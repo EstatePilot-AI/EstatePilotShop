@@ -1,19 +1,22 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
+import { SkeletonModule } from 'primeng/skeleton';
+import { DividerModule } from 'primeng/divider';
+import { TooltipModule } from 'primeng/tooltip';
+import { MessageModule } from 'primeng/message';
 
-interface Property {
-  image: string;
-  title: string;
-  location: string;
-  price: string;
-  type: string;
-  beds: number;
-  baths: number;
-  sqft: string;
-  isNew: boolean;
-}
+import { PropertyService } from '../../../../core/services/property.service';
+import { IProperty } from '../../../property/models/IProperty';
 
 interface Category {
   icon: string;
@@ -37,12 +40,61 @@ interface Testimonial {
 
 @Component({
   selector: 'app-landing',
-  imports: [RouterLink, ButtonModule, TagModule],
+  imports: [RouterLink, ButtonModule, TagModule, SkeletonModule, DividerModule, TooltipModule, MessageModule],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Landing {
+export class Landing implements OnInit {
+  private readonly propertyService = inject(PropertyService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  // ── Featured listings state ─────────────────────────────
+  readonly featuredProperties = signal<IProperty[]>([]);
+  readonly featuredLoading = signal(true);
+  readonly featuredError = signal<string | null>(null);
+  readonly featuredPreview = signal<IProperty[]>([]);
+  readonly skeletonItems = Array.from({ length: 3 });
+
+  // ── Lifecycle ────────────────────────────────────────────
+  ngOnInit(): void {
+    this.propertyService
+      .getAllProperties()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data) => {
+          this.featuredProperties.set(data);
+          this.featuredPreview.set(data.slice(0, 3));
+          this.featuredLoading.set(false);
+        },
+        error: (err: Error) => {
+          this.featuredError.set(err?.message ?? 'Failed to load properties.');
+          this.featuredLoading.set(false);
+        },
+      });
+  }
+
+  // ── Helpers ──────────────────────────────────────────────
+  formatPrice(price: number): string {
+    return new Intl.NumberFormat('en-EG', {
+      style: 'currency',
+      currency: 'EGP',
+      maximumFractionDigits: 0,
+    }).format(price);
+  }
+
+  statusSeverity(
+    status: string,
+  ): 'success' | 'warn' | 'danger' | 'info' | 'secondary' | 'contrast' {
+    const map: Record<string, 'success' | 'warn' | 'danger' | 'info' | 'secondary' | 'contrast'> = {
+      available: 'success',
+      sold:      'danger',
+      rented:    'warn',
+      pending:   'info',
+    };
+    return map[status?.toLowerCase()] ?? 'secondary';
+  }
+
   protected readonly categories: Category[] = [
     { icon: 'pi pi-building', name: 'Apartments', count: 840 },
     { icon: 'pi pi-home', name: 'Villas', count: 320 },
@@ -50,75 +102,6 @@ export class Landing {
     { icon: 'pi pi-map', name: 'Land', count: 95 },
     { icon: 'pi pi-briefcase', name: 'Offices', count: 210 },
     { icon: 'pi pi-key', name: 'Rentals', count: 560 },
-  ];
-
-  protected readonly featuredProperties: Property[] = [
-    {
-      image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=400&fit=crop',
-      title: 'Sunset Villa Residence',
-      location: 'Beverly Hills, CA',
-      price: '$1,250,000',
-      type: 'Villa',
-      beds: 4,
-      baths: 3,
-      sqft: '3,200',
-      isNew: true,
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop',
-      title: 'Skyline Penthouse',
-      location: 'Manhattan, NY',
-      price: '$2,800,000',
-      type: 'Penthouse',
-      beds: 3,
-      baths: 2,
-      sqft: '2,800',
-      isNew: false,
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=400&fit=crop',
-      title: 'Modern Urban Loft',
-      location: 'Austin, TX',
-      price: '$680,000',
-      type: 'Apartment',
-      beds: 2,
-      baths: 2,
-      sqft: '1,400',
-      isNew: true,
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=600&h=400&fit=crop',
-      title: 'Lakefront Estate',
-      location: 'Lake Tahoe, NV',
-      price: '$3,450,000',
-      type: 'Villa',
-      beds: 5,
-      baths: 4,
-      sqft: '4,500',
-      isNew: false,
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&h=400&fit=crop',
-      title: 'Palm Springs Retreat',
-      location: 'Palm Springs, CA',
-      price: '$890,000',
-      type: 'Villa',
-      beds: 3,
-      baths: 2,
-      sqft: '2,200',
-      isNew: true,
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&h=400&fit=crop',
-      title: 'Downtown Studio',
-      location: 'Chicago, IL',
-      price: '$320,000',
-      type: 'Apartment',
-      beds: 1,
-      baths: 1,
-      sqft: '750',
-      isNew: false,
-    },
   ];
 
   protected readonly stats: Stat[] = [

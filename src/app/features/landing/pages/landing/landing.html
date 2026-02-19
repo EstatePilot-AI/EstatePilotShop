@@ -17,26 +17,7 @@
         compare deals, and secure your next investment — all in one place.
       </p>
 
-      <div class="hero-search-bar">
-        <div class="search-input-group">
-          <i class="pi pi-search" aria-hidden="true"></i>
-          <input
-            type="text"
-            placeholder="Search by city, neighborhood, or property type..."
-            class="search-input"
-            aria-label="Search properties"
-          />
-        </div>
-        <p-button label="Search" icon="pi pi-search" [rounded]="true" size="large" />
-      </div>
 
-      <div class="hero-tags">
-        <span class="hero-tag">Popular:</span>
-        <a href="#" class="hero-tag-link">New York</a>
-        <a href="#" class="hero-tag-link">Los Angeles</a>
-        <a href="#" class="hero-tag-link">Miami</a>
-        <a href="#" class="hero-tag-link">Chicago</a>
-      </div>
     </div>
   </div>
 </section>
@@ -98,53 +79,93 @@
       />
     </div>
 
-    <div class="properties-grid">
-      @for (property of featuredProperties; track property.title) {
-        <article class="property-card">
-          <div class="property-image-wrapper">
-            <img
-              [src]="property.image"
-              [alt]="property.title"
-              class="property-image"
-              loading="lazy"
-            />
-            @if (property.isNew) {
-              <p-tag value="New" severity="success" class="property-new-badge" />
-            }
-            <span class="property-type-badge">{{ property.type }}</span>
-          </div>
-
-          <div class="property-info">
-            <div class="property-price">{{ property.price }}</div>
-            <h3 class="property-title">{{ property.title }}</h3>
-            <p class="property-location">
-              <i class="pi pi-map-marker" aria-hidden="true"></i>
-              {{ property.location }}
-            </p>
-
-            <div class="property-divider"></div>
-
-            <div class="property-details">
-              <span class="property-detail">
-                <i class="pi pi-th-large" aria-hidden="true"></i>
-                {{ property.beds }} Beds
-              </span>
-              <span class="property-detail">
-                <i class="pi pi-box" aria-hidden="true"></i>
-                {{ property.baths }} Baths
-              </span>
-              <span class="property-detail">
-                <i class="pi pi-arrows-alt" aria-hidden="true"></i>
-                {{ property.sqft }} sqft
-              </span>
-            </div>
-
-            <div class="property-actions">
-              <p-button label="View Details" [rounded]="true" size="small" styleClass="w-full" />
+    <!-- Loading skeletons -->
+    @if (featuredLoading()) {
+      <div class="properties-grid" aria-busy="true" aria-label="Loading featured properties">
+        @for (item of skeletonItems; track $index) {
+          <div class="property-card property-card--skeleton">
+            <p-skeleton height="200px" styleClass="skeleton-image" borderRadius="0" />
+            <div class="property-card-body">
+              <p-skeleton width="40%" height="1.25rem" styleClass="mb-2" />
+              <p-skeleton width="70%" height="1rem" styleClass="mb-1" />
+              <p-skeleton width="55%" height="0.85rem" styleClass="mb-3" />
+              <p-skeleton width="100%" height="1px" styleClass="mb-3" />
+              <div class="flex gap-3">
+                <p-skeleton width="4rem" height="0.85rem" />
+                <p-skeleton width="4rem" height="0.85rem" />
+                <p-skeleton width="4rem" height="0.85rem" />
+              </div>
             </div>
           </div>
-        </article>
-      }
+        }
+      </div>
+    }
+
+    <!-- Error -->
+    @if (featuredError()) {
+      <p class="featured-error" role="alert">{{ featuredError() }}</p>
+    }
+
+    <!-- Property cards -->
+    @if (!featuredLoading() && !featuredError()) {
+      <div class="properties-grid">
+        @for (property of featuredPreview(); track property.propertyId) {
+          <article class="property-card" [attr.aria-label]="property.propertyType + ' in ' + property.city">
+            <div class="property-image-wrapper">
+              <div class="property-image-placeholder" aria-hidden="true">
+                <i class="pi pi-building"></i>
+              </div>
+              <div class="property-status-badge">
+                <p-tag [value]="property.status" [severity]="statusSeverity(property.status)" [rounded]="true" />
+              </div>
+              <span class="property-type-pill">{{ property.propertyType }}</span>
+            </div>
+            <div class="property-card-body">
+              <p class="property-price">{{ formatPrice(property.price) }}</p>
+              <p class="property-location">
+                <i class="pi pi-map-marker" aria-hidden="true"></i>
+                {{ property.district }}, {{ property.city }}
+              </p>
+              <p-divider styleClass="my-3" />
+              <div class="property-stats">
+                <span class="property-stat" pTooltip="Area" tooltipPosition="top">
+                  <i class="pi pi-th-large" aria-hidden="true"></i>
+                  {{ property.area }} m²
+                </span>
+                <span class="property-stat" pTooltip="Type" tooltipPosition="top">
+                  <i class="pi pi-tag" aria-hidden="true"></i>
+                  {{ property.propertyType }}
+                </span>
+                <span class="property-stat" pTooltip="Status" tooltipPosition="top">
+                  <i class="pi pi-info-circle" aria-hidden="true"></i>
+                  {{ property.status }}
+                </span>
+              </div>
+              <p-button
+                label="View Details"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                styleClass="w-full mt-3"
+                [outlined]="true"
+                size="small"
+                [routerLink]="['/properties', property.propertyId]"
+                [attr.aria-label]="'View details for property ' + property.propertyId"
+              />
+            </div>
+          </article>
+        }
+      </div>
+    }
+
+    <div class="listings-more">
+      <p-button
+        label="Browse All Listings"
+        icon="pi pi-th-large"
+        iconPos="right"
+        [rounded]="true"
+        size="large"
+        routerLink="/properties"
+      />
     </div>
   </div>
 </section>

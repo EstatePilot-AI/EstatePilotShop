@@ -1,0 +1,149 @@
+// ============================================================
+// _themes.scss — CSS Custom Property Declarations
+// ============================================================
+//
+// This file is the ONLY place where CSS custom properties are
+// emitted. It consumes the semantic token maps from _variables.scss
+// and writes them as CSS variables under the correct selectors.
+//
+// Light mode → :root  (default, no class needed)
+// Dark  mode → body.dark  (set by ThemeService at runtime)
+//
+// CONVENTIONS:
+//   • CSS var name mirrors the SCSS map key, e.g.
+//       'surface-card' → --surface-card
+//   • Convenience aliases (--color-*) are also generated so
+//     existing component code keeps working with minimal changes.
+//   • Never write raw hex values in component SCSS — always use
+//     a CSS custom property: color: var(--content-body);
+// ============================================================
+
+@use 'sass:map';
+@use 'variables' as v;
+
+// ── Helper mixin: emit every entry in a token map as a CSS var ──
+@mixin emit-tokens($map) {
+  @each $token, $value in $map {
+    --#{$token}: #{$value};
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// :root — Light Mode (default)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+:root {
+  // ── Semantic tokens ──────────────────────────────────────
+  @include emit-tokens(v.$tokens-light);
+
+  // ── Convenience aliases (matches old --color-* usage) ────
+  // Surfaces
+  --color-bg:                var(--surface-ground);
+  --color-surface:           var(--surface-section);
+  --color-card:              var(--surface-card);
+  --color-overlay-surface:   var(--surface-overlay);
+
+  // Content
+  --color-heading:           var(--content-heading);
+  --color-text:              var(--content-body);
+  --color-body:              var(--content-body);
+  --color-muted:             var(--content-muted);
+  --color-subtle:            var(--content-muted);
+
+  // Borders
+  --color-border:            var(--border-default);
+
+  // Brand
+  --color-primary:           var(--brand-primary);
+  --color-primary-dark:      var(--brand-primary-dark);
+  --color-primary-subtle:    var(--brand-primary-subtle);
+  --color-accent:            var(--brand-accent);
+  --color-accent-light:      var(--brand-accent-light);
+
+  // Status
+  --color-success:           var(--status-success);
+  --color-success-bg:        var(--status-success-subtle);
+  --color-warning:           var(--status-warning);
+  --color-warning-bg:        var(--status-warning-subtle);
+  --color-info:              var(--status-info);
+  --color-info-bg:           var(--status-info-subtle);
+  --color-danger:            var(--status-danger);
+
+  // Focus
+  --color-focus:             var(--focus-ring);
+
+  // Glass effect
+  --glass-bg:                #{v.$glass-bg-light};
+  --glass-border:            #{v.$glass-border-light};
+
+  // Scrollbar
+  --scrollbar-thumb:         #{map.get(v.$tokens-light, 'border-default')};
+
+  // Misc
+  --color-highlight-bg:      #{map.get(v.$tokens-light, 'brand-accent-light')}1a; // 10% opacity
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Dark Theme Mixin
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Extracted so it can be applied to multiple selectors without
+// duplicating code (body.dark and the .dark-mode compat alias).
+
+@mixin apply-dark-theme {
+  @include emit-tokens(v.$tokens-dark);
+
+  --color-bg:                var(--surface-ground);
+  --color-surface:           var(--surface-section);
+  --color-card:              var(--surface-card);
+  --color-overlay-surface:   var(--surface-overlay);
+
+  --color-heading:           var(--content-heading);
+  --color-text:              var(--content-body);
+  --color-body:              var(--content-body);
+  --color-muted:             var(--content-muted);
+  --color-subtle:            var(--content-muted);
+
+  --color-border:            var(--border-default);
+
+  --color-primary:           var(--brand-primary);
+  --color-primary-dark:      var(--brand-primary-dark);
+  --color-primary-subtle:    var(--brand-primary-subtle);
+  --color-accent:            var(--brand-accent);
+  --color-accent-light:      var(--brand-accent-light);
+
+  --color-success:           var(--status-success);
+  --color-success-bg:        var(--status-success-subtle);
+  --color-warning:           var(--status-warning);
+  --color-warning-bg:        var(--status-warning-subtle);
+  --color-info:              var(--status-info);
+  --color-info-bg:           var(--status-info-subtle);
+  --color-danger:            var(--status-danger);
+
+  --color-focus:             var(--focus-ring);
+
+  --glass-bg:                #{v.$glass-bg-dark};
+  --glass-border:            #{v.$glass-border-dark};
+
+  --scrollbar-thumb:         #{map.get(v.$tokens-dark, 'border-default')};
+
+  --color-highlight-bg:      #{map.get(v.$tokens-dark, 'brand-accent')}29; // 16% opacity
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// body.dark — Dark Mode (primary selector, set by ThemeService)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+body.dark {
+  @include apply-dark-theme;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Backwards Compatibility Alias
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ThemeService also adds `.dark-mode` so existing component
+// :host-context(.dark-mode) selectors keep working during migration.
+// Remove this block once all components use :host-context(body.dark).
+
+body.dark-mode {
+  @include apply-dark-theme;
+}

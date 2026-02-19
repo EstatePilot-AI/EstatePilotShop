@@ -1,0 +1,278 @@
+<!-- ===== Hero Section ===== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <span class="hero-badge">
+        <i class="pi pi-shopping-cart" aria-hidden="true"></i>
+        Your Real Estate Marketplace
+      </span>
+
+      <h1 class="hero-title">
+        Buy &amp; Sell Properties<br />
+        <span class="hero-title-accent">With Confidence</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Discover premium properties at unbeatable prices. Browse thousands of verified listings,
+        compare deals, and secure your next investment — all in one place.
+      </p>
+
+      <div class="hero-search-bar">
+        <div class="search-input-group">
+          <i class="pi pi-search" aria-hidden="true"></i>
+          <input
+            type="text"
+            placeholder="Search by city, neighborhood, or property type..."
+            class="search-input"
+            aria-label="Search properties"
+          />
+        </div>
+        <p-button label="Search" icon="pi pi-search" [rounded]="true" size="large" />
+      </div>
+
+      <div class="hero-tags">
+        <span class="hero-tag">Popular:</span>
+        <a href="#" class="hero-tag-link">New York</a>
+        <a href="#" class="hero-tag-link">Los Angeles</a>
+        <a href="#" class="hero-tag-link">Miami</a>
+        <a href="#" class="hero-tag-link">Chicago</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Stats Strip ===== -->
+<section class="stats-strip">
+  <div class="container">
+    <div class="stats-grid">
+      @for (stat of stats; track stat.label) {
+        <div class="stat-item">
+          <i [class]="stat.icon" aria-hidden="true"></i>
+          <div class="stat-text">
+            <span class="stat-value">{{ stat.value }}</span>
+            <span class="stat-label">{{ stat.label }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== Categories Section ===== -->
+<section class="section categories-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Browse by Category</h2>
+      <p class="section-subtitle">Find the perfect property type for your needs</p>
+    </div>
+
+    <div class="categories-grid">
+      @for (cat of categories; track cat.name) {
+        <a href="#" class="category-card">
+          <div class="category-icon">
+            <i [class]="cat.icon" aria-hidden="true"></i>
+          </div>
+          <span class="category-name">{{ cat.name }}</span>
+          <span class="category-count">{{ cat.count }} listings</span>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== Featured Listings Section ===== -->
+<section class="section listings-section">
+  <div class="container">
+    <div class="section-header-row">
+      <div>
+        <h2 class="section-title">Featured Listings</h2>
+        <p class="section-subtitle">Handpicked properties at the best prices</p>
+      </div>
+      <p-button
+        label="View All"
+        icon="pi pi-arrow-right"
+        iconPos="right"
+        [rounded]="true"
+        [outlined]="true"
+        severity="secondary"
+      />
+    </div>
+
+    <div class="properties-grid">
+      @for (property of featuredProperties; track property.title) {
+        <article class="property-card">
+          <div class="property-image-wrapper">
+            <img
+              [src]="property.image"
+              [alt]="property.title"
+              class="property-image"
+              loading="lazy"
+            />
+            @if (property.isNew) {
+              <p-tag value="New" severity="success" class="property-new-badge" />
+            }
+            <span class="property-type-badge">{{ property.type }}</span>
+          </div>
+
+          <div class="property-info">
+            <div class="property-price">{{ property.price }}</div>
+            <h3 class="property-title">{{ property.title }}</h3>
+            <p class="property-location">
+              <i class="pi pi-map-marker" aria-hidden="true"></i>
+              {{ property.location }}
+            </p>
+
+            <div class="property-divider"></div>
+
+            <div class="property-details">
+              <span class="property-detail">
+                <i class="pi pi-th-large" aria-hidden="true"></i>
+                {{ property.beds }} Beds
+              </span>
+              <span class="property-detail">
+                <i class="pi pi-box" aria-hidden="true"></i>
+                {{ property.baths }} Baths
+              </span>
+              <span class="property-detail">
+                <i class="pi pi-arrows-alt" aria-hidden="true"></i>
+                {{ property.sqft }} sqft
+              </span>
+            </div>
+
+            <div class="property-actions">
+              <p-button label="View Details" [rounded]="true" size="small" styleClass="w-full" />
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== Testimonials Section ===== -->
+<section class="section testimonials-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">What Our Clients Say</h2>
+      <p class="section-subtitle">Trusted by thousands of happy homeowners and investors</p>
+    </div>
+
+    <div class="testimonials-grid">
+      @for (testimonial of testimonials; track testimonial.name) {
+        <div class="testimonial-card">
+          <div class="testimonial-stars">
+            @for (star of getStars(testimonial.rating); track star) {
+              <i class="pi pi-star-fill" aria-hidden="true"></i>
+            }
+          </div>
+          <p class="testimonial-text">"{{ testimonial.text }}"</p>
+          <div class="testimonial-author">
+            <img
+              [src]="testimonial.avatar"
+              [alt]="testimonial.name"
+              class="testimonial-avatar"
+              loading="lazy"
+            />
+            <div>
+              <span class="testimonial-name">{{ testimonial.name }}</span>
+              <span class="testimonial-role">{{ testimonial.role }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA Section ===== -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2 class="cta-title">Ready to Find Your Dream Home?</h2>
+      <p class="cta-subtitle">
+        Join thousands of satisfied buyers and sellers on the most trusted real estate marketplace.
+      </p>
+      <div class="cta-actions">
+        <p-button label="Start Shopping" icon="pi pi-shopping-cart" [rounded]="true" size="large" />
+        <p-button
+          label="List Your Property"
+          icon="pi pi-plus"
+          [rounded]="true"
+          [outlined]="true"
+          size="large"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <i class="pi pi-building" aria-hidden="true"></i>
+          <span>EstatePilot</span>
+        </div>
+        <p class="footer-description">
+          Your trusted marketplace for buying, selling, and renting premium properties. Verified
+          listings, transparent pricing, secure transactions.
+        </p>
+        <div class="footer-socials">
+          <a href="#" aria-label="Facebook" class="social-icon"
+            ><i class="pi pi-facebook" aria-hidden="true"></i
+          ></a>
+          <a href="#" aria-label="Twitter" class="social-icon"
+            ><i class="pi pi-twitter" aria-hidden="true"></i
+          ></a>
+          <a href="#" aria-label="Instagram" class="social-icon"
+            ><i class="pi pi-instagram" aria-hidden="true"></i
+          ></a>
+          <a href="#" aria-label="LinkedIn" class="social-icon"
+            ><i class="pi pi-linkedin" aria-hidden="true"></i
+          ></a>
+        </div>
+      </div>
+
+      <div class="footer-links-group">
+        <h4 class="footer-heading">Marketplace</h4>
+        <nav aria-label="Marketplace links">
+          <a routerLink="/" class="footer-link">Buy Property</a>
+          <a routerLink="/" class="footer-link">Sell Property</a>
+          <a routerLink="/" class="footer-link">Rent Property</a>
+          <a routerLink="/" class="footer-link">Property Valuation</a>
+        </nav>
+      </div>
+
+      <div class="footer-links-group">
+        <h4 class="footer-heading">Company</h4>
+        <nav aria-label="Company links">
+          <a routerLink="/" class="footer-link">About Us</a>
+          <a routerLink="/" class="footer-link">Careers</a>
+          <a routerLink="/" class="footer-link">Blog</a>
+          <a routerLink="/" class="footer-link">Contact</a>
+        </nav>
+      </div>
+
+      <div class="footer-links-group">
+        <h4 class="footer-heading">Contact Us</h4>
+        <div class="footer-contact">
+          <p><i class="pi pi-map-marker" aria-hidden="true"></i> 123 Real Estate Ave, NY 10001</p>
+          <p><i class="pi pi-phone" aria-hidden="true"></i> +1 (555) 123-4567</p>
+          <p><i class="pi pi-envelope" aria-hidden="true"></i> shop&#64;estatepilot.com</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-divider"></div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 EstatePilot Shop. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>

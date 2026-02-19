@@ -1,0 +1,219 @@
+<section class="property-list-page">
+  <!-- ── Page Header ──────────────────────────────────────── -->
+  <header class="page-header">
+    <div class="container">
+      <div class="page-header-inner">
+        <div>
+          <h1 class="page-title">All Properties</h1>
+          <p class="page-subtitle">
+            @if (loading()) {
+              Loading listings…
+            } @else {
+              {{ filtered().length }} listing{{ filtered().length === 1 ? '' : 's' }} found
+            }
+          </p>
+        </div>
+
+        <!-- Reload button -->
+        <p-button
+          icon="pi pi-refresh"
+          [rounded]="true"
+          [text]="true"
+          severity="secondary"
+          pTooltip="Refresh listings"
+          tooltipPosition="left"
+          [disabled]="loading()"
+          (onClick)="reload()"
+          aria-label="Refresh listings"
+        />
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- ── Filter Bar ──────────────────────────────────────── -->
+    <div class="filter-bar">
+      <!-- Search -->
+      <div class="filter-search">
+        <i class="pi pi-search filter-search-icon"></i>
+        <input
+          pInputText
+          type="text"
+          placeholder="Search by city, district or type…"
+          class="filter-search-input"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+          aria-label="Search properties"
+        />
+        @if (searchQuery()) {
+          <button
+            class="filter-search-clear"
+            (click)="searchQuery.set('')"
+            aria-label="Clear search"
+          >
+            <i class="pi pi-times"></i>
+          </button>
+        }
+      </div>
+
+      <!-- Type filter -->
+      <p-select
+        [options]="propertyTypes"
+        [ngModel]="selectedType()"
+        (ngModelChange)="selectedType.set($event)"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="All Types"
+        styleClass="filter-select"
+        aria-label="Filter by property type"
+      />
+
+      <!-- Sort -->
+      <p-select
+        [options]="sortOptions"
+        [ngModel]="sortBy()"
+        (ngModelChange)="sortBy.set($event)"
+        optionLabel="label"
+        optionValue="value"
+        styleClass="filter-select"
+        aria-label="Sort properties"
+      />
+
+      <!-- Clear filters -->
+      @if (searchQuery() || selectedType() || sortBy() !== 'newest') {
+        <p-button
+          label="Clear"
+          icon="pi pi-filter-slash"
+          [text]="true"
+          severity="secondary"
+          size="small"
+          (onClick)="clearFilters()"
+        />
+      }
+    </div>
+
+    <!-- ── Error State ─────────────────────────────────────── -->
+    @if (error()) {
+      <div class="state-wrapper" role="alert">
+        <p-message severity="error" [text]="error()!" styleClass="w-full" />
+        <p-button
+          label="Try Again"
+          icon="pi pi-refresh"
+          class="mt-3"
+          (onClick)="reload()"
+        />
+      </div>
+    }
+
+    <!-- ── Loading Skeletons ───────────────────────────────── -->
+    @if (loading() && !error()) {
+      <div class="properties-grid" aria-busy="true" aria-label="Loading properties">
+        @for (item of skeletonItems; track $index) {
+          <div class="property-card property-card--skeleton">
+            <p-skeleton height="220px" styleClass="skeleton-image" borderRadius="0" />
+            <div class="property-card-body">
+              <p-skeleton width="40%" height="1.25rem" styleClass="mb-2" />
+              <p-skeleton width="70%" height="1rem"   styleClass="mb-1" />
+              <p-skeleton width="55%" height="0.85rem" styleClass="mb-3" />
+              <p-skeleton width="100%" height="1px"   styleClass="mb-3" />
+              <div class="flex gap-3">
+                <p-skeleton width="4rem" height="0.85rem" />
+                <p-skeleton width="4rem" height="0.85rem" />
+                <p-skeleton width="4rem" height="0.85rem" />
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- ── Empty State ────────────────────────────────────── -->
+    @if (!loading() && !error() && filtered().length === 0) {
+      <div class="state-wrapper empty-state" role="status">
+        <span class="empty-icon" aria-hidden="true">
+          <i class="pi pi-building"></i>
+        </span>
+        <h3 class="empty-title">No properties found</h3>
+        <p class="empty-subtitle">
+          Try adjusting your search or filters.
+        </p>
+        <p-button
+          label="Clear Filters"
+          icon="pi pi-filter-slash"
+          [outlined]="true"
+          (onClick)="clearFilters()"
+        />
+      </div>
+    }
+
+    <!-- ── Property Grid ──────────────────────────────────── -->
+    @if (!loading() && !error() && filtered().length > 0) {
+      <div class="properties-grid">
+        @for (property of filtered(); track property.propertyId) {
+          <article class="property-card" [attr.aria-label]="property.propertyType + ' in ' + property.city">
+            <!-- Image placeholder (no image in IProperty) -->
+            <div class="property-image-wrapper">
+              <div class="property-image-placeholder" aria-hidden="true">
+                <i class="pi pi-building"></i>
+              </div>
+
+              <!-- Status badge -->
+              <div class="property-status-badge">
+                <p-tag
+                  [value]="property.status"
+                  [severity]="statusSeverity(property.status)"
+                  [rounded]="true"
+                />
+              </div>
+
+              <!-- Type pill -->
+              <span class="property-type-pill">{{ property.propertyType }}</span>
+            </div>
+
+            <!-- Card body -->
+            <div class="property-card-body">
+              <!-- Price -->
+              <p class="property-price">{{ formatPrice(property.price) }}</p>
+
+              <!-- Location -->
+              <p class="property-location">
+                <i class="pi pi-map-marker" aria-hidden="true"></i>
+                {{ property.district }}, {{ property.city }}
+              </p>
+
+              <p-divider styleClass="my-3" />
+
+              <!-- Stats row -->
+              <div class="property-stats">
+                <span class="property-stat" pTooltip="Area" tooltipPosition="top">
+                  <i class="pi pi-th-large" aria-hidden="true"></i>
+                  {{ property.area }} m²
+                </span>
+                <span class="property-stat" pTooltip="Type" tooltipPosition="top">
+                  <i class="pi pi-tag" aria-hidden="true"></i>
+                  {{ property.propertyType }}
+                </span>
+                <span class="property-stat" pTooltip="Status" tooltipPosition="top">
+                  <i class="pi pi-info-circle" aria-hidden="true"></i>
+                  {{ property.status }}
+                </span>
+              </div>
+
+              <!-- Action -->
+              <p-button
+                label="View Details"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                styleClass="w-full mt-3"
+                [outlined]="true"
+                size="small"
+                [routerLink]="['/properties', property.propertyId]"
+                aria-label="View details for property {{ property.propertyId }}"
+              />
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>

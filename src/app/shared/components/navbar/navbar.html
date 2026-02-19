@@ -1,0 +1,72 @@
+<header class="navbar">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <a routerLink="/" class="navbar-logo" aria-label="EstatePilot Home">
+      <i class="pi pi-building" aria-hidden="true"></i>
+      <span class="navbar-logo-text">EstatePilot</span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="navbar-nav" aria-label="Main navigation">
+      @for (link of navLinks; track link.path) {
+        <a
+          [routerLink]="link.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+          class="navbar-link"
+        >
+          {{ link.label }}
+        </a>
+      }
+    </nav>
+
+    <!-- Right Actions -->
+    <div class="navbar-actions">
+      <p-button
+        [icon]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"
+        [rounded]="true"
+        [text]="true"
+        severity="secondary"
+        (click)="themeService.toggleTheme()"
+        [attr.aria-label]="
+          themeService.isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'
+        "
+      />
+
+      <!-- Mobile Menu Toggle -->
+      <p-button
+        icon="pi pi-bars"
+        [rounded]="true"
+        [text]="true"
+        severity="secondary"
+        class="mobile-menu-toggle"
+        (click)="toggleMobileMenu()"
+        aria-label="Open menu"
+      />
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Drawer -->
+<p-drawer
+  [visible]="mobileMenuOpen()"
+  (visibleChange)="mobileMenuOpen.set($event)"
+  position="right"
+  [style]="{ width: '280px' }"
+  header="EstatePilot"
+  (onHide)="closeMobileMenu()"
+>
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    @for (link of navLinks; track link.path) {
+      <a
+        [routerLink]="link.path"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+        class="mobile-nav-link"
+        (click)="closeMobileMenu()"
+      >
+        {{ link.label }}
+      </a>
+    }
+  </nav>
+</p-drawer>

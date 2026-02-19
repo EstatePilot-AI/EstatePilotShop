@@ -1,0 +1,329 @@
+// ============================================================
+// _variables.scss — Design Token Source of Truth
+// ============================================================
+//
+// ARCHITECTURE (two-layer token system):
+//   Layer 1: $_raw-*     →  raw color palette (never use directly)
+//   Layer 2: $tokens-*   →  semantic named tokens (always use these)
+//
+// USAGE IN COMPONENT SCSS:
+//   • CSS custom properties: color: var(--surface-card);
+//   • SCSS maps (for mixins/loops): @use '../../styles/variables' as v;
+//
+// ADD NEW TOKENS:
+//   1. Add the raw color to the appropriate $_raw-* map.
+//   2. Add semantic entry to both $tokens-light AND $tokens-dark.
+//   3. The token will automatically appear as a CSS var via _themes.scss.
+// ============================================================
+
+@use 'sass:map';
+@use 'sass:color';
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Layer 1 — Raw Palette (private, prefix: $_raw-*)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$_raw-light: (
+  // ── Neutrals ──
+  'white':          #ffffff,
+  'gray-50':        #f9fafb,
+  'gray-100':       #f3f4f6,
+  'gray-200':       #e5e7eb,
+  'ink-950':        #020000,
+  'ink-700':        #364153,
+  'ink-400':        #6a7282,
+  'black':          #000000,
+
+  // ── Blue (primary action) ──
+  'blue-500':       #155dfc,
+  'blue-600':       #1447e6,
+  'blue-100':       #bedbff,
+
+  // ── Purple (brand accent) ──
+  'purple-700':     #8200db,
+  'purple-600':     #9810fa,
+  'purple-400':     #ad46ff,
+
+  // ── Green (success) ──
+  'green-600':      #00a63e,
+  'green-500':      #00c950,
+  'green-700':      #008236,
+  'green-100':      #b9f8cf,
+
+  // ── Amber (warning) ──
+  'amber-500':      #e17100,
+  'amber-700':      #bb4d00,
+  'amber-100':      #fef3c6,
+);
+
+$_raw-dark: (
+  // ── Surfaces ──
+  'surface-950':    #0a0e1a,
+  'surface-900':    #0f1320,
+  'surface-800':    #1a1f2e,
+  'surface-700':    #2a2f3e,
+  'black':          #000000,
+
+  // ── Neutrals ──
+  'white':          #ffffff,
+  'gray-200':       #d1d5dc,
+  'gray-400':       #99a1af,
+
+  // ── Indigo (primary action — dark) ──
+  'indigo-500':     #6366f1,
+  'blue-500':       #2b7fff,
+  'blue-400':       #51a2ff,
+
+  // ── Purple (brand accent — dark) ──
+  'purple-400':     #ad46ff,
+  'purple-300':     #c27aff,
+
+  // ── Orange / Yellow (warning — dark) ──
+  'orange-500':     #fe9a00,
+  'yellow-500':     #ffb900,
+
+  // ── Green (success — dark) ──
+  'green-500':      #00c950,
+  'green-400':      #05df72,
+
+  // ── Pink (danger — dark) ──
+  'pink-500':       #ff4d9d,
+);
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Layer 2 — Semantic Tokens (public, used as CSS custom props)
+//
+// Token naming: [category]-[role][-variant]
+//   Categories: surface | content | border | brand | status | feedback | focus | overlay
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$tokens-light: (
+  // ── Surfaces ────────────────────────────────────────────
+  // Page / app background
+  'surface-ground':       map.get($_raw-light, 'white'),
+  // Sections, sidebars, panels
+  'surface-section':      map.get($_raw-light, 'gray-50'),
+  // Cards, dialogs, tooltips
+  'surface-card':         map.get($_raw-light, 'gray-100'),
+  // Hover states, nested surfaces
+  'surface-overlay':      map.get($_raw-light, 'gray-200'),
+
+  // ── Content (text) ──────────────────────────────────────
+  // H1–H6, prominent labels
+  'content-heading':      map.get($_raw-light, 'ink-950'),
+  // Body copy, default text
+  'content-body':         map.get($_raw-light, 'ink-700'),
+  // Placeholders, captions, deemphasised text
+  'content-muted':        map.get($_raw-light, 'ink-400'),
+  // Inverse text (on dark backgrounds)
+  'content-inverse':      map.get($_raw-light, 'white'),
+
+  // ── Borders ─────────────────────────────────────────────
+  'border-default':       map.get($_raw-light, 'gray-200'),
+  'border-subtle':        map.get($_raw-light, 'gray-100'),
+  'border-strong':        map.get($_raw-light, 'ink-400'),
+
+  // ── Brand — Primary (blue) ──────────────────────────────
+  'brand-primary':        map.get($_raw-light, 'blue-500'),
+  'brand-primary-dark':   map.get($_raw-light, 'blue-600'),
+  'brand-primary-subtle': map.get($_raw-light, 'blue-100'),
+
+  // ── Brand — Accent (purple) ─────────────────────────────
+  'brand-accent':         map.get($_raw-light, 'purple-700'),
+  'brand-accent-mid':     map.get($_raw-light, 'purple-600'),
+  'brand-accent-light':   map.get($_raw-light, 'purple-400'),
+
+  // ── Status — Success ────────────────────────────────────
+  'status-success':       map.get($_raw-light, 'green-600'),
+  'status-success-hover': map.get($_raw-light, 'green-500'),
+  'status-success-strong':map.get($_raw-light, 'green-700'),
+  'status-success-subtle':map.get($_raw-light, 'green-100'),
+
+  // ── Status — Warning ────────────────────────────────────
+  'status-warning':       map.get($_raw-light, 'amber-500'),
+  'status-warning-strong':map.get($_raw-light, 'amber-700'),
+  'status-warning-subtle':map.get($_raw-light, 'amber-100'),
+
+  // ── Status — Info (alias of brand-primary) ──────────────
+  'status-info':          map.get($_raw-light, 'blue-500'),
+  'status-info-subtle':   map.get($_raw-light, 'blue-100'),
+
+  // ── Status — Danger (use warning-strong in light) ───────
+  'status-danger':        map.get($_raw-light, 'amber-700'),
+
+  // ── Focus ───────────────────────────────────────────────
+  'focus-ring':           map.get($_raw-light, 'blue-500'),
+
+  // ── Overlay / Backdrop ──────────────────────────────────
+  'overlay-backdrop':     rgba(0, 0, 0, 0.4),
+
+  // ── Interactive ─────────────────────────────────────────
+  'interactive-hover':    map.get($_raw-light, 'gray-50'),
+  'interactive-active':   map.get($_raw-light, 'gray-100'),
+  'interactive-disabled': map.get($_raw-light, 'gray-200'),
+);
+
+$tokens-dark: (
+  // ── Surfaces ────────────────────────────────────────────
+  'surface-ground':       map.get($_raw-dark, 'surface-950'),
+  'surface-section':      map.get($_raw-dark, 'surface-900'),
+  'surface-card':         map.get($_raw-dark, 'surface-800'),
+  'surface-overlay':      map.get($_raw-dark, 'surface-700'),
+
+  // ── Content (text) ──────────────────────────────────────
+  'content-heading':      map.get($_raw-dark, 'white'),
+  'content-body':         map.get($_raw-dark, 'gray-200'),
+  'content-muted':        map.get($_raw-dark, 'gray-400'),
+  'content-inverse':      map.get($_raw-dark, 'surface-950'),
+
+  // ── Borders ─────────────────────────────────────────────
+  'border-default':       map.get($_raw-dark, 'surface-700'),
+  'border-subtle':        map.get($_raw-dark, 'surface-800'),
+  'border-strong':        map.get($_raw-dark, 'gray-400'),
+
+  // ── Brand — Primary (indigo in dark) ────────────────────
+  'brand-primary':        map.get($_raw-dark, 'indigo-500'),
+  'brand-primary-dark':   map.get($_raw-dark, 'blue-500'),
+  'brand-primary-subtle': map.get($_raw-dark, 'blue-400'),
+
+  // ── Brand — Accent (purple) ─────────────────────────────
+  'brand-accent':         map.get($_raw-dark, 'purple-400'),
+  'brand-accent-mid':     map.get($_raw-dark, 'purple-400'),
+  'brand-accent-light':   map.get($_raw-dark, 'purple-300'),
+
+  // ── Status — Success ────────────────────────────────────
+  'status-success':       map.get($_raw-dark, 'green-500'),
+  'status-success-hover': map.get($_raw-dark, 'green-400'),
+  'status-success-strong':map.get($_raw-dark, 'green-500'),
+  'status-success-subtle':rgba(0, 201, 80, 0.15),
+
+  // ── Status — Warning ────────────────────────────────────
+  'status-warning':       map.get($_raw-dark, 'orange-500'),
+  'status-warning-strong':map.get($_raw-dark, 'yellow-500'),
+  'status-warning-subtle':rgba(254, 154, 0, 0.15),
+
+  // ── Status — Info ───────────────────────────────────────
+  'status-info':          map.get($_raw-dark, 'blue-500'),
+  'status-info-subtle':   rgba(43, 127, 255, 0.15),
+
+  // ── Status — Danger ─────────────────────────────────────
+  'status-danger':        map.get($_raw-dark, 'pink-500'),
+
+  // ── Focus ───────────────────────────────────────────────
+  'focus-ring':           map.get($_raw-dark, 'indigo-500'),
+
+  // ── Overlay / Backdrop ──────────────────────────────────
+  'overlay-backdrop':     rgba(0, 0, 0, 0.6),
+
+  // ── Interactive ─────────────────────────────────────────
+  'interactive-hover':    map.get($_raw-dark, 'surface-700'),
+  'interactive-active':   map.get($_raw-dark, 'surface-800'),
+  'interactive-disabled': map.get($_raw-dark, 'surface-700'),
+);
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Typography Scale
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$font-family-base:     'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-size-xs:         0.75rem;
+$font-size-sm:         0.875rem;
+$font-size-base:       1rem;
+$font-size-lg:         1.125rem;
+$font-size-xl:         1.25rem;
+$font-size-2xl:        1.5rem;
+$font-size-3xl:        1.875rem;
+$font-size-4xl:        2.25rem;
+$font-size-5xl:        3rem;
+
+$font-weight-regular:  400;
+$font-weight-medium:   500;
+$font-weight-semibold: 600;
+$font-weight-bold:     700;
+$font-weight-extrabold:800;
+
+$line-height-tight:    1.2;
+$line-height-base:     1.6;
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Spacing Scale
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$space-1:  0.25rem;
+$space-2:  0.5rem;
+$space-3:  0.75rem;
+$space-4:  1rem;
+$space-5:  1.25rem;
+$space-6:  1.5rem;
+$space-8:  2rem;
+$space-10: 2.5rem;
+$space-12: 3rem;
+$space-16: 4rem;
+$space-20: 5rem;
+$space-24: 6rem;
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Layout
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$container-max-width: 1200px;
+$container-padding:   $space-6;
+$section-padding-y:   $space-20;
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Border Radius
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$radius-sm:   0.25rem;
+$radius-md:   0.5rem;
+$radius-lg:   0.75rem;
+$radius-xl:   1rem;
+$radius-full: 9999px;
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Elevation / Shadows
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow-md:  0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+$shadow-lg:  0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+$shadow-xl:  0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Transitions
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$transition-fast: 0.15s ease;
+$transition-base: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Z-Index Scale
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$z-base:     0;
+$z-dropdown: 100;
+$z-sticky:   200;
+$z-overlay:  300;
+$z-modal:    400;
+$z-toast:    500;
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Breakpoints
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$breakpoint-sm:  480px;
+$breakpoint-md:  768px;
+$breakpoint-lg:  1024px;
+$breakpoint-xl:  1280px;
+$breakpoint-2xl: 1536px;
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Glass Morphism
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$glass-bg-light:     rgba(255, 255, 255, 0.8);
+$glass-border-light: rgba(0, 0, 0, 0.06);
+$glass-bg-dark:      rgba(26, 31, 46, 0.7);   // surface-800 with opacity
+$glass-border-dark:  rgba(255, 255, 255, 0.08);
+$glass-blur:         16px;

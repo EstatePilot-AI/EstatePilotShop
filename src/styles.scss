@@ -1,1 +1,230 @@
-/* You can add global styles to this file, and also import other style files */
+// ============================================================
+// styles.scss — Global Application Stylesheet
+// ============================================================
+//
+// Import order:
+//   1. variables  — SCSS token maps + dimension vars (no CSS output)
+//   2. themes     — CSS custom property declarations (:root, body.dark)
+//   3. primeng-overrides — Bridge PrimeNG tokens to our design system
+//   4. Global reset, typography, layout utilities (this file)
+//
+// RULE: Never write raw hex colors here.
+//       Always use a CSS custom property: color: var(--content-body);
+// ============================================================
+
+// 1. Token maps + SCSS dimension variables (spacing, type, breakpoints…)
+@use './styles/variables' as v;
+
+// 2. Emit CSS custom properties for light/dark themes
+@use './styles/themes';
+
+// 3. Map PrimeNG tokens to our design system
+@use './styles/primeng-overrides';
+
+
+
+// ============================================================
+// Mixins
+// ============================================================
+
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == sm  { @media (min-width: v.$breakpoint-sm)  { @content; } }
+  @else if $breakpoint == md  { @media (min-width: v.$breakpoint-md)  { @content; } }
+  @else if $breakpoint == lg  { @media (min-width: v.$breakpoint-lg)  { @content; } }
+  @else if $breakpoint == xl  { @media (min-width: v.$breakpoint-xl)  { @content; } }
+  @else if $breakpoint == 2xl { @media (min-width: v.$breakpoint-2xl) { @content; } }
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+// ============================================================
+// Reset & Base
+// ============================================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 100%;
+}
+
+body {
+  font-family: v.$font-family-base;
+  font-size: v.$font-size-base;
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color v.$transition-base, color v.$transition-base;
+  line-height: v.$line-height-base;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// ============================================================
+// Typography
+// ============================================================
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: v.$font-family-base;
+  line-height: v.$line-height-tight;
+}
+
+.h1 {
+  font-size: v.$font-size-5xl;
+  font-weight: v.$font-weight-extrabold;
+  letter-spacing: -0.02em;
+}
+
+.h2 {
+  font-size: v.$font-size-4xl;
+  font-weight: v.$font-weight-bold;
+  letter-spacing: -0.01em;
+}
+
+.h3 {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-semibold;
+}
+
+.text-xs   { font-size: v.$font-size-xs; }
+.text-sm   { font-size: v.$font-size-sm; }
+.text-base { font-size: v.$font-size-base; }
+.text-lg   { font-size: v.$font-size-lg; }
+.text-xl   { font-size: v.$font-size-xl; }
+
+.text-muted { color: var(--color-muted); }
+
+// ============================================================
+// Layout
+// ============================================================
+
+.container {
+  width: 100%;
+  max-width: v.$container-max-width;
+  margin-inline: auto;
+  padding-inline: v.$container-padding;
+}
+
+.section {
+  padding-block: v.$section-padding-y;
+}
+
+// ============================================================
+// Gradient Backgrounds
+// ============================================================
+
+.bg-gradient-hero {
+  background: linear-gradient(135deg, #f3e8ff 0%, #e9d4ff 40%, #bedbff 100%);
+
+  body.dark & {
+    background: linear-gradient(160deg, #0a0e1a 0%, #1a1040 50%, #0a0e1a 100%);
+  }
+}
+
+// ============================================================
+// Glass Effect
+// ============================================================
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(v.$glass-blur);
+  border: 1px solid var(--glass-border);
+}
+
+// ============================================================
+// Scrollbar
+// ============================================================
+
+::-webkit-scrollbar {
+  width: v.$space-2;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: v.$radius-full;
+}
+
+// ============================================================
+// Animations
+// ============================================================
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(v.$space-8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-delay-1 { animation-delay: 0.1s; }
+.animate-delay-2 { animation-delay: 0.2s; }
+.animate-delay-3 { animation-delay: 0.3s; }
+.animate-delay-4 { animation-delay: 0.4s; }
+
+// ============================================================
+// Accessibility
+// ============================================================
+
+.sr-only {
+  @include sr-only;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

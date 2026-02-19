@@ -1,0 +1,272 @@
+// ============================================================
+// navbar.scss — No raw hex values. CSS vars auto-handle dark mode.
+// All colors resolve from _themes.scss based on body.dark class.
+// ============================================================
+
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+// ── Shell ──────────────────────────────────────────────────────
+
+.navbar {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--glass-border);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+// ── Logo ───────────────────────────────────────────────────────
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--content-heading);
+  font-weight: 700;
+  font-size: 1.25rem;
+  transition: color 0.2s;
+
+  i {
+    font-size: 1.5rem;
+    color: var(--brand-accent);
+    transition: color 0.2s;
+  }
+}
+
+.navbar-logo-text {
+  // Gradient uses CSS vars — auto-updates for light / dark
+  background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// ── Desktop Nav ─────────────────────────────────────────────────
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: var(--content-body);
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: color 0.2s ease, background 0.2s ease;
+
+  &:hover {
+    color: var(--brand-accent);
+    background: var(--interactive-hover);
+  }
+
+  &.active {
+    color: var(--brand-accent);
+    background: var(--interactive-active);
+    font-weight: 600;
+  }
+}
+
+// ── Right Action Row ────────────────────────────────────────────
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+// ── Mobile Hamburger (PrimeNG Button) ───────────────────────────
+
+::ng-deep .mobile-menu-toggle {
+  display: none !important;
+
+  @media (max-width: 768px) {
+    display: inline-flex !important;
+  }
+}
+
+// ── Mobile Drawer ───────────────────────────────────────────────
+
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-top: 0.5rem;
+}
+
+.mobile-nav-link {
+  display: block;
+  text-decoration: none;
+  color: var(--content-body);
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  transition: color 0.2s ease, background 0.2s ease;
+
+  &:hover,
+  &.active {
+    color: var(--brand-accent);
+    background: var(--interactive-hover);
+  }
+}
+
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+// Logo
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: #101828;
+  font-weight: 700;
+  font-size: 1.25rem;
+  transition: color 0.2s;
+
+  :host-context(.dark-mode) & {
+    color: #f3f4f6;
+  }
+
+  i {
+    font-size: 1.5rem;
+    color: #8200db;
+
+    :host-context(.dark-mode) & {
+      color: #ad46ff;
+    }
+  }
+}
+
+.navbar-logo-text {
+  background: linear-gradient(135deg, #8200db, #ad46ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Desktop Nav
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: #4a5565;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  :host-context(.dark-mode) & {
+    color: #e5e7eb;
+  }
+
+  &:hover {
+    color: #8200db;
+    background: #f3e8ff;
+
+    :host-context(.dark-mode) & {
+      color: #e9d4ff;
+      background: rgba(173, 70, 255, 0.1);
+    }
+  }
+
+  &.active {
+    color: #8200db;
+    background: #f3e8ff;
+    font-weight: 600;
+
+    :host-context(.dark-mode) & {
+      color: #e9d4ff;
+      background: rgba(173, 70, 255, 0.12);
+    }
+  }
+}
+
+// Right Actions
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+::ng-deep .mobile-menu-toggle {
+  display: none !important;
+
+  @media (max-width: 768px) {
+    display: inline-flex !important;
+  }
+}
+
+// Mobile Drawer
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-top: 0.5rem;
+}
+
+.mobile-nav-link {
+  display: block;
+  text-decoration: none;
+  color: #101828;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  :host-context(.dark-mode) & {
+    color: #e5e7eb;
+  }
+
+  &:hover,
+  &.active {
+    color: #8200db;
+    background: #f3e8ff;
+
+    :host-context(.dark-mode) & {
+      color: #e9d4ff;
+      background: rgba(173, 70, 255, 0.1);
+    }
+  }
+}

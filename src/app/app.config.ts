@@ -6,6 +6,7 @@ import { providePrimeNG } from 'primeng/config';
 
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 
 const EstatePilotPreset = definePreset(Aura, {
   semantic: {
@@ -88,6 +89,7 @@ const EstatePilotPreset = definePreset(Aura, {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideHttpClient(withFetch()),
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
     provideClientHydration(withEventReplay()),

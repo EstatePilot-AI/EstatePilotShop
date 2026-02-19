@@ -1,7 +1,7 @@
 <!-- ===== Hero Section ===== -->
 <section class="hero">
   <div class="container">
-    <div class="hero-content">
+    <div class="hero-content" appReveal>
       <span class="hero-badge">
         <i class="pi pi-shopping-cart" aria-hidden="true"></i>
         Your Real Estate Marketplace
@@ -27,7 +27,7 @@
   <div class="container">
     <div class="stats-grid">
       @for (stat of stats; track stat.label) {
-        <div class="stat-item">
+        <div class="stat-item" appReveal [revealDelay]="$index * 100">
           <i [class]="stat.icon" aria-hidden="true"></i>
           <div class="stat-text">
             <span class="stat-value">{{ stat.value }}</span>
@@ -42,14 +42,14 @@
 <!-- ===== Categories Section ===== -->
 <section class="section categories-section">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header" appReveal>
       <h2 class="section-title">Browse by Category</h2>
       <p class="section-subtitle">Find the perfect property type for your needs</p>
     </div>
 
     <div class="categories-grid">
       @for (cat of categories; track cat.name) {
-        <a href="#" class="category-card">
+        <a href="#" class="category-card" appReveal [revealDelay]="$index * 75">
           <div class="category-icon">
             <i [class]="cat.icon" aria-hidden="true"></i>
           </div>
@@ -64,7 +64,7 @@
 <!-- ===== Featured Listings Section ===== -->
 <section class="section listings-section">
   <div class="container">
-    <div class="section-header-row">
+    <div class="section-header-row" appReveal>
       <div>
         <h2 class="section-title">Featured Listings</h2>
         <p class="section-subtitle">Handpicked properties at the best prices</p>
@@ -110,7 +110,7 @@
     @if (!featuredLoading() && !featuredError()) {
       <div class="properties-grid">
         @for (property of featuredPreview(); track property.propertyId) {
-          <article class="property-card" [attr.aria-label]="property.propertyType + ' in ' + property.city">
+          <article class="property-card" appReveal [revealDelay]="$index * 120" [attr.aria-label]="property.propertyType + ' in ' + property.city">
             <div class="property-image-wrapper">
               <div class="property-image-placeholder" aria-hidden="true">
                 <i class="pi pi-building"></i>
@@ -157,7 +157,7 @@
       </div>
     }
 
-    <div class="listings-more">
+    <div class="listings-more" appReveal [revealDelay]="360">
       <p-button
         label="Browse All Listings"
         icon="pi pi-th-large"
@@ -173,14 +173,14 @@
 <!-- ===== Testimonials Section ===== -->
 <section class="section testimonials-section">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header" appReveal>
       <h2 class="section-title">What Our Clients Say</h2>
       <p class="section-subtitle">Trusted by thousands of happy homeowners and investors</p>
     </div>
 
     <div class="testimonials-grid">
       @for (testimonial of testimonials; track testimonial.name) {
-        <div class="testimonial-card">
+        <div class="testimonial-card" appReveal [revealDelay]="$index * 120">
           <div class="testimonial-stars">
             @for (star of getStars(testimonial.rating); track star) {
               <i class="pi pi-star-fill" aria-hidden="true"></i>
@@ -208,7 +208,7 @@
 <!-- ===== CTA Section ===== -->
 <section class="cta-section">
   <div class="container">
-    <div class="cta-content">
+    <div class="cta-content" appReveal>
       <h2 class="cta-title">Ready to Find Your Dream Home?</h2>
       <p class="cta-subtitle">
         Join thousands of satisfied buyers and sellers on the most trusted real estate marketplace.

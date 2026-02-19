@@ -17,6 +17,7 @@ import { MessageModule } from 'primeng/message';
 
 import { PropertyService } from '../../../../core/services/property.service';
 import { IProperty } from '../../../property/models/IProperty';
+import { RevealDirective } from '../../../../shared/directives/reveal.directive';
 
 interface Category {
   icon: string;
@@ -40,7 +41,7 @@ interface Testimonial {
 
 @Component({
   selector: 'app-landing',
-  imports: [RouterLink, ButtonModule, TagModule, SkeletonModule, DividerModule, TooltipModule, MessageModule],
+  imports: [RouterLink, ButtonModule, TagModule, SkeletonModule, DividerModule, TooltipModule, MessageModule, RevealDirective],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

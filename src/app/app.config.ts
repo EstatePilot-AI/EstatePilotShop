@@ -98,7 +98,7 @@ export const appConfig: ApplicationConfig = {
     anchorScrolling: 'enabled'
   })
 ),
-    provideClientHydration(withEventReplay()),
+    // provideClientHydration(withEventReplay()),
     providePrimeNG({
       theme: {
         preset: EstatePilotPreset,

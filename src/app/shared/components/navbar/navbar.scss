@@ -1,7 +1,14 @@
 // ============================================================
-// navbar.scss — No raw hex values. CSS vars auto-handle dark mode.
-// All colors resolve from _themes.scss based on body.dark class.
+// navbar.scss — Fully native mobile menu (no PrimeNG Drawer).
+// All colors via CSS custom properties. Dark mode is automatic.
 // ============================================================
+
+// ── Breakpoint ──────────────────────────────────────────────
+$mobile-breakpoint: 768px;
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Host
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 :host {
   display: block;
@@ -10,11 +17,14 @@
   z-index: 1000;
 }
 
-// ── Shell ──────────────────────────────────────────────────────
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Header Bar
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 .navbar {
   background: var(--glass-bg);
   backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--glass-border);
   transition: background 0.3s ease, border-color 0.3s ease;
 }
@@ -27,9 +37,16 @@
   align-items: center;
   justify-content: space-between;
   height: 64px;
+
+  @media (max-width: $mobile-breakpoint) {
+    padding: 0 1rem;
+    height: 56px;
+  }
 }
 
-// ── Logo ───────────────────────────────────────────────────────
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Logo
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 .navbar-logo {
   display: flex;
@@ -39,31 +56,36 @@
   color: var(--content-heading);
   font-weight: 700;
   font-size: 1.25rem;
-  transition: color 0.2s;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.85;
+  }
 
   i {
     font-size: 1.5rem;
     color: var(--brand-accent);
-    transition: color 0.2s;
   }
 }
 
 .navbar-logo-text {
-  // Gradient uses CSS vars — auto-updates for light / dark
   background: linear-gradient(135deg, var(--brand-accent), var(--brand-accent-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-// ── Desktop Nav ─────────────────────────────────────────────────
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Desktop Navigation
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-.navbar-nav {
+.navbar-nav-desktop {
   display: flex;
   align-items: center;
   gap: 0.25rem;
 
-  @media (max-width: 768px) {
+  @media (max-width: $mobile-breakpoint) {
     display: none;
   }
 }
@@ -89,47 +111,254 @@
   }
 }
 
-// ── Right Action Row ────────────────────────────────────────────
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Icon Buttons (theme toggle, hamburger)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 .navbar-actions {
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  flex-shrink: 0;
 }
 
-// ── Mobile Hamburger (PrimeNG Button) ───────────────────────────
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--content-body);
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
 
-::ng-deep .mobile-menu-toggle {
-  display: none !important;
+  &:hover {
+    background: var(--interactive-hover);
+    color: var(--brand-accent);
+  }
 
-  @media (max-width: 768px) {
-    display: inline-flex !important;
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
   }
 }
 
-// ── Mobile Drawer ───────────────────────────────────────────────
+.mobile-toggle {
+  display: none;
+
+  @media (max-width: $mobile-breakpoint) {
+    display: inline-flex;
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Mobile Backdrop
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.mobile-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  background: var(--overlay-backdrop);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  &.open {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Mobile Drawer
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1100;
+  width: 300px;
+  max-width: 85vw;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-ground);
+  border-left: 1px solid var(--border-default);
+  box-shadow: -8px 0 32px color-mix(in srgb, black 12%, transparent);
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+
+  &.open {
+    transform: translateX(0);
+  }
+}
+
+// ── Drawer Header ───────────────────────────────────────────
+
+.mobile-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+
+  .navbar-logo {
+    font-size: 1.15rem;
+
+    i {
+      font-size: 1.35rem;
+    }
+  }
+}
+
+// ── Drawer Navigation ───────────────────────────────────────
 
 .mobile-nav {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  padding-top: 0.5rem;
+  padding: 1rem;
+  flex: 1;
 }
 
 .mobile-nav-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   text-decoration: none;
   color: var(--content-body);
   font-weight: 500;
   font-size: 1rem;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
   transition: color 0.2s ease, background 0.2s ease;
 
-  &:hover,
-  &.active {
+  i {
+    font-size: 1.1rem;
+    width: 1.25rem;
+    text-align: center;
+    color: var(--content-muted);
+    transition: color 0.2s;
+  }
+
+  &:hover {
     color: var(--brand-accent);
     background: var(--interactive-hover);
+
+    i {
+      color: var(--brand-accent);
+    }
+  }
+
+  &.active {
+    color: var(--brand-accent);
+    background: color-mix(in srgb, var(--brand-accent) 10%, transparent);
+    font-weight: 600;
+
+    i {
+      color: var(--brand-accent);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: -2px;
+  }
+}
+
+// ── Drawer Footer ───────────────────────────────────────────
+
+.mobile-drawer-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: auto;
+}
+
+.mobile-theme-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.25rem;
+}
+
+.mobile-theme-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--content-body);
+}
+
+// ── Theme Toggle Switch ─────────────────────────────────────
+
+.theme-switch {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+    border-radius: 100px;
+  }
+}
+
+.theme-switch-track {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 100px;
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-default);
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.theme-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--content-muted);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+// When dark mode is on, the switch thumb slides right.
+// Uses :host-context to react to the body class applied by ThemeService.
+:host-context(body.dark) {
+  .theme-switch-track {
+    background: var(--brand-accent);
+    border-color: var(--brand-accent);
+  }
+
+  .theme-switch-thumb {
+    transform: translateX(20px);
+    background: var(--content-inverse);
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Reduced Motion
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-drawer,
+  .mobile-backdrop,
+  .theme-switch-track,
+  .theme-switch-thumb {
+    transition-duration: 0.01ms !important;
   }
 }
 

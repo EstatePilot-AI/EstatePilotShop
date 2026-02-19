@@ -7,7 +7,7 @@
     </a>
 
     <!-- Desktop Navigation -->
-    <nav class="navbar-nav" aria-label="Main navigation">
+    <nav class="navbar-nav-desktop" aria-label="Main navigation">
       @for (link of navLinks; track link.path) {
         <a
           [routerLink]="link.path"
@@ -22,51 +22,95 @@
 
     <!-- Right Actions -->
     <div class="navbar-actions">
-      <p-button
-        [icon]="themeService.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"
-        [rounded]="true"
-        [text]="true"
-        severity="secondary"
+      <!-- Theme Toggle -->
+      <button
+        type="button"
+        class="icon-btn"
         (click)="themeService.toggleTheme()"
-        [attr.aria-label]="
-          themeService.isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'
-        "
-      />
+        [attr.aria-label]="themeToggleLabel()"
+      >
+        <i [class]="themeIcon()" aria-hidden="true"></i>
+      </button>
 
       <!-- Mobile Menu Toggle -->
-      <p-button
-        icon="pi pi-bars"
-        [rounded]="true"
-        [text]="true"
-        severity="secondary"
-        class="mobile-menu-toggle"
+      <button
+        type="button"
+        class="icon-btn mobile-toggle"
         (click)="toggleMobileMenu()"
-        aria-label="Open menu"
-      />
+        [attr.aria-label]="mobileMenuOpen() ? 'Close menu' : 'Open menu'"
+        [attr.aria-expanded]="mobileMenuOpen()"
+        aria-controls="mobile-nav-drawer"
+      >
+        <i [class]="mobileMenuOpen() ? 'pi pi-times' : 'pi pi-bars'" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 </header>
 
+<!-- Mobile Backdrop -->
+<div
+  class="mobile-backdrop"
+  [class.open]="mobileMenuOpen()"
+  (click)="closeMobileMenu()"
+  aria-hidden="true"
+></div>
+
 <!-- Mobile Drawer -->
-<p-drawer
-  [visible]="mobileMenuOpen()"
-  (visibleChange)="mobileMenuOpen.set($event)"
-  position="right"
-  [style]="{ width: '280px' }"
-  header="EstatePilot"
-  (onHide)="closeMobileMenu()"
+<aside
+  id="mobile-nav-drawer"
+  class="mobile-drawer"
+  [class.open]="mobileMenuOpen()"
+  role="dialog"
+  [attr.aria-modal]="mobileMenuOpen()"
+  aria-label="Mobile navigation"
 >
+  <!-- Drawer Header -->
+  <div class="mobile-drawer-header">
+    <a routerLink="/" class="navbar-logo" aria-label="EstatePilot Home" (click)="closeMobileMenu()">
+      <i class="pi pi-building" aria-hidden="true"></i>
+      <span class="navbar-logo-text">EstatePilot</span>
+    </a>
+    <button
+      type="button"
+      class="icon-btn"
+      (click)="closeMobileMenu()"
+      aria-label="Close menu"
+    >
+      <i class="pi pi-times" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <!-- Drawer Nav -->
   <nav class="mobile-nav" aria-label="Mobile navigation">
     @for (link of navLinks; track link.path) {
       <a
         [routerLink]="link.path"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: link.path === '/' }"
         class="mobile-nav-link"
+        [class.active]="isLinkActive(link.path)"
         (click)="closeMobileMenu()"
       >
-        {{ link.label }}
+        <i [class]="link.icon" aria-hidden="true"></i>
+        <span>{{ link.label }}</span>
       </a>
     }
   </nav>
-</p-drawer>
+
+  <!-- Drawer Footer -->
+  <div class="mobile-drawer-footer">
+    <div class="mobile-theme-row">
+      <span class="mobile-theme-label">Dark Mode</span>
+      <button
+        type="button"
+        class="theme-switch"
+        role="switch"
+        [attr.aria-checked]="themeService.isDarkMode()"
+        [attr.aria-label]="themeToggleLabel()"
+        (click)="themeService.toggleTheme()"
+      >
+        <span class="theme-switch-track">
+          <span class="theme-switch-thumb"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</aside>

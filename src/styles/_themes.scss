@@ -137,4 +137,13 @@ body.dark {
   @include apply-dark-theme;
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Backwards Compatibility Alias
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ThemeService also adds `.dark-mode` so existing component
+// :host-context(.dark-mode) selectors keep working during migration.
+// Remove this block once all components use :host-context(body.dark).
 
+body.dark-mode {
+  @include apply-dark-theme;
+}

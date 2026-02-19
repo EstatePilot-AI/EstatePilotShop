@@ -35,24 +35,6 @@
   @else if $breakpoint == 2xl { @media (min-width: v.$breakpoint-2xl) { @content; } }
 }
 
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@mixin flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-@mixin truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 @mixin sr-only {
   position: absolute;
   width: 1px;

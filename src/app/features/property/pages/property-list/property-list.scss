@@ -70,17 +70,17 @@
 
 .filter-search-input {
   width: 100%;
-  padding-left: 2.25rem !important;
-  padding-right: 2.25rem !important;
-  background: var(--surface-section) !important;
-  border-color: var(--border-default) !important;
-  color: var(--content-heading) !important;
+  padding-left: 2.25rem;
+  padding-right: 2.25rem;
+  background: var(--surface-section);
+  border-color: var(--border-default);
+  color: var(--content-heading);
 
-  &::placeholder { color: var(--content-muted) !important; }
+  &::placeholder { color: var(--content-muted); }
 
   &:focus {
-    border-color: var(--brand-primary) !important;
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 15%, transparent) !important;
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 15%, transparent);
   }
 }
 

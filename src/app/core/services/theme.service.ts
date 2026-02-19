@@ -9,11 +9,9 @@ const STORAGE_KEY = 'estate-pilot-theme';
  *
  * Colour-scheme strategy
  * ─────────────────────
- * • The active theme is expressed as two CSS classes on <body>:
- *     `dark`       — primary selector used by _themes.scss and PrimeNG
- *     `dark-mode`  — backwards-compat alias for existing component SCSS that
- *                    still uses :host-context(.dark-mode) selectors.
- * • Light mode: both classes are absent.
+ * • The active theme is expressed as a single CSS class on <body>:
+ *     `dark` — matched by _themes.scss `body.dark {}` and PrimeNG's darkModeSelector.
+ * • Light mode: class is absent.
  *
  * Persistence
  * ───────────
@@ -70,13 +68,9 @@ export class ThemeService {
     const body = document.body;
 
     if (dark) {
-      // Primary selector — matched by _themes.scss `body.dark { ... }`
       body.classList.add('dark');
-      // Backwards-compat alias — matched by existing `:host-context(.dark-mode)` in component SCSS.
-      // Remove this once all components are migrated.
-      body.classList.add('dark-mode');
     } else {
-      body.classList.remove('dark', 'dark-mode');
+      body.classList.remove('dark');
     }
 
     localStorage.setItem(STORAGE_KEY, dark ? 'dark' : 'light');

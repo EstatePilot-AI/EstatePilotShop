@@ -20,6 +20,8 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 import { ContactService } from '../../../../core/services/contact.service';
 
@@ -30,13 +32,16 @@ import { ContactService } from '../../../../core/services/contact.service';
     ButtonModule,
     DialogModule,
     InputTextModule,
+    ToastModule,
   ],
+  providers: [MessageService],
   templateUrl: './contact-dialog.html',
   styleUrl: './contact-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactDialog {
   private readonly contactService = inject(ContactService);
+  private readonly messageService = inject(MessageService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly fb = inject(FormBuilder);
 
@@ -116,11 +121,22 @@ export class ContactDialog {
         next: () => {
           this.submitting.set(false);
           this.visible.set(false);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sent!',
+            detail: 'Your contact info has been submitted successfully.',
+          });
           this.submitted.emit();
         },
-        error: () => {
+        error: (err: Error) => {
           this.submitting.set(false);
-          this.submitError.emit('Failed to submit. Please try again.');
+          const message = err?.message || 'Failed to submit. Please try again.';
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: message,
+          });
+          this.submitError.emit(message);
         },
       });
   }

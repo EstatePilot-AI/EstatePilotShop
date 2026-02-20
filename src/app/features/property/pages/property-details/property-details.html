@@ -195,10 +195,6 @@
     <app-contact-dialog
       [propertyId]="p.propertyId"
       [(visible)]="dialogVisible"
-      (submitted)="onContactSent()"
-      (submitError)="onContactError($event)"
     />
   }
-
-  <p-toast />
 </section>

@@ -173,7 +173,7 @@
               label="Contact Us"
               icon="pi pi-envelope"
               styleClass="w-full"
-              routerLink="/contact"
+              (onClick)="openContactDialog()"
               aria-label="Contact us about this property"
             />
             <p-button
@@ -189,4 +189,16 @@
       </div>
     }
   </div>
+
+  <!-- ── Contact Dialog ──────────────────────────────────── -->
+  @if (property(); as p) {
+    <app-contact-dialog
+      [propertyId]="p.propertyId"
+      [(visible)]="dialogVisible"
+      (submitted)="onContactSent()"
+      (submitError)="onContactError($event)"
+    />
+  }
+
+  <p-toast />
 </section>

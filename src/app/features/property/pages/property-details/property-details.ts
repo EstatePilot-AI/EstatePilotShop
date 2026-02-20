@@ -15,9 +15,12 @@ import { TagModule } from 'primeng/tag';
 import { SkeletonModule } from 'primeng/skeleton';
 import { DividerModule } from 'primeng/divider';
 import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 import { PropertyService } from '../../../../core/services/property.service';
 import { IPropertyDetail } from '../../models/IProperty';
+import { ContactDialog } from '../../../contact/components/contact-dialog/contact-dialog';
 
 @Component({
   selector: 'app-property-details',
@@ -28,7 +31,10 @@ import { IPropertyDetail } from '../../models/IProperty';
     SkeletonModule,
     DividerModule,
     MessageModule,
+    ToastModule,
+    ContactDialog,
   ],
+  providers: [MessageService],
   templateUrl: './property-details.html',
   styleUrl: './property-details.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,11 +42,35 @@ import { IPropertyDetail } from '../../models/IProperty';
 export class PropertyDetails implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly propertyService = inject(PropertyService);
+  private readonly messageService = inject(MessageService);
   private readonly destroyRef = inject(DestroyRef);
 
   readonly property = signal<IPropertyDetail | null>(null);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
+
+  // ── Contact Dialog ──────────────────────────────────────
+  readonly dialogVisible = signal(false);
+
+  openContactDialog(): void {
+    this.dialogVisible.set(true);
+  }
+
+  onContactSent(): void {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Sent!',
+      detail: 'Your contact info has been submitted successfully.',
+    });
+  }
+
+  onContactError(message: string): void {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: message,
+    });
+  }
 
   readonly formattedPrice = computed(() => {
     const p = this.property();

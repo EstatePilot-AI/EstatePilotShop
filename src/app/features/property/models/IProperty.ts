@@ -20,3 +20,22 @@ export interface IPropertyDetail extends IProperty {
   floorNumber: number;
   apartmentNumber: number;
 }
+
+export interface IUpdatePropertyPayload {
+  propertyType?: number | null;
+  finishingType?: number | null;
+  negotiable?: boolean | null;
+  price?: number | null;
+  area?: number | null;
+  rooms?: number | null;
+  bathrooms?: number | null;
+  country?: string;
+  governorate?: string;
+  city?: string;
+  district?: string;
+  street?: string;
+  buildingNumber?: number | null;
+  floorNumber?: number | null;
+  apartmentNumber?: number | null;
+  imageFiles?: File[];
+}

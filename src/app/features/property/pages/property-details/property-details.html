@@ -185,6 +185,13 @@
           <!-- CTA -->
           <div class="details-actions">
             <p-button
+              [label]="'PROPERTY_DETAILS.EDIT_PROPERTY' | translate"
+              icon="pi pi-pen-to-square"
+              [outlined]="true"
+              [routerLink]="['/properties/update', p.propertyId]"
+              [attr.aria-label]="'PROPERTY_DETAILS.EDIT_ARIA' | translate"
+            />
+            <p-button
               [label]="'PROPERTY_DETAILS.CONTACT_US' | translate"
               icon="pi pi-envelope"
               styleClass="w-full"

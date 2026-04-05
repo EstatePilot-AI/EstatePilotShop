@@ -1,0 +1,135 @@
+<header class="navbar">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <a routerLink="/" class="navbar-logo" aria-label="EstatePilot Home">
+      <i class="pi pi-building" aria-hidden="true"></i>
+      <span class="navbar-logo-text">EstatePilot</span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="navbar-nav-desktop" aria-label="Main navigation">
+      @for (link of navLinks; track link.path) {
+        <a
+          [routerLink]="link.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+          class="navbar-link"
+        >
+          {{ link.labelKey | translate }}
+        </a>
+      }
+    </nav>
+
+    <!-- Right Actions -->
+    <div class="navbar-actions">
+      <!-- Language Toggle -->
+      <button
+        type="button"
+        class="icon-btn"
+        (click)="translationService.toggleLanguage()"
+        [attr.aria-label]="'NAV.SWITCH_LANGUAGE' | translate"
+      >
+        <i class="pi pi-globe" aria-hidden="true"></i>
+        <span class="lang-label">{{ translationService.switchLabel() }}</span>
+      </button>
+
+      <!-- Theme Toggle -->
+      <button
+        type="button"
+        class="icon-btn"
+        (click)="themeService.toggleTheme()"
+        [attr.aria-label]="themeToggleLabel()"
+      >
+        <i [class]="themeIcon()" aria-hidden="true"></i>
+      </button>
+
+      <!-- Mobile Menu Toggle -->
+      <button
+        type="button"
+        class="icon-btn mobile-toggle"
+        (click)="toggleMobileMenu()"
+        [attr.aria-label]="(mobileMenuOpen() ? 'NAV.CLOSE_MENU' : 'NAV.OPEN_MENU') | translate"
+        [attr.aria-expanded]="mobileMenuOpen()"
+        aria-controls="mobile-nav-drawer"
+      >
+        <i [class]="mobileMenuOpen() ? 'pi pi-times' : 'pi pi-bars'" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Backdrop -->
+<div
+  class="mobile-backdrop"
+  [class.open]="mobileMenuOpen()"
+  (click)="closeMobileMenu()"
+  aria-hidden="true"
+></div>
+
+<!-- Mobile Drawer -->
+<aside
+  id="mobile-nav-drawer"
+  class="mobile-drawer"
+  [class.open]="mobileMenuOpen()"
+  role="dialog"
+  [attr.aria-modal]="mobileMenuOpen()"
+  aria-label="Mobile navigation"
+>
+  <!-- Drawer Header -->
+  <div class="mobile-drawer-header">
+    <a routerLink="/" class="navbar-logo" aria-label="EstatePilot Home" (click)="closeMobileMenu()">
+      <i class="pi pi-building" aria-hidden="true"></i>
+      <span class="navbar-logo-text">EstatePilot</span>
+    </a>
+    <button
+      type="button"
+      class="icon-btn"
+      (click)="closeMobileMenu()"
+      [attr.aria-label]="'NAV.CLOSE_MENU' | translate"
+    >
+      <i class="pi pi-times" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <!-- Drawer Nav -->
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    @for (link of navLinks; track link.path) {
+      <a
+        [routerLink]="link.path"
+        class="mobile-nav-link"
+        [class.active]="isLinkActive(link.path)"
+        (click)="closeMobileMenu()"
+      >
+        <i [class]="link.icon" aria-hidden="true"></i>
+        <span>{{ link.labelKey | translate }}</span>
+      </a>
+    }
+  </nav>
+
+  <!-- Drawer Footer -->
+  <div class="mobile-drawer-footer">
+    <!-- Language Toggle -->
+    <div class="mobile-theme-row">
+      <button type="button" class="icon-btn" (click)="translationService.toggleLanguage()">
+        <i class="pi pi-globe" aria-hidden="true"></i>
+        <span>{{ translationService.switchLabel() }}</span>
+      </button>
+    </div>
+
+    <div class="mobile-theme-row">
+      <span class="mobile-theme-label">{{ 'NAV.DARK_MODE' | translate }}</span>
+      <button
+        type="button"
+        class="theme-switch"
+        role="switch"
+        [attr.aria-checked]="themeService.isDarkMode()"
+        [attr.aria-label]="themeToggleLabel()"
+        (click)="themeService.toggleTheme()"
+      >
+        <span class="theme-switch-track">
+          <span class="theme-switch-thumb"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</aside>

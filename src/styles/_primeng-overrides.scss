@@ -1,0 +1,286 @@
+// ============================================================
+// _primeng-overrides.scss — Bridge PrimeNG to Design Tokens
+// ============================================================
+//
+// PrimeNG v19+ (@primeuix/themes) generates CSS custom properties
+// prefixed with --p-* from the preset defined in app.config.ts.
+// This file re-maps those tokens so every PrimeNG component
+// automatically inherits the correct light/dark values from
+// our semantic token system.
+//
+// STRATEGY:
+//   1. Map PrimeNG surface palette (--p-surface-*) to our surfaces.
+//   2. Map PrimeNG semantic vars (--p-text-color, etc.) to ours.
+//   3. Override PrimeNG component-level tokens for buttons, inputs,
+//      cards, dialogs, and menus to align with the design system.
+//
+// IMPORTANT:
+//   • These rules are intentionally LOW specificity to remain
+//     overridable from individual component SCSS files.
+//   • This file must be imported AFTER PrimeNG's own stylesheet.
+//   • PrimeFlex utility classes are NOT touched here — they use
+//     their own CSS variables which remain unaffected.
+//
+// DARK MODE: When body.dark is active, our --surface-* tokens
+//   automatically flip, so PrimeNG components that reference
+//   var(--p-surface-*) will automatically get dark values.
+// ============================================================
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Global: Surface palette bridge
+// Maps PrimeNG's numeric surface scale to our semantic surfaces.
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+:root {
+  // Surface palette — light
+  --p-surface-0:   var(--surface-ground);    // pure white / app background
+  --p-surface-50:  var(--surface-section);   // light panels / sidebars
+  --p-surface-100: var(--surface-card);      // cards / dropdowns
+  --p-surface-200: var(--surface-overlay);   // hover states / dividers
+
+  // Map the rest to ensure PrimeNG's internal palette is consistent
+  --p-surface-300: var(--border-default);
+  --p-surface-400: var(--content-muted);
+  --p-surface-500: var(--content-muted);
+  --p-surface-600: var(--content-body);
+  --p-surface-700: var(--content-heading);
+  --p-surface-800: var(--content-heading);
+  --p-surface-900: var(--content-heading);
+
+  // Text tokens
+  --p-text-color:              var(--content-body);
+  --p-text-hover-color:        var(--content-heading);
+  --p-text-muted-color:        var(--content-muted);
+  --p-text-hover-muted-color:  var(--content-body);
+
+  // Primary tokens (PrimeNG buttons, links, focus rings)
+  --p-primary-color:           var(--brand-accent);
+  --p-primary-contrast-color:  var(--content-inverse);
+  --p-primary-hover-color:     var(--brand-accent-mid);
+  --p-primary-active-color:    var(--brand-accent-light);
+
+  // Highlight (selection, active nav items, focus in dropdowns)
+  --p-highlight-background:    var(--brand-accent-light);
+  --p-highlight-color:         var(--content-inverse);
+  --p-highlight-focus-background: var(--brand-accent-mid);
+  --p-highlight-focus-color:   var(--content-inverse);
+
+  // Focus ring
+  --p-focus-ring-color:        var(--focus-ring);
+  --p-focus-ring-width:        2px;
+  --p-focus-ring-style:        solid;
+  --p-focus-ring-offset:       2px;
+
+  // Content background (panels, fieldsets, etc.)
+  --p-content-background:      var(--surface-card);
+  --p-content-hover-background:var(--surface-overlay);
+  --p-content-border-color:    var(--border-default);
+  --p-content-hover-border-color: var(--border-strong);
+  --p-content-color:           var(--content-body);
+  --p-content-hover-color:     var(--content-heading);
+
+  // Overlay (modals, popovers, dropdowns, tooltips)
+  --p-overlay-popover-background:  var(--surface-card);
+  --p-overlay-popover-border-color: var(--border-default);
+  --p-overlay-popover-color:       var(--content-body);
+  --p-overlay-select-background:   var(--surface-card);
+  --p-overlay-select-border-color: var(--border-default);
+  --p-overlay-select-color:        var(--content-body);
+  --p-overlay-modal-background:    var(--surface-card);
+  --p-overlay-modal-border-color:  var(--border-default);
+  --p-overlay-modal-color:         var(--content-body);
+
+  // Navigation
+  --p-navigation-item-hover-background:  var(--interactive-hover);
+  --p-navigation-item-active-background: var(--surface-overlay);
+  --p-navigation-item-color:             var(--content-body);
+  --p-navigation-item-hover-color:       var(--content-heading);
+  --p-navigation-item-active-color:      var(--brand-accent);
+
+  // Form fields (input, textarea, select, etc.)
+  --p-form-field-background:             var(--surface-ground);
+  --p-form-field-disabled-background:    var(--surface-section);
+  --p-form-field-filled-background:      var(--surface-section);
+  --p-form-field-filled-hover-background:var(--surface-card);
+  --p-form-field-border-color:           var(--border-default);
+  --p-form-field-hover-border-color:     var(--border-strong);
+  --p-form-field-focus-border-color:     var(--brand-primary);
+  --p-form-field-invalid-border-color:   var(--status-danger);
+  --p-form-field-color:                  var(--content-heading);
+  --p-form-field-disabled-color:         var(--content-muted);
+  --p-form-field-placeholder-color:      var(--content-muted);
+  --p-form-field-shadow:                 none;
+
+  // Status / semantic colours used internally by PrimeNG
+  --p-green-500:  var(--status-success);
+  --p-yellow-500: var(--status-warning);
+  --p-red-500:    var(--status-danger);
+  --p-blue-500:   var(--status-info);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Component-Level Overrides
+// Targeting specific PrimeNG component tokens for design fidelity
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// ── Button ──────────────────────────────────────────────────
+.p-button {
+  // Outlined variant border should use primary colour
+  &.p-button-outlined {
+    --p-button-outlined-primary-border-color: var(--brand-accent);
+    --p-button-outlined-primary-color:        var(--brand-accent);
+    --p-button-outlined-primary-hover-background: rgba(130, 0, 219, 0.08);
+  }
+
+  // Text variant
+  &.p-button-text {
+    --p-button-text-primary-color:            var(--brand-accent);
+    --p-button-text-primary-hover-background: rgba(130, 0, 219, 0.08);
+  }
+
+  // Secondary variant
+  &.p-button-secondary {
+    --p-button-secondary-background:       var(--brand-primary);
+    --p-button-secondary-hover-background: var(--brand-primary-dark);
+    --p-button-secondary-color:            #ffffff;
+    --p-button-secondary-border-color:     var(--brand-primary);
+  }
+
+  // Success variant
+  &.p-button-success {
+    --p-button-success-background:       var(--status-success);
+    --p-button-success-hover-background: var(--status-success-hover);
+    --p-button-success-color:            #ffffff;
+  }
+
+  // Warning variant
+  &.p-button-warn {
+    --p-button-warn-background:       var(--status-warning);
+    --p-button-warn-hover-background: var(--status-warning-strong);
+    --p-button-warn-color:            #ffffff;
+  }
+}
+
+// ── Card ────────────────────────────────────────────────────
+.p-card {
+  --p-card-background:    var(--surface-card);
+  --p-card-color:         var(--content-body);
+  --p-card-border-color:  var(--border-default);
+  --p-card-shadow:        0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+// ── DataTable ───────────────────────────────────────────────
+.p-datatable {
+  --p-datatable-header-background:       var(--surface-section);
+  --p-datatable-header-color:            var(--content-heading);
+  --p-datatable-column-header-background:var(--surface-section);
+  --p-datatable-column-header-color:     var(--content-body);
+  --p-datatable-row-background:          var(--surface-ground);
+  --p-datatable-row-hover-background:    var(--interactive-hover);
+  --p-datatable-row-color:               var(--content-body);
+  --p-datatable-border-color:            var(--border-default);
+  --p-datatable-footer-background:       var(--surface-section);
+}
+
+// ── Dialog / Modal ──────────────────────────────────────────
+.p-dialog {
+  --p-dialog-background:   var(--surface-card);
+  --p-dialog-color:        var(--content-body);
+  --p-dialog-border-color: var(--border-default);
+  --p-dialog-header-background: var(--surface-card);
+  --p-dialog-header-color: var(--content-heading);
+}
+
+// ── InputText ───────────────────────────────────────────────
+.p-inputtext,
+.p-textarea {
+  background: var(--surface-ground);
+  border-color: var(--border-default);
+  color: var(--content-heading);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
+
+  &:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px rgba(21, 93, 252, 0.15);
+    outline: none;
+  }
+}
+
+// ── Dropdown / Select ───────────────────────────────────────
+.p-select,
+.p-multiselect {
+  --p-select-background:              var(--surface-ground);
+  --p-select-border-color:            var(--border-default);
+  --p-select-hover-border-color:      var(--border-strong);
+  --p-select-focus-border-color:      var(--brand-primary);
+  --p-select-color:                   var(--content-heading);
+  --p-select-overlay-background:      var(--surface-card);
+  --p-select-overlay-border-color:    var(--border-default);
+  --p-select-option-focus-background: var(--interactive-hover);
+  --p-select-option-selected-background: var(--brand-accent-light);
+  --p-select-option-selected-color:   var(--content-inverse);
+}
+
+// ── Tag / Badge ─────────────────────────────────────────────
+.p-tag {
+  &.p-tag-success  { background: var(--status-success-subtle); color: var(--status-success-strong); }
+  &.p-tag-warn     { background: var(--status-warning-subtle); color: var(--status-warning-strong); }
+  &.p-tag-danger   { background: rgba(var(--status-danger), 0.1); color: var(--status-danger); }
+  &.p-tag-info     { background: var(--status-info-subtle); color: var(--status-info); }
+}
+
+// ── Paginator ───────────────────────────────────────────────
+.p-paginator {
+  --p-paginator-background:              var(--surface-section);
+  --p-paginator-color:                   var(--content-body);
+  --p-paginator-nav-button-hover-background: var(--interactive-hover);
+  --p-paginator-nav-button-selected-background: var(--brand-accent);
+  --p-paginator-nav-button-selected-color: #ffffff;
+}
+
+// ── Toast / Message ─────────────────────────────────────────
+.p-message {
+  &.p-message-success {
+    --p-message-success-background:   var(--status-success-subtle);
+    --p-message-success-border-color: var(--status-success);
+    --p-message-success-color:        var(--status-success-strong);
+  }
+
+  &.p-message-warn {
+    --p-message-warn-background:   var(--status-warning-subtle);
+    --p-message-warn-border-color: var(--status-warning);
+    --p-message-warn-color:        var(--status-warning-strong);
+  }
+
+  &.p-message-info {
+    --p-message-info-background:   var(--status-info-subtle);
+    --p-message-info-border-color: var(--status-info);
+    --p-message-info-color:        var(--status-info);
+  }
+}
+
+// ── Menu / TieredMenu ───────────────────────────────────────
+.p-menu,
+.p-tieredmenu,
+.p-panelmenu {
+  --p-menu-background:               var(--surface-card);
+  --p-menu-border-color:             var(--border-default);
+  --p-menu-color:                    var(--content-body);
+  --p-menu-item-hover-background:    var(--interactive-hover);
+  --p-menu-item-active-background:   var(--interactive-active);
+  --p-menu-item-focus-color:         var(--content-heading);
+  --p-menu-separator-border-color:   var(--border-subtle);
+}
+
+// ── Tooltip ─────────────────────────────────────────────────
+.p-tooltip .p-tooltip-text {
+  background: var(--content-heading);
+  color: var(--surface-ground);
+  font-size: 0.8125rem;
+  border-radius: 6px;
+  padding: 0.375rem 0.75rem;
+}

@@ -1,0 +1,349 @@
+<!-- ===== Hero Section — Split Layout with Image Carousel ===== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-split">
+      <!-- Left: Content -->
+      <div class="hero-content" appReveal [revealDelay]="150">
+        <span class="hero-badge">
+          <i class="pi pi-shopping-cart" aria-hidden="true"></i>
+          {{ 'HERO.BADGE' | translate }}
+        </span>
+
+        <h1 class="hero-title">
+          {{ 'HERO.TITLE_1' | translate }}<br />
+          <span class="hero-title-accent">{{ 'HERO.TITLE_2' | translate }}</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          {{ 'HERO.SUBTITLE' | translate }}
+        </p>
+
+        <div class="hero-actions">
+          <p-button
+            [label]="'HERO.EXPLORE_BTN' | translate"
+            icon="pi pi-search"
+            [rounded]="true"
+            size="large"
+            routerLink="/properties"
+          />
+          <p-button
+            [label]="'HERO.CONTACT_BTN' | translate"
+            icon="pi pi-envelope"
+            [rounded]="true"
+            [outlined]="true"
+            size="large"
+            routerLink="/contact"
+          />
+        </div>
+      </div>
+
+      <!-- Right: Image Carousel -->
+      <div class="hero-carousel-wrapper" appReveal [revealDelay]="300">
+        <div class="hero-carousel-glow" aria-hidden="true"></div>
+        <div class="hero-carousel-inner">
+          <p-carousel
+            [value]="heroSlides"
+            [numVisible]="1"
+            [numScroll]="1"
+            [circular]="true"
+            [autoplayInterval]="5000"
+            [showNavigators]="false"
+            [showIndicators]="true"
+            styleClass="hero-carousel"
+          >
+            <ng-template #item let-slide>
+              <div class="hero-slide">
+                <img
+                  [src]="slide.image"
+                  [alt]="slide.labelKey | translate"
+                  class="hero-slide-image"
+                  loading="eager"
+                />
+                <div class="hero-slide-overlay">
+                  <div class="hero-slide-tag">
+                    <i class="pi pi-home" aria-hidden="true"></i>
+                    <span>{{ slide.labelKey | translate }}</span>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </p-carousel>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Stats Strip ===== -->
+<section class="stats-strip">
+  <div class="container">
+    <div class="stats-grid">
+      @for (stat of stats; track stat.labelKey) {
+        <div class="stat-item" appReveal [revealDelay]="$index * 100">
+          <i [class]="stat.icon" aria-hidden="true"></i>
+          <div class="stat-text">
+            <span class="stat-value">{{ stat.value }}</span>
+            <span class="stat-label">{{ stat.labelKey | translate }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== Categories Section ===== -->
+<section class="section categories-section">
+  <div class="container">
+    <div class="section-header" appReveal>
+      <h2 class="section-title">{{ 'CATEGORIES.TITLE' | translate }}</h2>
+      <p class="section-subtitle">{{ 'CATEGORIES.SUBTITLE' | translate }}</p>
+    </div>
+
+    <div class="categories-grid">
+      @for (cat of categories; track cat.nameKey) {
+        <a href="#" class="category-card" appReveal [revealDelay]="$index * 75">
+          <div class="category-icon">
+            <i [class]="cat.icon" aria-hidden="true"></i>
+          </div>
+          <span class="category-name">{{ cat.nameKey | translate }}</span>
+          <span class="category-count"
+            >{{ cat.count }} {{ 'CATEGORIES.LISTINGS' | translate }}</span
+          >
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ===== Featured Listings Section ===== -->
+<section class="section listings-section">
+  <div class="container">
+    <div class="section-header-row" appReveal>
+      <div>
+        <h2 class="section-title">{{ 'LISTINGS.TITLE' | translate }}</h2>
+        <p class="section-subtitle">{{ 'LISTINGS.SUBTITLE' | translate }}</p>
+      </div>
+      <p-button
+        [label]="'LISTINGS.VIEW_ALL' | translate"
+        icon="pi pi-arrow-right"
+        iconPos="right"
+        [rounded]="true"
+        [outlined]="true"
+        severity="secondary"
+        routerLink="/properties"
+      />
+    </div>
+
+    <!-- Loading skeletons -->
+    @if (featuredLoading()) {
+      <div
+        class="properties-grid"
+        aria-busy="true"
+        [attr.aria-label]="'LISTINGS.LOADING' | translate"
+      >
+        @for (item of skeletonItems; track $index) {
+          <div class="property-card property-card--skeleton">
+            <p-skeleton height="200px" styleClass="skeleton-image" borderRadius="0" />
+            <div class="property-card-body">
+              <p-skeleton width="40%" height="1.25rem" styleClass="mb-2" />
+              <p-skeleton width="70%" height="1rem" styleClass="mb-1" />
+              <p-skeleton width="55%" height="0.85rem" styleClass="mb-3" />
+              <p-skeleton width="100%" height="1px" styleClass="mb-3" />
+              <div class="flex gap-3">
+                <p-skeleton width="4rem" height="0.85rem" />
+                <p-skeleton width="4rem" height="0.85rem" />
+                <p-skeleton width="4rem" height="0.85rem" />
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Error -->
+    @if (featuredError()) {
+      <p class="featured-error" role="alert">{{ featuredError() }}</p>
+    }
+
+    <!-- Property cards -->
+    @if (!featuredLoading() && !featuredError()) {
+      <div class="properties-grid">
+        @for (property of featuredPreview(); track property.propertyId) {
+          <article
+            class="property-card"
+            appReveal
+            [revealDelay]="$index * 120"
+            [attr.aria-label]="displayPropertyType(property.propertyType) + ' in ' + property.city"
+          >
+            <div class="property-image-wrapper">
+              <img
+                class="property-image"
+                [src]="propertyImageUrl(property)"
+                [alt]="displayPropertyType(property.propertyType) + ' in ' + property.city"
+                width="900"
+                height="560"
+                loading="lazy"
+                decoding="async"
+                (error)="onImageError($event, property)"
+              />
+            </div>
+            <div class="property-card-body">
+              <p class="property-price">{{ formatPrice(property.price) }}</p>
+              <p class="property-location">
+                <i class="pi pi-map-marker" aria-hidden="true"></i>
+                {{ property.district }}, {{ property.city }}
+              </p>
+              <p-divider styleClass="my-3" />
+              <div class="property-stats">
+                <span
+                  class="property-stat"
+                  [pTooltip]="'LISTINGS.AREA' | translate"
+                  tooltipPosition="top"
+                >
+                  <i class="pi pi-th-large" aria-hidden="true"></i>
+                  {{ property.area }} m²
+                </span>
+                <span
+                  class="property-stat"
+                  [pTooltip]="'LISTINGS.TYPE' | translate"
+                  tooltipPosition="top"
+                >
+                  <i class="pi pi-tag" aria-hidden="true"></i>
+                  {{ displayPropertyType(property.propertyType) }}
+                </span>
+                <span
+                  class="property-stat"
+                  [pTooltip]="'LISTINGS.STATUS' | translate"
+                  tooltipPosition="top"
+                >
+                  <i class="pi pi-info-circle" aria-hidden="true"></i>
+                  {{ property.status }}
+                </span>
+              </div>
+              <p-button
+                [label]="'LISTINGS.VIEW_DETAILS' | translate"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                styleClass="w-full mt-3"
+                [outlined]="true"
+                size="small"
+                [routerLink]="['/properties', property.propertyId]"
+                [attr.aria-label]="'View details for property ' + property.propertyId"
+              />
+            </div>
+          </article>
+        }
+      </div>
+    }
+
+    <div class="listings-more" appReveal [revealDelay]="360">
+      <p-button
+        [label]="'LISTINGS.BROWSE_ALL' | translate"
+        icon="pi pi-th-large"
+        iconPos="right"
+        [rounded]="true"
+        size="large"
+        routerLink="/properties"
+      />
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA Section ===== -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content" appReveal>
+      <h2 class="cta-title">{{ 'CTA.TITLE' | translate }}</h2>
+      <p class="cta-subtitle">
+        {{ 'CTA.SUBTITLE' | translate }}
+      </p>
+      <div class="cta-actions">
+        <p-button
+          [label]="'CTA.START_SHOPPING' | translate"
+          icon="pi pi-shopping-cart"
+          [rounded]="true"
+          size="large"
+        />
+        <p-button
+          [label]="'CTA.LIST_PROPERTY' | translate"
+          icon="pi pi-plus"
+          [rounded]="true"
+          [outlined]="true"
+          size="large"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <i class="pi pi-building" aria-hidden="true"></i>
+          <span>EstatePilot</span>
+        </div>
+        <p class="footer-description">
+          {{ 'FOOTER.DESCRIPTION' | translate }}
+        </p>
+        <div class="footer-socials">
+          <a href="#" aria-label="Facebook" class="social-icon"
+            ><i class="pi pi-facebook" aria-hidden="true"></i
+          ></a>
+          <a href="#" aria-label="Twitter" class="social-icon"
+            ><i class="pi pi-twitter" aria-hidden="true"></i
+          ></a>
+          <a href="#" aria-label="Instagram" class="social-icon"
+            ><i class="pi pi-instagram" aria-hidden="true"></i
+          ></a>
+          <a href="#" aria-label="LinkedIn" class="social-icon"
+            ><i class="pi pi-linkedin" aria-hidden="true"></i
+          ></a>
+        </div>
+      </div>
+
+      <div class="footer-links-group">
+        <h4 class="footer-heading">{{ 'FOOTER.MARKETPLACE' | translate }}</h4>
+        <nav aria-label="Marketplace links">
+          <a routerLink="/" class="footer-link">{{ 'FOOTER.BUY_PROPERTY' | translate }}</a>
+          <a routerLink="/" class="footer-link">{{ 'FOOTER.SELL_PROPERTY' | translate }}</a>
+          <a routerLink="/" class="footer-link">{{ 'FOOTER.RENT_PROPERTY' | translate }}</a>
+          <a routerLink="/" class="footer-link">{{ 'FOOTER.PROPERTY_VALUATION' | translate }}</a>
+        </nav>
+      </div>
+
+      <div class="footer-links-group">
+        <h4 class="footer-heading">{{ 'FOOTER.COMPANY' | translate }}</h4>
+        <nav aria-label="Company links">
+          <a routerLink="/" class="footer-link">{{ 'FOOTER.ABOUT_US' | translate }}</a>
+          <a routerLink="/" class="footer-link">{{ 'FOOTER.CAREERS' | translate }}</a>
+          <a routerLink="/" class="footer-link">{{ 'FOOTER.BLOG' | translate }}</a>
+          <a routerLink="/" class="footer-link">{{ 'NAV.CONTACT' | translate }}</a>
+        </nav>
+      </div>
+
+      <div class="footer-links-group">
+        <h4 class="footer-heading">{{ 'FOOTER.CONTACT_US_HEADING' | translate }}</h4>
+        <div class="footer-contact">
+          <p>
+            <i class="pi pi-map-marker" aria-hidden="true"></i> {{ 'FOOTER.ADDRESS' | translate }}
+          </p>
+          <p><i class="pi pi-phone" aria-hidden="true"></i> {{ 'FOOTER.PHONE' | translate }}</p>
+          <p><i class="pi pi-envelope" aria-hidden="true"></i> {{ 'FOOTER.EMAIL' | translate }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-divider"></div>
+
+    <div class="footer-bottom">
+      <p>{{ 'FOOTER.COPYRIGHT' | translate }}</p>
+      <div class="footer-bottom-links">
+        <a href="#">{{ 'FOOTER.PRIVACY' | translate }}</a>
+        <a href="#">{{ 'FOOTER.TERMS' | translate }}</a>
+      </div>
+    </div>
+  </div>
+</footer>

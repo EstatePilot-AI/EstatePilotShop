@@ -52,12 +52,26 @@
         <div class="form-grid">
           <div class="form-field">
             <label for="up-property-type">{{ 'PROPERTY_UPDATE.PROPERTY_TYPE' | translate }}</label>
-            <input pInputText id="up-property-type" type="number" formControlName="propertyType" />
+            <p-select
+              [inputId]="'up-property-type'"
+              [options]="propertyTypeOptions()"
+              optionLabel="label"
+              optionValue="value"
+              formControlName="propertyType"
+              [placeholder]="'PROPERTY_UPDATE.PROPERTY_TYPE_PLACEHOLDER' | translate"
+            />
           </div>
 
           <div class="form-field">
             <label for="up-finishing-type">{{ 'PROPERTY_UPDATE.FINISHING_TYPE' | translate }}</label>
-            <input pInputText id="up-finishing-type" type="number" formControlName="finishingType" />
+            <p-select
+              [inputId]="'up-finishing-type'"
+              [options]="finishingTypeOptions()"
+              optionLabel="label"
+              optionValue="value"
+              formControlName="finishingType"
+              [placeholder]="'PROPERTY_UPDATE.FINISHING_TYPE_PLACEHOLDER' | translate"
+            />
           </div>
 
           <div class="form-field">

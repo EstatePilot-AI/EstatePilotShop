@@ -19,6 +19,7 @@ import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 
 import { PropertyService } from '../../../../core/services/property.service';
+import { TranslationService } from '../../../../core/services/translation.service';
 import { IPropertyDetail, IUpdatePropertyPayload } from '../../models/IProperty';
 
 @Component({
@@ -41,6 +42,7 @@ export class PropertyUpdate implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly propertyService = inject(PropertyService);
+  private readonly translationService = inject(TranslationService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly translate = inject(TranslateService);
 
@@ -68,11 +70,39 @@ export class PropertyUpdate implements OnInit {
     apartmentNumber: this.fb.control<number | null>(null, { validators: [Validators.min(0)] }),
   });
 
-  readonly negotiableOptions = computed(() => [
-    { label: this.translate.instant('PROPERTY_UPDATE.NEGOTIABLE_NOT_SET'), value: null },
-    { label: this.translate.instant('PROPERTY_UPDATE.NEGOTIABLE_YES'), value: true },
-    { label: this.translate.instant('PROPERTY_UPDATE.NEGOTIABLE_NO'), value: false },
-  ]);
+  readonly negotiableOptions = computed(() => {
+    this.translationService.currentLang();
+    return [
+      { label: this.translate.instant('PROPERTY_UPDATE.NEGOTIABLE_NOT_SET'), value: null },
+      { label: this.translate.instant('PROPERTY_UPDATE.NEGOTIABLE_YES'), value: true },
+      { label: this.translate.instant('PROPERTY_UPDATE.NEGOTIABLE_NO'), value: false },
+    ];
+  });
+
+  readonly propertyTypeOptions = computed(() => {
+    this.translationService.currentLang();
+    return [
+      { label: this.translate.instant('PROPERTY_UPDATE.PROPERTY_TYPES.APARTMENT'), value: 1 },
+      { label: this.translate.instant('PROPERTY_UPDATE.PROPERTY_TYPES.VILLA'), value: 2 },
+      { label: this.translate.instant('PROPERTY_UPDATE.PROPERTY_TYPES.STUDIO'), value: 3 },
+      { label: this.translate.instant('PROPERTY_UPDATE.PROPERTY_TYPES.CHALET'), value: 4 },
+      { label: this.translate.instant('PROPERTY_UPDATE.PROPERTY_TYPES.DUPLEX'), value: 5 },
+      { label: this.translate.instant('PROPERTY_UPDATE.PROPERTY_TYPES.TOWNHOUSE'), value: 6 },
+    ];
+  });
+
+  readonly finishingTypeOptions = computed(() => {
+    this.translationService.currentLang();
+    return [
+      {
+        label: this.translate.instant('PROPERTY_UPDATE.FINISHING_TYPES.WITHOUT_FINISHING'),
+        value: 1,
+      },
+      { label: this.translate.instant('PROPERTY_UPDATE.FINISHING_TYPES.SEMI_FINISHED'), value: 2 },
+      { label: this.translate.instant('PROPERTY_UPDATE.FINISHING_TYPES.FULLY_FINISHED'), value: 3 },
+      { label: this.translate.instant('PROPERTY_UPDATE.FINISHING_TYPES.SUPER_LUX'), value: 4 },
+    ];
+  });
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));

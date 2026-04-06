@@ -155,8 +155,24 @@
     "BACK_TO_LIST_ARIA": "Back to property list",
     "INVALID_ID": "Invalid property ID for update.",
     "PREFILLING": "Loading current property data…",
-    "PROPERTY_TYPE": "Property Type (enum id)",
-    "FINISHING_TYPE": "Finishing Type (enum id)",
+    "PROPERTY_TYPE": "Property Type",
+    "PROPERTY_TYPE_PLACEHOLDER": "Select property type",
+    "FINISHING_TYPE": "Finishing Type",
+    "FINISHING_TYPE_PLACEHOLDER": "Select finishing type",
+    "PROPERTY_TYPES": {
+      "APARTMENT": "Apartment",
+      "VILLA": "Villa",
+      "STUDIO": "Studio",
+      "CHALET": "Chalet",
+      "DUPLEX": "Duplex",
+      "TOWNHOUSE": "Townhouse"
+    },
+    "FINISHING_TYPES": {
+      "WITHOUT_FINISHING": "Without-Finishing",
+      "SEMI_FINISHED": "Semi-Finished",
+      "FULLY_FINISHED": "Fully-Finished",
+      "SUPER_LUX": "Super-Lux"
+    },
     "NEGOTIABLE": "Negotiable",
     "NEGOTIABLE_PLACEHOLDER": "Select negotiable value",
     "NEGOTIABLE_NOT_SET": "Not set",

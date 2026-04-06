@@ -155,8 +155,24 @@
     "BACK_TO_LIST_ARIA": "العودة إلى قائمة العقارات",
     "INVALID_ID": "معرّف العقار غير صالح للتحديث.",
     "PREFILLING": "جارٍ تحميل بيانات العقار الحالية…",
-    "PROPERTY_TYPE": "نوع العقار (رقم enum)",
-    "FINISHING_TYPE": "نوع التشطيب (رقم enum)",
+    "PROPERTY_TYPE": "نوع العقار",
+    "PROPERTY_TYPE_PLACEHOLDER": "اختر نوع العقار",
+    "FINISHING_TYPE": "نوع التشطيب",
+    "FINISHING_TYPE_PLACEHOLDER": "اختر نوع التشطيب",
+    "PROPERTY_TYPES": {
+      "APARTMENT": "شقة",
+      "VILLA": "فيلا",
+      "STUDIO": "ستوديو",
+      "CHALET": "شاليه",
+      "DUPLEX": "دوبلكس",
+      "TOWNHOUSE": "تاون هاوس"
+    },
+    "FINISHING_TYPES": {
+      "WITHOUT_FINISHING": "بدون تشطيب",
+      "SEMI_FINISHED": "نصف تشطيب",
+      "FULLY_FINISHED": "تشطيب كامل",
+      "SUPER_LUX": "سوبر لوكس"
+    },
     "NEGOTIABLE": "قابل للتفاوض",
     "NEGOTIABLE_PLACEHOLDER": "اختر حالة التفاوض",
     "NEGOTIABLE_NOT_SET": "غير محدد",

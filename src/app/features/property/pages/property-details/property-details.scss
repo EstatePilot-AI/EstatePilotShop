@@ -76,6 +76,47 @@
   background: var(--surface-ground);
 }
 
+.gallery-thumbnails {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.gallery-thumb-btn {
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  padding: 0;
+  background: var(--surface-ground);
+  cursor: pointer;
+  line-height: 0;
+  flex: 0 0 auto;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--brand-accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  &.is-active {
+    border-color: var(--brand-accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand-accent) 25%, transparent);
+  }
+}
+
+.gallery-thumb-image {
+  width: 96px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 9px;
+  display: block;
+}
+
 .hero-placeholder {
   display: flex;
   align-items: center;

@@ -60,18 +60,43 @@
     <!-- ── Property Details ────────────────────────────────── -->
     @if (!loading() && !error() && property(); as p) {
       <div class="details-layout">
-        <!-- Hero Image / Placeholder -->
+        <!-- Property gallery -->
         <div class="details-hero">
           <img
             class="hero-image"
-            [src]="propertyImageUrl(p.propertyType)"
+            [src]="galleryImages()[selectedImageIndex()]"
             [alt]="displayPropertyType(p.propertyType) + ' in ' + p.city"
             width="1400"
             height="900"
             loading="eager"
             decoding="async"
-            (error)="onHeroImageError($event, p.propertyType)"
+            (error)="onGalleryImageError($event, p.propertyType)"
           />
+          @if (galleryImages().length > 1) {
+            <div class="gallery-thumbnails" role="list" aria-label="Property images">
+              @for (imageUrl of galleryImages(); track imageUrl; let i = $index) {
+                <button
+                  type="button"
+                  class="gallery-thumb-btn"
+                  [class.is-active]="i === selectedImageIndex()"
+                  [attr.aria-label]="'Show image ' + (i + 1)"
+                  [attr.aria-current]="i === selectedImageIndex() ? 'true' : null"
+                  (click)="selectGalleryImage(i)"
+                >
+                  <img
+                    class="gallery-thumb-image"
+                    [src]="imageUrl"
+                    [alt]="displayPropertyType(p.propertyType) + ' thumbnail ' + (i + 1)"
+                    width="200"
+                    height="140"
+                    loading="lazy"
+                    decoding="async"
+                    (error)="onGalleryImageError($event, p.propertyType)"
+                  />
+                </button>
+              }
+            </div>
+          }
           <div class="hero-badges">
             <p-tag
               [value]="p.propertyStatus"

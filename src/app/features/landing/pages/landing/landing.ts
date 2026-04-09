@@ -105,20 +105,12 @@ export class Landing implements OnInit {
   }
 
   propertyImageUrl(property: IProperty): string {
-    const type = property.propertyType?.toLowerCase().trim();
-    const imageByType: Record<string, string> = {
-      apartment: '/images/properties/luxury-apartment.png',
-      villa: '/images/properties/modern-villa.png',
-      penthouse: '/images/properties/penthouse.png',
-      house: '/images/properties/beach-house.png',
-      chalet: '/images/properties/beach-house.png',
-      office:
-        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
-      land:
-        'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80',
-    };
+    const firstImageFileName = property.imageURLs?.find(Boolean);
+    if (firstImageFileName) {
+      return this.propertyService.buildPropertyImageUrl(firstImageFileName);
+    }
 
-    return imageByType[type] ?? this.localFallbackImage(property.propertyType);
+    return this.localFallbackImage(property.propertyType);
   }
 
   onImageError(event: Event, property: IProperty): void {

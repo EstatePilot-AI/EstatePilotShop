@@ -7,15 +7,21 @@ import {
   IUpdatePropertyPayload,
 } from '../../features/property/models/IProperty';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environments';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PropertyService {
   private readonly api = inject(ApiService);
+  private readonly imageBaseUrl = environment.apiUrl.replace(/\/api\/?$/, '');
 
   getAllProperties(): Observable<IProperty[]> {
     return this.api.get<IProperty[]>('property/GetAllProperties');
+  }
+
+  buildPropertyImageUrl(imageFileName: string): string {
+    return `${this.imageBaseUrl}/Images/${encodeURIComponent(imageFileName)}`;
   }
 
   getPropertyById(id: number): Observable<IPropertyDetail> {

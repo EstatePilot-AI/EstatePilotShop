@@ -17,6 +17,7 @@ import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
+import { MessageService } from 'primeng/api';
 
 import { PropertyService } from '../../../../core/services/property.service';
 import { TranslationService } from '../../../../core/services/translation.service';
@@ -45,11 +46,11 @@ export class PropertyUpdate implements OnInit {
   private readonly translationService = inject(TranslationService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly translate = inject(TranslateService);
+  private readonly messageService = inject(MessageService);
 
   readonly propertyId = signal<number | null>(null);
   readonly loadingProperty = signal(false);
   readonly submitting = signal(false);
-  readonly error = signal<string | null>(null);
   readonly successMessage = signal<string | null>(null);
 
   readonly updateForm = this.fb.group({
@@ -107,7 +108,11 @@ export class PropertyUpdate implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!id || Number.isNaN(id)) {
-      this.error.set(this.translate.instant('PROPERTY_UPDATE.INVALID_ID'));
+      this.messageService.add({
+        severity: 'error',
+        summary: this.translate.instant('PROPERTY_UPDATE.ERROR'),
+        detail: this.translate.instant('PROPERTY_UPDATE.INVALID_ID'),
+      });
       return;
     }
 
@@ -123,12 +128,15 @@ export class PropertyUpdate implements OnInit {
 
     const id = this.propertyId();
     if (id === null) {
-      this.error.set(this.translate.instant('PROPERTY_UPDATE.INVALID_ID'));
+      this.messageService.add({
+        severity: 'error',
+        summary: this.translate.instant('PROPERTY_UPDATE.ERROR'),
+        detail: this.translate.instant('PROPERTY_UPDATE.INVALID_ID'),
+      });
       return;
     }
 
     this.submitting.set(true);
-    this.error.set(null);
     this.successMessage.set(null);
 
     this.propertyService
@@ -139,9 +147,8 @@ export class PropertyUpdate implements OnInit {
           this.submitting.set(false);
           this.successMessage.set(this.translate.instant('PROPERTY_UPDATE.SUCCESS'));
         },
-        error: (err: Error) => {
+        error: () => {
           this.submitting.set(false);
-          this.error.set(err?.message ?? this.translate.instant('PROPERTY_UPDATE.ERROR'));
         },
       });
   }
@@ -167,7 +174,6 @@ export class PropertyUpdate implements OnInit {
 
     uploader?.clear();
 
-    this.error.set(null);
     this.successMessage.set(null);
   }
 

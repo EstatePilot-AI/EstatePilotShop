@@ -5,10 +5,12 @@ import { providePrimeNG } from 'primeng/config';
 
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader, provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslationService } from './core/services/translation.service';
+import { MessageService } from 'primeng/api';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
 
 const EstatePilotPreset = definePreset(Aura, {
   semantic: {
@@ -91,7 +93,8 @@ const EstatePilotPreset = definePreset(Aura, {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptors([errorInterceptor])),
+    MessageService,
     provideBrowserGlobalErrorListeners(),
     provideRouter(
       routes,

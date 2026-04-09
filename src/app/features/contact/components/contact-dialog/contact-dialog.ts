@@ -21,7 +21,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 
 import { ContactService } from '../../../../core/services/contact.service';
@@ -33,10 +32,8 @@ import { ContactService } from '../../../../core/services/contact.service';
     ButtonModule,
     DialogModule,
     InputTextModule,
-    ToastModule,
     TranslatePipe,
   ],
-  providers: [MessageService],
   templateUrl: './contact-dialog.html',
   styleUrl: './contact-dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -134,11 +131,6 @@ export class ContactDialog {
         error: (err: Error) => {
           this.submitting.set(false);
           const message = err?.message || this.translate.instant('CONTACT.ERROR_MESSAGE');
-          this.messageService.add({
-            severity: 'error',
-            summary: this.translate.instant('CONTACT.ERROR_TITLE'),
-            detail: message,
-          });
           this.submitError.emit(message);
         },
       });

@@ -40,10 +40,6 @@
         <p-message severity="info" [text]="'PROPERTY_UPDATE.PREFILLING' | translate" />
       }
 
-      @if (error()) {
-        <p-message severity="error" [text]="error()!" />
-      }
-
       @if (successMessage()) {
         <p-message severity="success" [text]="successMessage()!" />
       }

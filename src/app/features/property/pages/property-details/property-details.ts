@@ -46,6 +46,7 @@ export class PropertyDetails implements OnInit {
   readonly property = signal<IPropertyDetail | null>(null);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
+  readonly selectedImageIndex = signal(0);
 
   // ── Contact Dialog ──────────────────────────────────────
   readonly dialogVisible = signal(false);
@@ -54,30 +55,17 @@ export class PropertyDetails implements OnInit {
     this.dialogVisible.set(true);
   }
 
-  propertyImageUrl(propertyType: string): string {
-    const type = propertyType?.toLowerCase().trim();
-    const imageByType: Record<string, string> = {
-      apartment: '/images/properties/luxury-apartment.png',
-      villa: '/images/properties/modern-villa.png',
-      penthouse: '/images/properties/penthouse.png',
-      house: '/images/properties/beach-house.png',
-      chalet: '/images/properties/beach-house.png',
-      office:
-        'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1400&q=80',
-      land:
-        'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1400&q=80',
-    };
-
-    return imageByType[type] ?? this.localFallbackImage(propertyType);
-  }
-
-  onHeroImageError(event: Event, propertyType: string): void {
+  onGalleryImageError(event: Event, propertyType: string): void {
     const image = event.target as HTMLImageElement | null;
     if (!image) return;
 
     if (image.dataset['fallbackApplied'] === 'true') return;
     image.dataset['fallbackApplied'] = 'true';
     image.src = this.localFallbackImage(propertyType);
+  }
+
+  selectGalleryImage(index: number): void {
+    this.selectedImageIndex.set(index);
   }
 
   displayPropertyType(propertyType: string): string {
@@ -131,6 +119,21 @@ export class PropertyDetails implements OnInit {
       .join(', ');
   });
 
+  readonly galleryImages = computed(() => {
+    const p = this.property();
+    if (!p) return [];
+
+    const imageUrls = (p.imageURLs ?? [])
+      .filter((fileName): fileName is string => Boolean(fileName))
+      .map(fileName => this.propertyService.buildPropertyImageUrl(fileName));
+
+    if (imageUrls.length > 0) {
+      return imageUrls;
+    }
+
+    return [this.localFallbackImage(p.propertyType)];
+  });
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!id || isNaN(id)) {
@@ -174,6 +177,7 @@ export class PropertyDetails implements OnInit {
       .subscribe({
         next: (data) => {
           this.property.set(data);
+          this.selectedImageIndex.set(0);
           this.loading.set(false);
         },
         error: (err: Error) => {

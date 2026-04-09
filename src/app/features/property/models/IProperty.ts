@@ -6,6 +6,7 @@ export interface IProperty {
   status: string;
   city: string;
   district: string;
+  imageURLs?: string[];
 }
 
 export interface IPropertyDetail extends IProperty {
@@ -19,6 +20,7 @@ export interface IPropertyDetail extends IProperty {
   buildingNumber: number;
   floorNumber: number;
   apartmentNumber: number;
+  imageURLs?: string[];
 }
 
 export interface IUpdatePropertyPayload {

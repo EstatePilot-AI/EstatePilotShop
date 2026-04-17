@@ -235,5 +235,28 @@
     "LOADING": "جاري التحميل…",
     "ERROR": "حدث خطأ.",
     "LOAD_FAILED": "فشل تحميل العقارات."
+  },
+  "CHATBOT": {
+    "TITLE": "مساعد EstatePilot",
+    "PLACEHOLDER": "اسأل عن العقارات…",
+    "SEND": "إرسال",
+    "RECOMMENDED": "مُوصى به لك",
+    "OTHER_OPTIONS": "خيارات أخرى",
+    "VIEW_DETAILS": "عرض التفاصيل",
+    "ROOMS": "غرف",
+    "BATHROOMS": "حمامات",
+    "FLOOR": "طابق",
+    "NO_RESULTS": "لم يتم العثور على عقارات تطابق بحثك.",
+    "FALLBACK_NOTICE": "عرض نتائج عامة. حاول أن تكون أكثر تحديدًا.",
+    "RETRY": "إعادة المحاولة",
+    "ERROR_GENERIC": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "CLOSE": "إغلاق المحادثة",
+    "OPEN_CHAT": "فتح المحادثة",
+    "CLEAR_CHAT": "مسح المحادثة",
+    "WELCOME_GREETING": "مرحبًا! أنا مساعدك العقاري. كيف أساعدك اليوم؟",
+    "SUGGESTION_SEARCH": "ابحث عن شقق في القاهرة",
+    "SUGGESTION_RECOMMEND": "رشّح لي عقارًا",
+    "SUGGESTION_COMPARE": "قارن بين العقارات",
+    "BEST_MATCH": "الأفضل لك"
   }
 }

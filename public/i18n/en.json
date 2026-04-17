@@ -235,5 +235,28 @@
     "LOADING": "Loading…",
     "ERROR": "An error occurred.",
     "LOAD_FAILED": "Failed to load properties."
+  },
+  "CHATBOT": {
+    "TITLE": "EstatePilot Advisor",
+    "PLACEHOLDER": "Ask about properties…",
+    "SEND": "Send",
+    "RECOMMENDED": "Recommended for you",
+    "OTHER_OPTIONS": "Other options",
+    "VIEW_DETAILS": "View details",
+    "ROOMS": "rooms",
+    "BATHROOMS": "bathrooms",
+    "FLOOR": "floor",
+    "NO_RESULTS": "No properties matched your search.",
+    "FALLBACK_NOTICE": "Showing general results. Try being more specific.",
+    "RETRY": "Retry",
+    "ERROR_GENERIC": "Something went wrong. Please try again.",
+    "CLOSE": "Close chat",
+    "OPEN_CHAT": "Open chat",
+    "CLEAR_CHAT": "Clear chat",
+    "WELCOME_GREETING": "Hi! I'm your EstatePilot Advisor. How can I help you today?",
+    "SUGGESTION_SEARCH": "Find apartments in Cairo",
+    "SUGGESTION_RECOMMEND": "Recommend me a property",
+    "SUGGESTION_COMPARE": "Compare properties",
+    "BEST_MATCH": "Best match"
   }
 }

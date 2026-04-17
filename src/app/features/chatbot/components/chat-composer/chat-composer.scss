@@ -1,0 +1,105 @@
+/* ── Composer bar ────────────────────────────────────────── */
+.composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--glass-border, rgba(0, 0, 0, 0.06));
+  background: var(--glass-bg, rgba(255, 255, 255, 0.6));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  flex-shrink: 0;
+}
+
+/* ── Textarea ───────────────────────────────────────────── */
+.composer__input {
+  flex: 1;
+  resize: none;
+  border: 1.5px solid var(--border-default, rgba(0, 0, 0, 0.08));
+  border-radius: 14px;
+  padding: 0.625rem 1rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  background: var(--surface-ground, rgba(255, 255, 255, 0.5));
+  color: var(--content-body, #364153);
+  max-height: 80px;
+  overflow-y: auto;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+
+  &::placeholder {
+    color: var(--content-muted, #6a7282);
+    opacity: 0.65;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--brand-accent, #8200db);
+    box-shadow: 0 0 0 3px rgba(130, 0, 219, 0.08);
+    background: var(--surface-ground, #ffffff);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+/* ── Send button ────────────────────────────────────────── */
+.composer__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--brand-accent, #8200db), var(--brand-primary, #155dfc));
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(130, 0, 219, 0.2);
+  transition:
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.2s ease,
+    opacity 0.2s;
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(130, 0, 219, 0.3);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0) scale(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--brand-accent, #8200db);
+    outline-offset: 2px;
+  }
+}
+
+/* ── Responsive: mobile ─────────────────────────────────── */
+@media (max-width: 480px) {
+  .composer {
+    padding: 0.625rem 0.75rem;
+  }
+
+  .composer__input {
+    font-size: 1rem;
+    border-radius: 12px;
+    padding: 0.625rem 0.875rem;
+  }
+
+  .composer__btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+}

@@ -1,0 +1,107 @@
+<!-- Floating Action Button -->
+<button
+  class="chat-fab"
+  type="button"
+  [attr.aria-label]="'CHATBOT.OPEN_CHAT' | translate"
+  (click)="toggle()"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </svg>
+</button>
+
+@if (!isOpen()) {
+  <span class="chat-fab-label" aria-hidden="true">
+    <span class="chat-fab-label__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" />
+        <path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" />
+      </svg>
+    </span>
+    {{ 'CHATBOT.TITLE' | translate }}
+  </span>
+}
+
+<!-- Chat Panel -->
+@if (isOpen()) {
+  <div class="chat-panel" role="dialog" [attr.aria-label]="'CHATBOT.TITLE' | translate" [dir]="direction()">
+    <header class="chat-panel__header">
+      <div class="chat-panel__brand">
+        <div class="chat-panel__avatar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" />
+            <path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="chat-panel__title">{{ 'CHATBOT.TITLE' | translate }}</h3>
+          <span class="chat-panel__status">Online</span>
+        </div>
+      </div>
+      <div class="chat-panel__actions">
+        @if (hasMessages()) {
+          <button
+            class="chat-panel__action"
+            type="button"
+            [attr.aria-label]="'CHATBOT.CLEAR_CHAT' | translate"
+            (click)="clearChat()"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+            </svg>
+          </button>
+        }
+        <button
+          class="chat-panel__action"
+          type="button"
+          [attr.aria-label]="'CHATBOT.CLOSE' | translate"
+          (click)="close()"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18" /><path d="M6 6 12 12 18 18" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    @if (!hasMessages()) {
+      <div class="chat-welcome">
+        <div class="chat-welcome__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" />
+            <path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" />
+          </svg>
+        </div>
+        <p class="chat-welcome__greeting">{{ 'CHATBOT.WELCOME_GREETING' | translate }}</p>
+        <div class="chat-welcome__chips">
+          @for (suggestion of translatedSuggestions(); track $index) {
+            <button
+              class="chat-welcome__chip"
+              type="button"
+              (click)="sendMessage(suggestion)"
+            >
+              {{ suggestion }}
+            </button>
+          }
+        </div>
+      </div>
+    } @else {
+      <app-chat-message-list
+        [messages]="messages()"
+        [loading]="loading()"
+      />
+    }
+
+    <app-chat-composer
+      [disabled]="loading()"
+      (send)="sendMessage($event)"
+    />
+  </div>
+}

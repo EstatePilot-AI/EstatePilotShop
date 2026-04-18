@@ -1,27 +1,11 @@
 // ============================================================
 // styles.scss — Global Application Stylesheet
-// ============================================================
-//
-// Import order:
-//   1. variables  — SCSS token maps + dimension vars (no CSS output)
-//   2. themes     — CSS custom property declarations (:root, body.dark)
-//   3. primeng-overrides — Bridge PrimeNG tokens to our design system
-//   4. Global reset, typography, layout utilities (this file)
-//
-// RULE: Never write raw hex colors here.
-//       Always use a CSS custom property: color: var(--content-body);
+// Editorial Luxury Real Estate Design System
 // ============================================================
 
-// 1. Token maps + SCSS dimension variables (spacing, type, breakpoints…)
 @use './styles/variables' as v;
-
-// 2. Emit CSS custom properties for light/dark themes
 @use './styles/themes';
-
-// 3. Map PrimeNG tokens to our design system
 @use './styles/primeng-overrides';
-
-
 
 // ============================================================
 // Mixins
@@ -83,7 +67,7 @@ html {
 }
 
 body {
-  font-family: v.$font-family-base;
+  font-family: v.$font-family-body;
   font-size: v.$font-size-base;
   background: var(--color-bg);
   color: var(--color-text);
@@ -94,11 +78,11 @@ body {
 }
 
 // ============================================================
-// Typography
+// Typography — Editorial Luxury
 // ============================================================
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: v.$font-family-base;
+  font-family: var(--font-display);
   line-height: v.$line-height-tight;
 }
 
@@ -136,14 +120,26 @@ h1, h2, h3, h4, h5, h6 {
   max-width: v.$container-max-width;
   margin-inline: auto;
   padding-inline: v.$container-padding;
+
+  @media (max-width: 480px) {
+    padding-inline: 1rem;
+  }
 }
 
 .section {
   padding-block: v.$section-padding-y;
+
+  @media (max-width: 768px) {
+    padding-block: 3rem;
+  }
+
+  @media (max-width: 480px) {
+    padding-block: 2rem;
+  }
 }
 
 // ============================================================
-// Minimal utility classes (replacing used PrimeFlex subset)
+// Utility Classes
 // ============================================================
 
 .w-full { width: 100% !important; }
@@ -169,24 +165,35 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 // ============================================================
-// Gradient Backgrounds
+// Gradient Backgrounds — Editorial Luxury
 // ============================================================
 
 .bg-gradient-hero {
-  background: linear-gradient(135deg, #f3e8ff 0%, #e9d4ff 40%, #bedbff 100%);
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--brand-accent) 6%, var(--surface-ground)) 0%,
+    color-mix(in srgb, var(--brand-primary) 8%, var(--surface-section)) 50%,
+    var(--surface-ground) 100%
+  );
 
   body.dark & {
-    background: linear-gradient(160deg, #0a0e1a 0%, #1a1040 50%, #0a0e1a 100%);
+    background: linear-gradient(
+      160deg,
+      var(--surface-ground) 0%,
+      color-mix(in srgb, var(--brand-primary) 12%, var(--surface-ground)) 50%,
+      var(--surface-ground) 100%
+    );
   }
 }
 
 // ============================================================
-// Glass Effect
+// Glass Effect — Warm Tinted
 // ============================================================
 
 .glass {
   background: var(--glass-bg);
   backdrop-filter: blur(v.$glass-blur);
+  -webkit-backdrop-filter: blur(v.$glass-blur);
   border: 1px solid var(--glass-border);
 }
 
@@ -231,7 +238,6 @@ h1, h2, h3, h4, h5, h6 {
 .animate-delay-3 { animation-delay: 0.3s; }
 .animate-delay-4 { animation-delay: 0.4s; }
 
-// ── Scroll-triggered reveal (used by RevealDirective) ─────────
 .reveal-on-scroll {
   opacity: 0;
   transform: translateY(28px);
@@ -262,7 +268,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 

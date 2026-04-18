@@ -19,7 +19,7 @@ export class ChatbotApiService {
 
   askAdvisor(payload: AdvisorRequest): Observable<AdvisorResponse> {
     return this.http
-      .post<AdvisorResponse>('/api/ai-advisor', payload)
+      .post<AdvisorResponse>(`${this.baseUrl}/advisor`, payload)
       .pipe(timeout(this.advisorTimeoutMs));
   }
 

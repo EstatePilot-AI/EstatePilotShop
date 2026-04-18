@@ -49,6 +49,7 @@ export class PropertyUpdate implements OnInit {
   private readonly messageService = inject(MessageService);
 
   readonly propertyId = signal<number | null>(null);
+  readonly propertyDetail = signal<IPropertyDetail | null>(null);
   readonly loadingProperty = signal(false);
   readonly submitting = signal(false);
   readonly successMessage = signal<string | null>(null);
@@ -183,6 +184,30 @@ export class PropertyUpdate implements OnInit {
     return errorName ? control.hasError(errorName) : control.invalid;
   }
 
+  propertyImageUrl(property: IPropertyDetail): string {
+    const firstImageFileName = property.imageURLs?.find(Boolean);
+    if (firstImageFileName) {
+      return this.propertyService.buildPropertyImageUrl(firstImageFileName);
+    }
+    return '/images/properties/luxury-apartment.png';
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement | null;
+    if (!img) return;
+    if (img.dataset['fallbackApplied'] === 'true') return;
+    img.dataset['fallbackApplied'] = 'true';
+    img.src = '/images/properties/luxury-apartment.png';
+  }
+
+  formatPrice(price: number): string {
+    return new Intl.NumberFormat('en-EG', {
+      style: 'currency',
+      currency: 'EGP',
+      maximumFractionDigits: 0,
+    }).format(price);
+  }
+
   private loadCurrentProperty(id: number): void {
     this.loadingProperty.set(true);
 
@@ -191,6 +216,7 @@ export class PropertyUpdate implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (property) => {
+          this.propertyDetail.set(property);
           this.patchFromProperty(property);
           this.loadingProperty.set(false);
         },

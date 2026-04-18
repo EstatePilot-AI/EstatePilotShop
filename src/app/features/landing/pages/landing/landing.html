@@ -1,74 +1,62 @@
-<!-- ===== Hero Section — Split Layout with Image Carousel ===== -->
+<!-- ===== Hero Section — Full-Bleed Editorial ===== -->
 <section class="hero">
-  <div class="container">
-    <div class="hero-split">
-      <!-- Left: Content -->
-      <div class="hero-content" appReveal [revealDelay]="150">
-        <span class="hero-badge">
-          <i class="pi pi-shopping-cart" aria-hidden="true"></i>
-          {{ 'HERO.BADGE' | translate }}
-        </span>
-
-        <h1 class="hero-title">
-          {{ 'HERO.TITLE_1' | translate }}<br />
-          <span class="hero-title-accent">{{ 'HERO.TITLE_2' | translate }}</span>
-        </h1>
-
-        <p class="hero-subtitle">
-          {{ 'HERO.SUBTITLE' | translate }}
-        </p>
-
-        <div class="hero-actions">
-          <p-button
-            [label]="'HERO.EXPLORE_BTN' | translate"
-            icon="pi pi-search"
-            [rounded]="true"
-            size="large"
-            routerLink="/properties"
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hero-carousel-wrapper">
+      <p-carousel
+        [value]="heroSlides"
+        [numVisible]="1"
+        [numScroll]="1"
+        [circular]="true"
+        [autoplayInterval]="6000"
+        [showNavigators]="false"
+        [showIndicators]="false"
+        styleClass="hero-carousel"
+      >
+        <ng-template #item let-slide>
+          <img
+            [src]="slide.image"
+            [alt]="slide.labelKey | translate"
+            class="hero-bg-image"
+            loading="eager"
           />
-          <p-button
-            [label]="'HERO.CONTACT_BTN' | translate"
-            icon="pi pi-envelope"
-            [rounded]="true"
-            [outlined]="true"
-            size="large"
-            routerLink="/contact"
-          />
-        </div>
-      </div>
+        </ng-template>
+      </p-carousel>
+    </div>
+    <div class="hero-overlay"></div>
+  </div>
 
-      <!-- Right: Image Carousel -->
-      <div class="hero-carousel-wrapper" appReveal [revealDelay]="300">
-        <div class="hero-carousel-glow" aria-hidden="true"></div>
-        <div class="hero-carousel-inner">
-          <p-carousel
-            [value]="heroSlides"
-            [numVisible]="1"
-            [numScroll]="1"
-            [circular]="true"
-            [autoplayInterval]="5000"
-            [showNavigators]="false"
-            [showIndicators]="true"
-            styleClass="hero-carousel"
-          >
-            <ng-template #item let-slide>
-              <div class="hero-slide">
-                <img
-                  [src]="slide.image"
-                  [alt]="slide.labelKey | translate"
-                  class="hero-slide-image"
-                  loading="eager"
-                />
-                <div class="hero-slide-overlay">
-                  <div class="hero-slide-tag">
-                    <i class="pi pi-home" aria-hidden="true"></i>
-                    <span>{{ slide.labelKey | translate }}</span>
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-          </p-carousel>
-        </div>
+  <div class="container hero-content-wrapper">
+    <div class="hero-content" appReveal [revealDelay]="150">
+      <span class="hero-badge">
+        <i class="pi pi-shopping-cart" aria-hidden="true"></i>
+        {{ 'HERO.BADGE' | translate }}
+      </span>
+
+      <h1 class="hero-title">
+        {{ 'HERO.TITLE_1' | translate }}<br />
+        <span class="hero-title-accent">{{ 'HERO.TITLE_2' | translate }}</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        {{ 'HERO.SUBTITLE' | translate }}
+      </p>
+
+      <div class="hero-actions">
+        <p-button
+          [label]="'HERO.EXPLORE_BTN' | translate"
+          icon="pi pi-search"
+          [rounded]="true"
+          size="large"
+          routerLink="/properties"
+        />
+        <p-button
+          [label]="'HERO.CONTACT_BTN' | translate"
+          icon="pi pi-envelope"
+          [rounded]="true"
+          [outlined]="true"
+          size="large"
+          routerLink="/contact"
+        />
       </div>
     </div>
   </div>
@@ -91,7 +79,7 @@
   </div>
 </section>
 
-<!-- ===== Categories Section ===== -->
+<!-- ===== Categories Section — Horizontal Chips ===== -->
 <section class="section categories-section">
   <div class="container">
     <div class="section-header" appReveal>
@@ -99,23 +87,25 @@
       <p class="section-subtitle">{{ 'CATEGORIES.SUBTITLE' | translate }}</p>
     </div>
 
-    <div class="categories-grid">
-      @for (cat of categories; track cat.nameKey) {
-        <a href="#" class="category-card" appReveal [revealDelay]="$index * 75">
-          <div class="category-icon">
-            <i [class]="cat.icon" aria-hidden="true"></i>
-          </div>
-          <span class="category-name">{{ cat.nameKey | translate }}</span>
-          <span class="category-count"
-            >{{ cat.count }} {{ 'CATEGORIES.LISTINGS' | translate }}</span
-          >
-        </a>
-      }
+    <div class="categories-scroll" appReveal [revealDelay]="100">
+      <div class="categories-chips">
+        @for (cat of categories; track cat.nameKey) {
+          <a href="#" class="category-chip">
+            <div class="category-chip-icon">
+              <i [class]="cat.icon" aria-hidden="true"></i>
+            </div>
+            <div class="category-chip-text">
+              <span class="category-chip-name">{{ cat.nameKey | translate }}</span>
+              <span class="category-chip-count">{{ cat.count }} {{ 'CATEGORIES.LISTINGS' | translate }}</span>
+            </div>
+          </a>
+        }
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ===== Featured Listings Section ===== -->
+<!-- ===== Featured Listings — Magazine Cards ===== -->
 <section class="section listings-section">
   <div class="container">
     <div class="section-header-row" appReveal>
@@ -143,7 +133,7 @@
       >
         @for (item of skeletonItems; track $index) {
           <div class="property-card property-card--skeleton">
-            <p-skeleton height="200px" styleClass="skeleton-image" borderRadius="0" />
+            <p-skeleton height="260px" styleClass="skeleton-image" borderRadius="0" />
             <div class="property-card-body">
               <p-skeleton width="40%" height="1.25rem" styleClass="mb-2" />
               <p-skeleton width="70%" height="1rem" styleClass="mb-1" />
@@ -160,12 +150,11 @@
       </div>
     }
 
-    <!-- Error -->
     @if (featuredError()) {
       <p class="featured-error" role="alert">{{ featuredError() }}</p>
     }
 
-    <!-- Property cards -->
+    <!-- Property cards — magazine style -->
     @if (!featuredLoading() && !featuredError()) {
       <div class="properties-grid">
         @for (property of featuredPreview(); track property.propertyId) {
@@ -181,42 +170,47 @@
                 [src]="propertyImageUrl(property)"
                 [alt]="displayPropertyType(property.propertyType) + ' in ' + property.city"
                 width="900"
-                height="560"
+                height="506"
                 loading="lazy"
                 decoding="async"
                 (error)="onImageError($event, property)"
               />
+
+              <span
+                class="property-status-badge"
+                [class.status-available]="property.status === 'Available'"
+                [class.status-sold]="property.status === 'Sold'"
+                [class.status-rented]="property.status === 'Rented'"
+              >
+                {{ property.status }}
+              </span>
+
+              <button
+                class="property-heart-btn"
+                type="button"
+                [attr.aria-label]="'Save ' + displayPropertyType(property.propertyType)"
+              >
+                <i class="pi pi-heart" aria-hidden="true"></i>
+              </button>
+
+              <div class="property-image-overlay">
+                <span class="property-price-badge">{{ formatPrice(property.price) }}</span>
+                <span class="property-type-pill">
+                  {{ displayPropertyType(property.propertyType) }}
+                </span>
+              </div>
             </div>
             <div class="property-card-body">
-              <p class="property-price">{{ formatPrice(property.price) }}</p>
-              <p class="property-location">
-                <i class="pi pi-map-marker" aria-hidden="true"></i>
+              <h3 class="property-card-title">
                 {{ property.district }}, {{ property.city }}
-              </p>
-              <p-divider styleClass="my-3" />
-              <div class="property-stats">
-                <span
-                  class="property-stat"
-                  [pTooltip]="'LISTINGS.AREA' | translate"
-                  tooltipPosition="top"
-                >
+              </h3>
+              <div class="property-meta">
+                <span class="property-meta-pill">
                   <i class="pi pi-th-large" aria-hidden="true"></i>
                   {{ property.area }} m²
                 </span>
-                <span
-                  class="property-stat"
-                  [pTooltip]="'LISTINGS.TYPE' | translate"
-                  tooltipPosition="top"
-                >
+                <span class="property-meta-pill">
                   <i class="pi pi-tag" aria-hidden="true"></i>
-                  {{ displayPropertyType(property.propertyType) }}
-                </span>
-                <span
-                  class="property-stat"
-                  [pTooltip]="'LISTINGS.STATUS' | translate"
-                  tooltipPosition="top"
-                >
-                  <i class="pi pi-info-circle" aria-hidden="true"></i>
                   {{ property.status }}
                 </span>
               </div>
@@ -249,7 +243,7 @@
   </div>
 </section>
 
-<!-- ===== CTA Section ===== -->
+<!-- ===== CTA Section — Dark Editorial ===== -->
 <section class="cta-section">
   <div class="container">
     <div class="cta-content" appReveal>
@@ -276,31 +270,33 @@
   </div>
 </section>
 
-<!-- ===== Footer ===== -->
+<!-- ===== Footer — Dark Navy ===== -->
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="footer-logo">
           <i class="pi pi-building" aria-hidden="true"></i>
-          <span>EstatePilot</span>
+          <span class="footer-logo-text">
+            <span class="logo-serif">Estate</span><span class="logo-sans">Pilot</span>
+          </span>
         </div>
         <p class="footer-description">
           {{ 'FOOTER.DESCRIPTION' | translate }}
         </p>
         <div class="footer-socials">
-          <a href="#" aria-label="Facebook" class="social-icon"
-            ><i class="pi pi-facebook" aria-hidden="true"></i
-          ></a>
-          <a href="#" aria-label="Twitter" class="social-icon"
-            ><i class="pi pi-twitter" aria-hidden="true"></i
-          ></a>
-          <a href="#" aria-label="Instagram" class="social-icon"
-            ><i class="pi pi-instagram" aria-hidden="true"></i
-          ></a>
-          <a href="#" aria-label="LinkedIn" class="social-icon"
-            ><i class="pi pi-linkedin" aria-hidden="true"></i
-          ></a>
+          <a href="#" aria-label="Facebook" class="social-icon">
+            <i class="pi pi-facebook" aria-hidden="true"></i>
+          </a>
+          <a href="#" aria-label="Twitter" class="social-icon">
+            <i class="pi pi-twitter" aria-hidden="true"></i>
+          </a>
+          <a href="#" aria-label="Instagram" class="social-icon">
+            <i class="pi pi-instagram" aria-hidden="true"></i>
+          </a>
+          <a href="#" aria-label="LinkedIn" class="social-icon">
+            <i class="pi pi-linkedin" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
 

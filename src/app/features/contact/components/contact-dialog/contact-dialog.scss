@@ -1,6 +1,49 @@
 // ============================================================
-// contact-dialog.scss — reusable contact dialog styles
+// contact-dialog.scss — Editorial Luxury Real Estate
+// Teal header, gold submit, warm background
 // ============================================================
+
+::ng-deep .contact-dialog {
+  .p-dialog-header {
+    background: var(--brand-primary);
+    border-radius: 12px 12px 0 0;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .p-dialog-content {
+    background: var(--surface-card);
+    border-radius: 0 0 12px 12px;
+    padding: 1.5rem;
+  }
+
+  .p-dialog-header-close {
+    color: rgba(255, 255, 255, 0.8);
+
+    &:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+.dialog-header-custom {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  > i {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+.dialog-header-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
 
 .contact-form {
   display: flex;
@@ -12,14 +55,14 @@
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.4rem;
 
   label {
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--content-heading);
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
   }
 
   input {
@@ -28,7 +71,7 @@
 }
 
 .form-error {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--status-danger);
   font-weight: 500;
 }
@@ -38,4 +81,31 @@
   justify-content: flex-end;
   gap: 0.75rem;
   margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-default);
+
+  @media (max-width: 480px) {
+    flex-direction: column-reverse;
+  }
+}
+
+::ng-deep .contact-submit-btn {
+  .p-button {
+    background: var(--brand-accent) !important;
+    border-color: var(--brand-accent) !important;
+    color: #ffffff !important;
+
+    &:hover {
+      background: var(--brand-accent-light) !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+
+    .p-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 }

@@ -26,176 +26,261 @@
   </header>
 
   <div class="container">
-    <div class="form-card">
-      <div class="form-header">
-        <h1>{{ 'PROPERTY_UPDATE.TITLE' | translate }}</h1>
-        @if (propertyId(); as id) {
-          <p>
-            {{ 'PROPERTY_UPDATE.PROPERTY_ID' | translate }} #{{ id }}
-          </p>
-        }
+    @if (loadingProperty()) {
+      <p-message severity="info" [text]="'PROPERTY_UPDATE.PREFILLING' | translate" />
+    }
+
+    @if (successMessage()) {
+      <p-message severity="success" [text]="successMessage()!" styleClass="mb-6" />
+    }
+
+    <form
+      [formGroup]="updateForm"
+      class="update-layout"
+      (ngSubmit)="submit(uploader)"
+      novalidate
+    >
+      <!-- ── Main Form Column ─────────────────────────────── -->
+      <div class="update-main">
+        <!-- Property Details -->
+        <section class="form-group" role="group" aria-labelledby="grp-details">
+          <h2 class="form-group-title" id="grp-details">
+            <i class="pi pi-home" aria-hidden="true"></i>
+            {{ 'PROPERTY_UPDATE.TITLE' | translate }}
+          </h2>
+
+          <div class="form-row form-row--3">
+            <div class="form-field">
+              <label for="up-property-type">{{ 'PROPERTY_UPDATE.PROPERTY_TYPE' | translate }}</label>
+              <p-select
+                [inputId]="'up-property-type'"
+                [options]="propertyTypeOptions()"
+                optionLabel="label"
+                optionValue="value"
+                formControlName="propertyType"
+                [placeholder]="'PROPERTY_UPDATE.PROPERTY_TYPE_PLACEHOLDER' | translate"
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="up-finishing-type">{{ 'PROPERTY_UPDATE.FINISHING_TYPE' | translate }}</label>
+              <p-select
+                [inputId]="'up-finishing-type'"
+                [options]="finishingTypeOptions()"
+                optionLabel="label"
+                optionValue="value"
+                formControlName="finishingType"
+                [placeholder]="'PROPERTY_UPDATE.FINISHING_TYPE_PLACEHOLDER' | translate"
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="up-negotiable">{{ 'PROPERTY_UPDATE.NEGOTIABLE' | translate }}</label>
+              <p-select
+                [inputId]="'up-negotiable'"
+                [options]="negotiableOptions()"
+                optionLabel="label"
+                optionValue="value"
+                formControlName="negotiable"
+                [placeholder]="'PROPERTY_UPDATE.NEGOTIABLE_PLACEHOLDER' | translate"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="up-price">{{ 'PROPERTY_UPDATE.PRICE' | translate }}</label>
+              <div class="input-with-suffix">
+                <input pInputText id="up-price" type="number" formControlName="price" />
+                <span class="input-suffix">EGP</span>
+              </div>
+              @if (isControlInvalid('price', 'min')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
+              }
+            </div>
+
+            <div class="form-field">
+              <label for="up-area">{{ 'PROPERTY_UPDATE.AREA' | translate }}</label>
+              <div class="input-with-suffix">
+                <input pInputText id="up-area" type="number" formControlName="area" />
+                <span class="input-suffix">m²</span>
+              </div>
+              @if (isControlInvalid('area', 'min')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
+              }
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="up-rooms">{{ 'PROPERTY_UPDATE.ROOMS' | translate }}</label>
+              <input pInputText id="up-rooms" type="number" formControlName="rooms" />
+              @if (isControlInvalid('rooms', 'min')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
+              }
+            </div>
+
+            <div class="form-field">
+              <label for="up-bathrooms">{{ 'PROPERTY_UPDATE.BATHROOMS' | translate }}</label>
+              <input pInputText id="up-bathrooms" type="number" formControlName="bathrooms" />
+              @if (isControlInvalid('bathrooms', 'min')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
+              }
+            </div>
+          </div>
+        </section>
+
+        <!-- Location -->
+        <section class="form-group" role="group" aria-labelledby="grp-location">
+          <h2 class="form-group-title" id="grp-location">
+            <i class="pi pi-map-marker" aria-hidden="true"></i>
+            Location
+          </h2>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="up-country">{{ 'PROPERTY_UPDATE.COUNTRY' | translate }}</label>
+              <input pInputText id="up-country" type="text" formControlName="country" />
+            </div>
+
+            <div class="form-field">
+              <label for="up-governorate">{{ 'PROPERTY_UPDATE.GOVERNORATE' | translate }}</label>
+              <input pInputText id="up-governorate" type="text" formControlName="governorate" />
+            </div>
+          </div>
+
+          <div class="form-row form-row--3">
+            <div class="form-field">
+              <label for="up-city">{{ 'PROPERTY_UPDATE.CITY' | translate }}</label>
+              <input pInputText id="up-city" type="text" formControlName="city" />
+            </div>
+
+            <div class="form-field">
+              <label for="up-district">{{ 'PROPERTY_UPDATE.DISTRICT' | translate }}</label>
+              <input pInputText id="up-district" type="text" formControlName="district" />
+            </div>
+
+            <div class="form-field">
+              <label for="up-street">{{ 'PROPERTY_UPDATE.STREET' | translate }}</label>
+              <input pInputText id="up-street" type="text" formControlName="street" />
+            </div>
+          </div>
+        </section>
+
+        <!-- Building -->
+        <section class="form-group" role="group" aria-labelledby="grp-building">
+          <h2 class="form-group-title" id="grp-building">
+            <i class="pi pi-building" aria-hidden="true"></i>
+            Building
+          </h2>
+
+          <div class="form-row form-row--3">
+            <div class="form-field">
+              <label for="up-building-number">{{ 'PROPERTY_UPDATE.BUILDING_NUMBER' | translate }}</label>
+              <input pInputText id="up-building-number" type="number" formControlName="buildingNumber" />
+              @if (isControlInvalid('buildingNumber', 'min')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
+              }
+            </div>
+
+            <div class="form-field">
+              <label for="up-floor-number">{{ 'PROPERTY_UPDATE.FLOOR_NUMBER' | translate }}</label>
+              <input pInputText id="up-floor-number" type="number" formControlName="floorNumber" />
+            </div>
+
+            <div class="form-field">
+              <label for="up-apartment-number">{{ 'PROPERTY_UPDATE.APARTMENT_NUMBER' | translate }}</label>
+              <input pInputText id="up-apartment-number" type="number" formControlName="apartmentNumber" />
+              @if (isControlInvalid('apartmentNumber', 'min')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
+              }
+            </div>
+          </div>
+        </section>
+
+        <!-- Images -->
+        <section class="form-group form-group--last" role="group" aria-labelledby="grp-images">
+          <h2 class="form-group-title" id="grp-images">
+            <i class="pi pi-images" aria-hidden="true"></i>
+            Images
+          </h2>
+
+          <div class="form-field">
+            <label for="up-image-files">{{ 'PROPERTY_UPDATE.IMAGES' | translate }}</label>
+            <p-fileupload
+              #uploader
+              [name]="'ImageURLs'"
+              mode="advanced"
+              [multiple]="true"
+              [showUploadButton]="false"
+              [showCancelButton]="true"
+              [customUpload]="true"
+              accept="image/*"
+              [chooseLabel]="'PROPERTY_UPDATE.CHOOSE_IMAGES' | translate"
+              [cancelLabel]="'PROPERTY_UPDATE.CLEAR_IMAGES' | translate"
+              [invalidFileTypeMessageSummary]="'PROPERTY_UPDATE.INVALID_FILE_TYPE' | translate"
+            />
+            <small class="form-hint">{{ 'PROPERTY_UPDATE.IMAGES_HINT' | translate }}</small>
+          </div>
+        </section>
       </div>
 
-      @if (loadingProperty()) {
-        <p-message severity="info" [text]="'PROPERTY_UPDATE.PREFILLING' | translate" />
-      }
+      <!-- ── Sticky Sidebar ───────────────────────────────── -->
+      <aside class="update-sidebar" aria-label="Property summary and actions">
+        @if (propertyDetail(); as p) {
+          <div class="sidebar-preview">
+            <div class="sidebar-image-wrapper">
+              <img
+                class="sidebar-image"
+                [src]="propertyImageUrl(p)"
+                [alt]="p.city + ' property'"
+                width="340"
+                height="191"
+                loading="eager"
+                decoding="async"
+                (error)="onImageError($event)"
+              />
+            </div>
 
-      @if (successMessage()) {
-        <p-message severity="success" [text]="successMessage()!" />
-      }
+            <div class="sidebar-info">
+              <span class="sidebar-price">{{ formatPrice(p.price) }}</span>
 
-      <form [formGroup]="updateForm" class="update-form" (ngSubmit)="submit(uploader)" novalidate>
-        <div class="form-grid">
-          <div class="form-field">
-            <label for="up-property-type">{{ 'PROPERTY_UPDATE.PROPERTY_TYPE' | translate }}</label>
-            <p-select
-              [inputId]="'up-property-type'"
-              [options]="propertyTypeOptions()"
-              optionLabel="label"
-              optionValue="value"
-              formControlName="propertyType"
-              [placeholder]="'PROPERTY_UPDATE.PROPERTY_TYPE_PLACEHOLDER' | translate"
-            />
+              <div class="sidebar-meta">
+                <span class="sidebar-meta-item">
+                  <i class="pi pi-map-marker" aria-hidden="true"></i>
+                  {{ p.city }}, {{ p.district }}
+                </span>
+                <span
+                  class="sidebar-status"
+                  [class.status-available]="p.propertyStatus === 'Available'"
+                  [class.status-sold]="p.propertyStatus === 'Sold'"
+                  [class.status-rented]="p.propertyStatus === 'Rented'"
+                  [class.status-pending]="p.propertyStatus === 'Pending'"
+                >
+                  {{ p.propertyStatus }}
+                </span>
+              </div>
+
+              <span class="sidebar-id">ID #{{ p.propertyId }}</span>
+            </div>
           </div>
-
-          <div class="form-field">
-            <label for="up-finishing-type">{{ 'PROPERTY_UPDATE.FINISHING_TYPE' | translate }}</label>
-            <p-select
-              [inputId]="'up-finishing-type'"
-              [options]="finishingTypeOptions()"
-              optionLabel="label"
-              optionValue="value"
-              formControlName="finishingType"
-              [placeholder]="'PROPERTY_UPDATE.FINISHING_TYPE_PLACEHOLDER' | translate"
-            />
+        } @else {
+          <div class="sidebar-preview sidebar-preview--placeholder">
+            <div class="sidebar-placeholder-icon">
+              <i class="pi pi-home" aria-hidden="true"></i>
+            </div>
+            <span class="sidebar-placeholder-text">Loading property...</span>
           </div>
+        }
 
-          <div class="form-field">
-            <label for="up-negotiable">{{ 'PROPERTY_UPDATE.NEGOTIABLE' | translate }}</label>
-            <p-select
-              [inputId]="'up-negotiable'"
-              [options]="negotiableOptions()"
-              optionLabel="label"
-              optionValue="value"
-              formControlName="negotiable"
-              [placeholder]="'PROPERTY_UPDATE.NEGOTIABLE_PLACEHOLDER' | translate"
-            />
-          </div>
-
-          <div class="form-field">
-            <label for="up-price">{{ 'PROPERTY_UPDATE.PRICE' | translate }}</label>
-            <input pInputText id="up-price" type="number" formControlName="price" />
-            @if (isControlInvalid('price', 'min')) {
-              <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
-            }
-          </div>
-
-          <div class="form-field">
-            <label for="up-area">{{ 'PROPERTY_UPDATE.AREA' | translate }}</label>
-            <input pInputText id="up-area" type="number" formControlName="area" />
-            @if (isControlInvalid('area', 'min')) {
-              <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
-            }
-          </div>
-
-          <div class="form-field">
-            <label for="up-rooms">{{ 'PROPERTY_UPDATE.ROOMS' | translate }}</label>
-            <input pInputText id="up-rooms" type="number" formControlName="rooms" />
-            @if (isControlInvalid('rooms', 'min')) {
-              <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
-            }
-          </div>
-
-          <div class="form-field">
-            <label for="up-bathrooms">{{ 'PROPERTY_UPDATE.BATHROOMS' | translate }}</label>
-            <input pInputText id="up-bathrooms" type="number" formControlName="bathrooms" />
-            @if (isControlInvalid('bathrooms', 'min')) {
-              <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
-            }
-          </div>
-
-          <div class="form-field">
-            <label for="up-country">{{ 'PROPERTY_UPDATE.COUNTRY' | translate }}</label>
-            <input pInputText id="up-country" type="text" formControlName="country" />
-          </div>
-
-          <div class="form-field">
-            <label for="up-governorate">{{ 'PROPERTY_UPDATE.GOVERNORATE' | translate }}</label>
-            <input pInputText id="up-governorate" type="text" formControlName="governorate" />
-          </div>
-
-          <div class="form-field">
-            <label for="up-city">{{ 'PROPERTY_UPDATE.CITY' | translate }}</label>
-            <input pInputText id="up-city" type="text" formControlName="city" />
-          </div>
-
-          <div class="form-field">
-            <label for="up-district">{{ 'PROPERTY_UPDATE.DISTRICT' | translate }}</label>
-            <input pInputText id="up-district" type="text" formControlName="district" />
-          </div>
-
-          <div class="form-field">
-            <label for="up-street">{{ 'PROPERTY_UPDATE.STREET' | translate }}</label>
-            <input pInputText id="up-street" type="text" formControlName="street" />
-          </div>
-
-          <div class="form-field">
-            <label for="up-building-number">{{ 'PROPERTY_UPDATE.BUILDING_NUMBER' | translate }}</label>
-            <input
-              pInputText
-              id="up-building-number"
-              type="number"
-              formControlName="buildingNumber"
-            />
-            @if (isControlInvalid('buildingNumber', 'min')) {
-              <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
-            }
-          </div>
-
-          <div class="form-field">
-            <label for="up-floor-number">{{ 'PROPERTY_UPDATE.FLOOR_NUMBER' | translate }}</label>
-            <input pInputText id="up-floor-number" type="number" formControlName="floorNumber" />
-          </div>
-
-          <div class="form-field">
-            <label for="up-apartment-number">{{ 'PROPERTY_UPDATE.APARTMENT_NUMBER' | translate }}</label>
-            <input
-              pInputText
-              id="up-apartment-number"
-              type="number"
-              formControlName="apartmentNumber"
-            />
-            @if (isControlInvalid('apartmentNumber', 'min')) {
-              <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
-            }
-          </div>
-        </div>
-
-        <div class="form-field full-width">
-          <label for="up-image-files">{{ 'PROPERTY_UPDATE.IMAGES' | translate }}</label>
-          <p-fileupload
-            #uploader
-            [name]="'ImageURLs'"
-            mode="advanced"
-            [multiple]="true"
-            [showUploadButton]="false"
-            [showCancelButton]="true"
-            [customUpload]="true"
-            accept="image/*"
-            [chooseLabel]="'PROPERTY_UPDATE.CHOOSE_IMAGES' | translate"
-            [cancelLabel]="'PROPERTY_UPDATE.CLEAR_IMAGES' | translate"
-            [invalidFileTypeMessageSummary]="'PROPERTY_UPDATE.INVALID_FILE_TYPE' | translate"
-          />
-          <small class="form-hint">{{ 'PROPERTY_UPDATE.IMAGES_HINT' | translate }}</small>
-        </div>
-
-        <div class="form-actions">
+        <div class="sidebar-actions">
           <p-button
             type="submit"
             icon="pi pi-save"
             [label]="'PROPERTY_UPDATE.SAVE' | translate"
             [loading]="submitting()"
             [disabled]="submitting()"
+            styleClass="sidebar-save-btn"
           />
           <p-button
             type="button"
@@ -206,7 +291,7 @@
             (onClick)="clearForm(uploader)"
           />
         </div>
-      </form>
-    </div>
+      </aside>
+    </form>
   </div>
 </section>

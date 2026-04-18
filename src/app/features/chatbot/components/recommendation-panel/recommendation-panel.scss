@@ -13,7 +13,7 @@
 .rec-panel__label {
   font-weight: 700;
   font-size: 0.75rem;
-  color: var(--brand-accent, #8200db);
+  color: var(--brand-primary, #1a4d3e);
   margin: 0 0 0.5rem;
   display: flex;
   align-items: center;
@@ -28,7 +28,7 @@
 
 .rec-panel__others {
   padding-top: 0.625rem;
-  border-top: 1px solid var(--glass-border, rgba(0, 0, 0, 0.06));
+  border-top: 1px solid var(--glass-border, rgba(224, 216, 204, 0.4));
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -37,7 +37,7 @@
 .rec-panel__others-label {
   font-weight: 600;
   font-size: 0.6875rem;
-  color: var(--content-muted, #6a7282);
+  color: var(--content-muted, #8b8b9e);
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.04em;

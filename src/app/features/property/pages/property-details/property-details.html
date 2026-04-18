@@ -37,9 +37,9 @@
         [attr.aria-label]="'PROPERTY_DETAILS.LOADING' | translate"
       >
         <div class="details-hero">
-          <p-skeleton height="360px" styleClass="skeleton-image" borderRadius="16px" />
+          <p-skeleton height="480px" styleClass="skeleton-image" borderRadius="16px" />
         </div>
-        <div class="details-content">
+        <div class="details-body">
           <p-skeleton width="50%" height="2rem" styleClass="mb-3" />
           <p-skeleton width="70%" height="1.25rem" styleClass="mb-2" />
           <p-skeleton width="40%" height="1rem" styleClass="mb-4" />
@@ -60,14 +60,14 @@
     <!-- ── Property Details ────────────────────────────────── -->
     @if (!loading() && !error() && property(); as p) {
       <div class="details-layout">
-        <!-- Property gallery -->
+        <!-- ── Hero Gallery (full width) ──────────────────── -->
         <div class="details-hero">
           <img
             class="hero-image"
             [src]="galleryImages()[selectedImageIndex()]"
             [alt]="displayPropertyType(p.propertyType) + ' in ' + p.city"
             width="1400"
-            height="900"
+            height="788"
             loading="eager"
             decoding="async"
             (error)="onGalleryImageError($event, p.propertyType)"
@@ -88,7 +88,7 @@
                     [src]="imageUrl"
                     [alt]="displayPropertyType(p.propertyType) + ' thumbnail ' + (i + 1)"
                     width="200"
-                    height="140"
+                    height="113"
                     loading="lazy"
                     decoding="async"
                     (error)="onGalleryImageError($event, p.propertyType)"
@@ -107,135 +107,144 @@
           </div>
         </div>
 
-        <!-- Content Panel -->
-        <div class="details-content">
-          <!-- Price & ID -->
-          <div class="content-header">
-            <h1 class="property-price">{{ formattedPrice() }}</h1>
-            <span class="property-id">ID #{{ p.propertyId }}</span>
-          </div>
+        <!-- ── Two-column: Content + Sidebar ──────────────── -->
+        <div class="details-body">
+          <div class="details-main">
+            <!-- Location -->
+            <p class="property-location">
+              <i class="pi pi-map-marker" aria-hidden="true"></i>
+              {{ fullAddress() }}
+            </p>
 
-          <!-- Location -->
-          <p class="property-location">
-            <i class="pi pi-map-marker" aria-hidden="true"></i>
-            {{ fullAddress() }}
-          </p>
+            <p-divider />
 
-          <p-divider />
-
-          <!-- Quick Stats Grid -->
-          <div class="stats-grid">
-            <div class="stat-card">
-              <i class="pi pi-th-large stat-icon" aria-hidden="true"></i>
-              <div class="stat-info">
-                <span class="stat-value">{{ p.area }} m²</span>
-                <span class="stat-label">{{ 'PROPERTY_DETAILS.AREA' | translate }}</span>
+            <!-- Quick Stats Grid -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <i class="pi pi-th-large stat-icon" aria-hidden="true"></i>
+                <div class="stat-info">
+                  <span class="stat-value">{{ p.area }} m²</span>
+                  <span class="stat-label">{{ 'PROPERTY_DETAILS.AREA' | translate }}</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <i class="pi pi-home stat-icon" aria-hidden="true"></i>
+                <div class="stat-info">
+                  <span class="stat-value">{{ p.rooms }}</span>
+                  <span class="stat-label">{{ 'PROPERTY_DETAILS.ROOMS' | translate }}</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <i class="pi pi-inbox stat-icon" aria-hidden="true"></i>
+                <div class="stat-info">
+                  <span class="stat-value">{{ p.bathrooms }}</span>
+                  <span class="stat-label">{{ 'PROPERTY_DETAILS.BATHROOMS' | translate }}</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <i class="pi pi-check-circle stat-icon" aria-hidden="true"></i>
+                <div class="stat-info">
+                  <span class="stat-value">{{ p.finishingType }}</span>
+                  <span class="stat-label">{{ 'PROPERTY_DETAILS.FINISHING' | translate }}</span>
+                </div>
               </div>
             </div>
-            <div class="stat-card">
-              <i class="pi pi-home stat-icon" aria-hidden="true"></i>
-              <div class="stat-info">
-                <span class="stat-value">{{ p.rooms }}</span>
-                <span class="stat-label">{{ 'PROPERTY_DETAILS.ROOMS' | translate }}</span>
+
+            <p-divider />
+
+            <!-- Location Details -->
+            <h2 class="section-title">
+              <i class="pi pi-map" aria-hidden="true"></i>
+              {{ 'PROPERTY_DETAILS.LOCATION_DETAILS' | translate }}
+            </h2>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">{{ 'PROPERTY_DETAILS.COUNTRY' | translate }}</span>
+                <span class="info-value">{{ p.country }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">{{ 'PROPERTY_DETAILS.GOVERNORATE' | translate }}</span>
+                <span class="info-value">{{ p.governorate }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">{{ 'PROPERTY_DETAILS.CITY' | translate }}</span>
+                <span class="info-value">{{ p.city }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">{{ 'PROPERTY_DETAILS.DISTRICT' | translate }}</span>
+                <span class="info-value">{{ p.district }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">{{ 'PROPERTY_DETAILS.STREET' | translate }}</span>
+                <span class="info-value">{{ p.street }}</span>
               </div>
             </div>
-            <div class="stat-card">
-              <i class="pi pi-inbox stat-icon" aria-hidden="true"></i>
-              <div class="stat-info">
-                <span class="stat-value">{{ p.bathrooms }}</span>
-                <span class="stat-label">{{ 'PROPERTY_DETAILS.BATHROOMS' | translate }}</span>
+
+            <p-divider />
+
+            <!-- Building Details -->
+            <h2 class="section-title">
+              <i class="pi pi-building stat-icon" aria-hidden="true"></i>
+              {{ 'PROPERTY_DETAILS.BUILDING_DETAILS' | translate }}
+            </h2>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">{{ 'PROPERTY_DETAILS.BUILDING_NO' | translate }}</span>
+                <span class="info-value">{{ p.buildingNumber }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">{{ 'PROPERTY_DETAILS.FLOOR' | translate }}</span>
+                <span class="info-value">{{ formatFloorLabel(p.floorNumber) }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">{{ 'PROPERTY_DETAILS.APARTMENT_NO' | translate }}</span>
+                <span class="info-value">{{ p.apartmentNumber }}</span>
               </div>
             </div>
-            <div class="stat-card">
-              <i class="pi pi-check-circle stat-icon" aria-hidden="true"></i>
-              <div class="stat-info">
-                <span class="stat-value">{{ p.finishingType }}</span>
-                <span class="stat-label">{{ 'PROPERTY_DETAILS.FINISHING' | translate }}</span>
-              </div>
-            </div>
           </div>
 
-          <p-divider />
+          <!-- ── Sticky Sidebar ─────────────────────────────── -->
+          <aside class="details-sidebar" aria-label="Property price and actions">
+            <div class="sidebar-card">
+              <h1 class="property-price">{{ formattedPrice() }}</h1>
+              <span class="property-id">ID #{{ p.propertyId }}</span>
 
-          <!-- Location Details -->
-          <h2 class="section-title">
-            <i class="pi pi-map" aria-hidden="true"></i>
-            {{ 'PROPERTY_DETAILS.LOCATION_DETAILS' | translate }}
-          </h2>
-          <div class="info-grid">
-            <div class="info-item">
-              <span class="info-label">{{ 'PROPERTY_DETAILS.COUNTRY' | translate }}</span>
-              <span class="info-value">{{ p.country }}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">{{ 'PROPERTY_DETAILS.GOVERNORATE' | translate }}</span>
-              <span class="info-value">{{ p.governorate }}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">{{ 'PROPERTY_DETAILS.CITY' | translate }}</span>
-              <span class="info-value">{{ p.city }}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">{{ 'PROPERTY_DETAILS.DISTRICT' | translate }}</span>
-              <span class="info-value">{{ p.district }}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">{{ 'PROPERTY_DETAILS.STREET' | translate }}</span>
-              <span class="info-value">{{ p.street }}</span>
-            </div>
-          </div>
+              <p-button
+                [label]="'PROPERTY_DETAILS.CONTACT_US' | translate"
+                icon="pi pi-envelope"
+                styleClass="sidebar-cta w-full"
+                (onClick)="openContactDialog()"
+                [attr.aria-label]="'PROPERTY_DETAILS.CONTACT_ARIA' | translate"
+              />
 
-          <p-divider />
-
-          <!-- Building Details -->
-          <h2 class="section-title">
-            <i class="pi pi-building stat-icon" aria-hidden="true"></i>
-            {{ 'PROPERTY_DETAILS.BUILDING_DETAILS' | translate }}
-          </h2>
-          <div class="info-grid">
-            <div class="info-item">
-              <span class="info-label">{{ 'PROPERTY_DETAILS.BUILDING_NO' | translate }}</span>
-              <span class="info-value">{{ p.buildingNumber }}</span>
+              <p-button
+                [label]="'PROPERTY_DETAILS.EDIT_PROPERTY' | translate"
+                icon="pi pi-pen-to-square"
+                [outlined]="true"
+                styleClass="w-full"
+                [routerLink]="['/properties/update', p.propertyId]"
+                [attr.aria-label]="'PROPERTY_DETAILS.EDIT_ARIA' | translate"
+              />
             </div>
-            <div class="info-item">
-              <span class="info-label">{{ 'PROPERTY_DETAILS.FLOOR' | translate }}</span>
-              <span class="info-value">{{ formatFloorLabel(p.floorNumber) }}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">{{ 'PROPERTY_DETAILS.APARTMENT_NO' | translate }}</span>
-              <span class="info-value">{{ p.apartmentNumber }}</span>
-            </div>
-          </div>
-
-          <!-- CTA -->
-          <div class="details-actions">
-            <p-button
-              [label]="'PROPERTY_DETAILS.EDIT_PROPERTY' | translate"
-              icon="pi pi-pen-to-square"
-              [outlined]="true"
-              [routerLink]="['/properties/update', p.propertyId]"
-              [attr.aria-label]="'PROPERTY_DETAILS.EDIT_ARIA' | translate"
-            />
-            <p-button
-              [label]="'PROPERTY_DETAILS.CONTACT_US' | translate"
-              icon="pi pi-envelope"
-              styleClass="w-full"
-              (onClick)="openContactDialog()"
-              [attr.aria-label]="'PROPERTY_DETAILS.CONTACT_ARIA' | translate"
-            />
-            <p-button
-              [label]="'PROPERTY_DETAILS.BACK_TO_LISTINGS' | translate"
-              icon="pi pi-arrow-left"
-              styleClass="w-full"
-              [outlined]="true"
-              routerLink="/properties/list"
-              [attr.aria-label]="'PROPERTY_DETAILS.BACK_ARIA' | translate"
-            />
-          </div>
+          </aside>
         </div>
       </div>
     }
   </div>
+
+  <!-- ── Floating Mobile CTA ────────────────────────────────── -->
+  @if (!loading() && !error() && property()) {
+    <div class="mobile-cta-bar">
+      <span class="mobile-cta-price">{{ formattedPrice() }}</span>
+      <p-button
+        [label]="'PROPERTY_DETAILS.CONTACT_US' | translate"
+        icon="pi pi-envelope"
+        size="small"
+        (onClick)="openContactDialog()"
+        [attr.aria-label]="'PROPERTY_DETAILS.CONTACT_ARIA' | translate"
+      />
+    </div>
+  }
 
   <!-- ── Contact Dialog ──────────────────────────────────── -->
   @if (property(); as p) {

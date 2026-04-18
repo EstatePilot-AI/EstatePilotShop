@@ -117,10 +117,46 @@
 
 ::ng-deep .filter-select {
   min-width: 150px;
+  --p-select-background: var(--surface-ground);
+  --p-select-border-color: var(--border-default);
+  --p-select-color: var(--content-heading);
+  --p-select-placeholder-color: var(--content-muted);
+  --p-select-hover-border-color: var(--border-strong);
+  --p-select-focus-border-color: var(--brand-primary);
+
+  .p-select-label {
+    color: var(--content-heading) !important;
+  }
+
+  .p-select-dropdown {
+    color: var(--content-muted) !important;
+  }
 
   @media (max-width: 480px) {
     min-width: 100%;
     width: 100%;
+  }
+}
+
+:host ::ng-deep .p-select-overlay {
+  background: var(--surface-card) !important;
+  border: 1px solid var(--border-default) !important;
+}
+
+:host ::ng-deep .p-select-option {
+  color: var(--content-body) !important;
+
+  &.p-focus,
+  &:hover {
+    background: var(--interactive-hover) !important;
+    color: var(--content-heading) !important;
+  }
+
+  &.p-select-option-selected,
+  &[aria-selected='true'] {
+    background: color-mix(in srgb, var(--brand-primary) 22%, var(--surface-card)) !important;
+    color: var(--content-heading) !important;
+    font-weight: 600;
   }
 }
 

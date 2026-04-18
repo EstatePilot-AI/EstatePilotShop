@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -17,6 +17,7 @@ import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
+import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 
 import { PropertyService } from '../../../../core/services/property.service';
@@ -33,6 +34,7 @@ import { IPropertyDetail, IUpdatePropertyPayload } from '../../models/IProperty'
     InputTextModule,
     MessageModule,
     SelectModule,
+    DialogModule,
     TranslatePipe,
   ],
   templateUrl: './property-update.html',
@@ -41,6 +43,7 @@ import { IPropertyDetail, IUpdatePropertyPayload } from '../../models/IProperty'
 })
 export class PropertyUpdate implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly propertyService = inject(PropertyService);
   private readonly translationService = inject(TranslationService);
@@ -52,24 +55,47 @@ export class PropertyUpdate implements OnInit {
   readonly propertyDetail = signal<IPropertyDetail | null>(null);
   readonly loadingProperty = signal(false);
   readonly submitting = signal(false);
-  readonly successMessage = signal<string | null>(null);
+  readonly saveConfirmDialogVisible = signal(false);
+  readonly imageSelectionTouched = signal(false);
 
   readonly updateForm = this.fb.group({
-    propertyType: this.fb.control<number | null>(null),
-    finishingType: this.fb.control<number | null>(null),
-    negotiable: this.fb.control<boolean | null>(null),
-    price: this.fb.control<number | null>(null, { validators: [Validators.min(0)] }),
-    area: this.fb.control<number | null>(null, { validators: [Validators.min(0)] }),
-    rooms: this.fb.control<number | null>(null, { validators: [Validators.min(0)] }),
-    bathrooms: this.fb.control<number | null>(null, { validators: [Validators.min(0)] }),
+    propertyType: this.fb.control<number | null>(null, { validators: [Validators.required] }),
+    finishingType: this.fb.control<number | null>(null, { validators: [Validators.required] }),
+    negotiable: this.fb.control<boolean | null>(null, { validators: [Validators.required] }),
+    price: this.fb.control<number | null>(null, {
+      validators: [Validators.required, Validators.min(0)],
+    }),
+    area: this.fb.control<number | null>(null, {
+      validators: [Validators.required, Validators.min(0)],
+    }),
+    rooms: this.fb.control<number | null>(null, {
+      validators: [Validators.required, Validators.min(0)],
+    }),
+    bathrooms: this.fb.control<number | null>(null, {
+      validators: [Validators.required, Validators.min(0)],
+    }),
     country: this.fb.nonNullable.control('', { validators: [Validators.maxLength(100)] }),
-    governorate: this.fb.nonNullable.control('', { validators: [Validators.maxLength(100)] }),
-    city: this.fb.nonNullable.control('', { validators: [Validators.maxLength(100)] }),
-    district: this.fb.nonNullable.control('', { validators: [Validators.maxLength(100)] }),
-    street: this.fb.nonNullable.control('', { validators: [Validators.maxLength(100)] }),
-    buildingNumber: this.fb.control<number | null>(null, { validators: [Validators.min(0)] }),
-    floorNumber: this.fb.control<number | null>(null),
-    apartmentNumber: this.fb.control<number | null>(null, { validators: [Validators.min(0)] }),
+    governorate: this.fb.nonNullable.control('', {
+      validators: [Validators.required, Validators.maxLength(100)],
+    }),
+    city: this.fb.nonNullable.control('', {
+      validators: [Validators.required, Validators.maxLength(100)],
+    }),
+    district: this.fb.nonNullable.control('', {
+      validators: [Validators.required, Validators.maxLength(100)],
+    }),
+    street: this.fb.nonNullable.control('', {
+      validators: [Validators.required, Validators.maxLength(100)],
+    }),
+    buildingNumber: this.fb.control<number | null>(null, {
+      validators: [Validators.required, Validators.min(0)],
+    }),
+    floorNumber: this.fb.control<number | null>(null, {
+      validators: [Validators.required, Validators.min(0)],
+    }),
+    apartmentNumber: this.fb.control<number | null>(null, {
+      validators: [Validators.required, Validators.min(0)],
+    }),
   });
 
   readonly negotiableOptions = computed(() => {
@@ -121,11 +147,27 @@ export class PropertyUpdate implements OnInit {
     this.loadCurrentProperty(id);
   }
 
-  submit(uploader: FileUpload): void {
-    if (this.updateForm.invalid) {
+  openSaveConfirm(uploader: FileUpload): void {
+    const selectedFiles = this.getSelectedFiles(uploader);
+
+    if (this.updateForm.invalid || selectedFiles.length === 0) {
       this.updateForm.markAllAsTouched();
+      this.imageSelectionTouched.set(true);
       return;
     }
+
+    this.saveConfirmDialogVisible.set(true);
+  }
+
+  cancelSaveConfirm(): void {
+    this.saveConfirmDialogVisible.set(false);
+  }
+
+  confirmSaveAndGoHome(uploader: FileUpload): void {
+    if (this.submitting()) return;
+    this.saveConfirmDialogVisible.set(false);
+
+    const selectedFiles = this.getSelectedFiles(uploader);
 
     const id = this.propertyId();
     if (id === null) {
@@ -138,15 +180,20 @@ export class PropertyUpdate implements OnInit {
     }
 
     this.submitting.set(true);
-    this.successMessage.set(null);
 
     this.propertyService
-      .updateProperty(id, this.mapToPayload(this.getSelectedFiles(uploader)))
+      .updateProperty(id, this.mapToPayload(selectedFiles))
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           this.submitting.set(false);
-          this.successMessage.set(this.translate.instant('PROPERTY_UPDATE.SUCCESS'));
+          this.messageService.add({
+            severity: 'success',
+            summary: this.translate.instant('PROPERTY_UPDATE.SUCCESS_TITLE'),
+            detail: this.translate.instant('PROPERTY_UPDATE.SUCCESS'),
+            life: 3000,
+          });
+          this.router.navigateByUrl('/');
         },
         error: () => {
           this.submitting.set(false);
@@ -175,13 +222,25 @@ export class PropertyUpdate implements OnInit {
 
     uploader?.clear();
 
-    this.successMessage.set(null);
+    this.imageSelectionTouched.set(false);
   }
 
   isControlInvalid(controlName: string, errorName?: string): boolean {
     const control = this.updateForm.get(controlName);
     if (!control || !control.touched) return false;
     return errorName ? control.hasError(errorName) : control.invalid;
+  }
+
+  onImagesSelect(): void {
+    this.imageSelectionTouched.set(true);
+  }
+
+  onImagesClear(): void {
+    this.imageSelectionTouched.set(true);
+  }
+
+  isImageRequiredInvalid(uploader?: FileUpload): boolean {
+    return this.imageSelectionTouched() && this.getSelectedFiles(uploader).length === 0;
   }
 
   propertyImageUrl(property: IPropertyDetail): string {

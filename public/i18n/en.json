@@ -200,11 +200,22 @@
     "CLEAR_IMAGES": "Clear Images",
     "INVALID_FILE_TYPE": "Only image files are allowed.",
     "SELECTED_IMAGES": "Selected images",
+    "FIELD_REQUIRED": "This field is required.",
+    "IMAGES_REQUIRED": "Please select at least one image.",
     "NON_NEGATIVE": "Value must be zero or greater.",
     "SAVE": "Save Changes",
     "CLEAR": "Clear Form",
+    "SUCCESS_TITLE": "Success",
     "SUCCESS": "Property updated successfully.",
-    "ERROR": "Failed to update property. Please try again."
+    "ERROR": "Failed to update property. Please try again.",
+    "SAVE_CONFIRM_TITLE": "Confirm Save",
+    "SAVE_CONFIRM_BODY": "Are you sure you want to save these changes? If you continue, the property will be updated and you will be redirected to the home page.",
+    "SAVE_CONFIRM_CANCEL": "Cancel",
+    "SAVE_CONFIRM_ACCEPT": "Yes, Save",
+    "UPDATE_CONFIRMED_TITLE": "Update Confirmed",
+    "UPDATE_CONFIRMED_BODY": "Your property has been updated successfully. Do you want to go back to the home page now?",
+    "GO_HOME": "Go Home",
+    "STAY_HERE": "Stay Here"
   },
   "CONTACT": {
     "DIALOG_TITLE": "Contact Us",

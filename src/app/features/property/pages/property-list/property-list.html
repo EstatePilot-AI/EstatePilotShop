@@ -14,7 +14,6 @@
           </p>
         </div>
 
-        <!-- Reload button -->
         <p-button
           icon="pi pi-refresh"
           [rounded]="true"
@@ -33,7 +32,6 @@
   <div class="container">
     <!-- ── Filter Bar ──────────────────────────────────────── -->
     <div class="filter-bar">
-      <!-- Search -->
       <div class="filter-search">
         <i class="pi pi-search filter-search-icon"></i>
         <input
@@ -56,7 +54,6 @@
         }
       </div>
 
-      <!-- Type filter -->
       <p-select
         [options]="propertyTypes()"
         [ngModel]="selectedType()"
@@ -68,7 +65,6 @@
         [attr.aria-label]="'PROPERTIES.FILTER_TYPE' | translate"
       />
 
-      <!-- Sort -->
       <p-select
         [options]="sortOptions()"
         [ngModel]="sortBy()"
@@ -79,7 +75,6 @@
         [attr.aria-label]="'PROPERTIES.SORT_LABEL' | translate"
       />
 
-      <!-- Clear filters -->
       @if (searchQuery() || selectedType() || sortBy() !== 'newest') {
         <p-button
           [label]="'PROPERTIES.CLEAR_FILTERS' | translate"
@@ -156,6 +151,7 @@
         @for (property of filtered(); track property.propertyId) {
           <article
             class="property-card"
+            [routerLink]="['/properties', property.propertyId]"
             [attr.aria-label]="displayPropertyType(property.propertyType) + ' in ' + property.city"
           >
             <div class="property-image-wrapper">
@@ -164,67 +160,75 @@
                 [src]="propertyImageUrl(property)"
                 [alt]="displayPropertyType(property.propertyType) + ' in ' + property.city"
                 width="900"
-                height="560"
+                height="506"
                 loading="lazy"
                 decoding="async"
                 (error)="onImageError($event, property)"
               />
-            </div>
 
-            <!-- Card body -->
-            <div class="property-card-body">
-              <!-- Price -->
-              <p class="property-price">{{ formatPrice(property.price) }}</p>
+              <span
+                class="property-status-badge"
+                [class.status-available]="property.status === 'Available'"
+                [class.status-sold]="property.status === 'Sold'"
+                [class.status-rented]="property.status === 'Rented'"
+                [class.status-pending]="property.status === 'Pending'"
+              >
+                {{ property.status }}
+              </span>
 
-              <!-- Location -->
-              <p class="property-location">
-                <i class="pi pi-map-marker" aria-hidden="true"></i>
-                {{ property.district }}, {{ property.city }}
-              </p>
+              <button
+                class="property-heart-btn"
+                type="button"
+                [attr.aria-label]="'Save ' + displayPropertyType(property.propertyType)"
+                (click)="$event.stopPropagation()"
+              >
+                <i class="pi pi-heart" aria-hidden="true"></i>
+              </button>
 
-              <p-divider styleClass="my-3" />
-
-              <!-- Stats row -->
-              <div class="property-stats">
-                <span
-                  class="property-stat"
-                  [pTooltip]="'PROPERTIES.AREA' | translate"
-                  tooltipPosition="top"
-                >
-                  <i class="pi pi-th-large" aria-hidden="true"></i>
-                  {{ property.area }} m²
-                </span>
-                <span
-                  class="property-stat"
-                  [pTooltip]="'PROPERTIES.TYPE' | translate"
-                  tooltipPosition="top"
-                >
-                  <i class="pi pi-tag" aria-hidden="true"></i>
+              <div class="property-image-overlay">
+                <span class="property-price-badge">{{ formatPrice(property.price) }}</span>
+                <span class="property-type-pill">
                   {{ displayPropertyType(property.propertyType) }}
                 </span>
-                <span
-                  class="property-stat"
-                  [pTooltip]="'PROPERTIES.STATUS' | translate"
-                  tooltipPosition="top"
-                >
-                  <i class="pi pi-info-circle" aria-hidden="true"></i>
-                  {{ property.status }}
+              </div>
+            </div>
+
+            <div class="property-card-body">
+              <div class="property-card-header">
+                <div class="property-card-text">
+                  <h3 class="property-card-title">
+                    {{ property.district }}, {{ property.city }}
+                  </h3>
+                  <span class="property-card-subtitle">{{ property.city }}</span>
+                </div>
+
+                <span class="property-card-price">
+                  {{ formatPrice(property.price) }}
                 </span>
               </div>
 
-              <!-- Action -->
-              <p-button
-                [label]="'PROPERTIES.VIEW_DETAILS' | translate"
-                icon="pi pi-arrow-right"
-                iconPos="right"
-                styleClass="w-full mt-3"
-                [outlined]="true"
-                size="small"
-                [routerLink]="['/properties', property.propertyId]"
-                [attr.aria-label]="
-                  'PROPERTIES.VIEW_DETAILS_ARIA' | translate: { id: property.propertyId }
-                "
-              />
+              <div class="property-divider"></div>
+
+              <div class="property-card-footer">
+                <div class="property-tags">
+                  <span class="property-tag">
+                    <i class="pi pi-th-large" aria-hidden="true"></i>
+                    {{ property.area }} m²
+                  </span>
+                  <span class="property-tag">
+                    <i class="pi pi-map-marker" aria-hidden="true"></i>
+                    {{ property.city }}
+                  </span>
+                  <span class="property-tag">
+                    <i class="pi pi-tag" aria-hidden="true"></i>
+                    {{ displayPropertyType(property.propertyType) }}
+                  </span>
+                </div>
+
+                <span class="property-card-arrow" aria-hidden="true">
+                  <i class="pi pi-arrow-up-right"></i>
+                </span>
+              </div>
             </div>
           </article>
         }

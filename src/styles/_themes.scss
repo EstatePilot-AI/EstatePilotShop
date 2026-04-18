@@ -76,11 +76,15 @@
   --glass-bg:                #{v.$glass-bg-light};
   --glass-border:            #{v.$glass-border-light};
 
+  // Typography
+  --font-display:            #{v.$font-family-display};
+  --font-body:               #{v.$font-family-body};
+
   // Scrollbar
   --scrollbar-thumb:         #{map.get(v.$tokens-light, 'border-default')};
 
   // Misc
-  --color-highlight-bg:      #{map.get(v.$tokens-light, 'brand-accent-light')}1a; // 10% opacity
+  --color-highlight-bg:      #{map.get(v.$tokens-light, 'brand-accent-light')}1a;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -124,9 +128,13 @@
   --glass-bg:                #{v.$glass-bg-dark};
   --glass-border:            #{v.$glass-border-dark};
 
+  // Typography
+  --font-display:            #{v.$font-family-display};
+  --font-body:               #{v.$font-family-body};
+
   --scrollbar-thumb:         #{map.get(v.$tokens-dark, 'border-default')};
 
-  --color-highlight-bg:      #{map.get(v.$tokens-dark, 'brand-accent')}29; // 16% opacity
+  --color-highlight-bg:      #{map.get(v.$tokens-dark, 'brand-accent')}29;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

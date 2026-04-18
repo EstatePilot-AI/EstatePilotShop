@@ -1,19 +1,16 @@
 // ============================================================
 // _variables.scss — Design Token Source of Truth
+// Editorial Luxury Real Estate Palette
 // ============================================================
 //
 // ARCHITECTURE (two-layer token system):
 //   Layer 1: $_raw-*     →  raw color palette (never use directly)
 //   Layer 2: $tokens-*   →  semantic named tokens (always use these)
 //
-// USAGE IN COMPONENT SCSS:
-//   • CSS custom properties: color: var(--surface-card);
-//   • SCSS maps (for mixins/loops): @use '../../styles/variables' as v;
-//
-// ADD NEW TOKENS:
-//   1. Add the raw color to the appropriate $_raw-* map.
-//   2. Add semantic entry to both $tokens-light AND $tokens-dark.
-//   3. The token will automatically appear as a CSS var via _themes.scss.
+// DESIGN DIRECTION: Editorial Luxury
+//   Primary: Deep forest teal — trust, stability, premium
+//   Accent:  Antique gold — luxury, aspiration
+//   Surfaces: Warm cream/sand — inviting, grounded
 // ============================================================
 
 @use 'sass:map';
@@ -24,143 +21,147 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 $_raw-light: (
-  // ── Neutrals ──
+  // ── Warm Neutrals ──
+  'warm-white':     #fdfbf7,
+  'cream':          #f8f4ed,
+  'sand':           #f0e9dc,
+  'linen':          #e8dfd0,
+  'stone':          #d4c9b8,
+  'warm-gray':      #8b8b9e,
+  'slate':          #3d3d56,
+  'charcoal':       #1a1a2e,
+  'ink':            #0f0f1a,
   'white':          #ffffff,
-  'gray-50':        #f9fafb,
-  'gray-100':       #f3f4f6,
-  'gray-200':       #e5e7eb,
-  'ink-950':        #020000,
-  'ink-700':        #364153,
-  'ink-400':        #6a7282,
   'black':          #000000,
 
-  // ── Blue (primary action) ──
-  'blue-500':       #155dfc,
-  'blue-600':       #1447e6,
-  'blue-100':       #bedbff,
+  // ── Teal (primary — trust, stability) ──
+  'teal-900':       #0d2f26,
+  'teal-800':       #1a4d3e,
+  'teal-700':       #22614f,
+  'teal-600':       #2d8b6e,
+  'teal-100':       #d4ede4,
+  'teal-50':        #e8f5f0,
 
-  // ── Purple (brand accent) ──
-  'purple-700':     #8200db,
-  'purple-600':     #9810fa,
-  'purple-400':     #ad46ff,
+  // ── Gold (accent — luxury, aspiration) ──
+  'gold-800':       #8b6508,
+  'gold-700':       #a0761a,
+  'gold-600':       #b8860b,
+  'gold-500':       #c9952d,
+  'gold-400':       #daa520,
+  'gold-100':       #f5e6c8,
+  'gold-50':        #faf2e0,
 
   // ── Green (success) ──
-  'green-600':      #00a63e,
-  'green-500':      #00c950,
-  'green-700':      #008236,
-  'green-100':      #b9f8cf,
+  'green-700':      #1a7a3a,
+  'green-600':      #22884a,
+  'green-500':      #2ea043,
+  'green-100':      #d4edda,
 
-  // ── Amber (warning) ──
-  'amber-500':      #e17100,
-  'amber-700':      #bb4d00,
-  'amber-100':      #fef3c6,
+  // ── Amber/Red (warning/danger) ──
+  'amber-600':      #b8860b,
+  'amber-100':      #fef3cd,
+  'red-700':        #a5202a,
+  'red-100':        #f8d7da,
 );
 
 $_raw-dark: (
-  // ── Surfaces ──
-  'surface-950':    #0a0e1a,
-  'surface-900':    #0f1320,
-  'surface-800':    #1a1f2e,
-  'surface-700':    #2a2f3e,
+  // ── Dark Surfaces (navy-charcoal) ──
+  'surface-950':    #080b10,
+  'surface-900':    #0d1117,
+  'surface-800':    #161b22,
+  'surface-700':    #21262d,
+  'surface-600':    #30363d,
   'black':          #000000,
 
   // ── Neutrals ──
   'white':          #ffffff,
-  'gray-200':       #d1d5dc,
-  'gray-400':       #99a1af,
+  'warm-white':     #f0ead6,
+  'gray-200':       #c9cdd1,
+  'gray-400':       #7d8590,
+  'gray-500':       #6e7681,
 
-  // ── Indigo (primary action — dark) ──
-  'indigo-500':     #6366f1,
-  'blue-500':       #2b7fff,
-  'blue-400':       #51a2ff,
+  // ── Teal (primary — dark mode) ──
+  'teal-500':       #34a87a,
+  'teal-400':       #4cc692,
+  'teal-300':       #7ddaaf,
 
-  // ── Purple (brand accent — dark) ──
-  'purple-400':     #ad46ff,
-  'purple-300':     #c27aff,
-
-  // ── Orange / Yellow (warning — dark) ──
-  'orange-500':     #fe9a00,
-  'yellow-500':     #ffb900,
+  // ── Gold (accent — dark mode) ──
+  'gold-500':       #daa520,
+  'gold-400':       #e6b84d,
+  'gold-300':       #f0cb6e,
 
   // ── Green (success — dark) ──
-  'green-500':      #00c950,
-  'green-400':      #05df72,
+  'green-500':      #2ea043,
+  'green-400':      #3fb950,
 
-  // ── Pink (danger — dark) ──
-  'pink-500':       #ff4d9d,
+  // ── Amber/Red (warning/danger — dark) ──
+  'amber-500':      #e3a008,
+  'amber-400':      #f0b429,
+
+  // ── Red (danger — dark) ──
+  'red-500':        #f85149,
 );
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Layer 2 — Semantic Tokens (public, used as CSS custom props)
-//
-// Token naming: [category]-[role][-variant]
-//   Categories: surface | content | border | brand | status | feedback | focus | overlay
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 $tokens-light: (
   // ── Surfaces ────────────────────────────────────────────
-  // Page / app background
-  'surface-ground':       map.get($_raw-light, 'white'),
-  // Sections, sidebars, panels
-  'surface-section':      map.get($_raw-light, 'gray-50'),
-  // Cards, dialogs, tooltips
-  'surface-card':         map.get($_raw-light, 'gray-100'),
-  // Hover states, nested surfaces
-  'surface-overlay':      map.get($_raw-light, 'gray-200'),
+  'surface-ground':       map.get($_raw-light, 'warm-white'),
+  'surface-section':      map.get($_raw-light, 'cream'),
+  'surface-card':         map.get($_raw-light, 'white'),
+  'surface-overlay':      map.get($_raw-light, 'sand'),
 
   // ── Content (text) ──────────────────────────────────────
-  // H1–H6, prominent labels
-  'content-heading':      map.get($_raw-light, 'ink-950'),
-  // Body copy, default text
-  'content-body':         map.get($_raw-light, 'ink-700'),
-  // Placeholders, captions, deemphasised text
-  'content-muted':        map.get($_raw-light, 'ink-400'),
-  // Inverse text (on dark backgrounds)
+  'content-heading':      map.get($_raw-light, 'charcoal'),
+  'content-body':         map.get($_raw-light, 'slate'),
+  'content-muted':        map.get($_raw-light, 'warm-gray'),
   'content-inverse':      map.get($_raw-light, 'white'),
 
   // ── Borders ─────────────────────────────────────────────
-  'border-default':       map.get($_raw-light, 'gray-200'),
-  'border-subtle':        map.get($_raw-light, 'gray-100'),
-  'border-strong':        map.get($_raw-light, 'ink-400'),
+  'border-default':       map.get($_raw-light, 'sand'),
+  'border-subtle':        map.get($_raw-light, 'cream'),
+  'border-strong':        map.get($_raw-light, 'stone'),
 
-  // ── Brand — Primary (blue) ──────────────────────────────
-  'brand-primary':        map.get($_raw-light, 'blue-500'),
-  'brand-primary-dark':   map.get($_raw-light, 'blue-600'),
-  'brand-primary-subtle': map.get($_raw-light, 'blue-100'),
+  // ── Brand — Primary (teal) ──────────────────────────────
+  'brand-primary':        map.get($_raw-light, 'teal-800'),
+  'brand-primary-dark':   map.get($_raw-light, 'teal-900'),
+  'brand-primary-subtle': map.get($_raw-light, 'teal-100'),
 
-  // ── Brand — Accent (purple) ─────────────────────────────
-  'brand-accent':         map.get($_raw-light, 'purple-700'),
-  'brand-accent-mid':     map.get($_raw-light, 'purple-600'),
-  'brand-accent-light':   map.get($_raw-light, 'purple-400'),
+  // ── Brand — Accent (gold) ──────────────────────────────
+  'brand-accent':         map.get($_raw-light, 'gold-600'),
+  'brand-accent-mid':     map.get($_raw-light, 'gold-500'),
+  'brand-accent-light':   map.get($_raw-light, 'gold-400'),
 
   // ── Status — Success ────────────────────────────────────
-  'status-success':       map.get($_raw-light, 'green-600'),
-  'status-success-hover': map.get($_raw-light, 'green-500'),
+  'status-success':       map.get($_raw-light, 'green-700'),
+  'status-success-hover': map.get($_raw-light, 'green-600'),
   'status-success-strong':map.get($_raw-light, 'green-700'),
   'status-success-subtle':map.get($_raw-light, 'green-100'),
 
   // ── Status — Warning ────────────────────────────────────
-  'status-warning':       map.get($_raw-light, 'amber-500'),
-  'status-warning-strong':map.get($_raw-light, 'amber-700'),
+  'status-warning':       map.get($_raw-light, 'amber-600'),
+  'status-warning-strong':map.get($_raw-light, 'amber-600'),
   'status-warning-subtle':map.get($_raw-light, 'amber-100'),
 
-  // ── Status — Info (alias of brand-primary) ──────────────
-  'status-info':          map.get($_raw-light, 'blue-500'),
-  'status-info-subtle':   map.get($_raw-light, 'blue-100'),
+  // ── Status — Info ──────────────────────────────────────
+  'status-info':          map.get($_raw-light, 'teal-800'),
+  'status-info-subtle':   map.get($_raw-light, 'teal-50'),
 
-  // ── Status — Danger (use warning-strong in light) ───────
-  'status-danger':        map.get($_raw-light, 'amber-700'),
+  // ── Status — Danger ─────────────────────────────────────
+  'status-danger':        map.get($_raw-light, 'red-700'),
 
   // ── Focus ───────────────────────────────────────────────
-  'focus-ring':           map.get($_raw-light, 'blue-500'),
+  'focus-ring':           map.get($_raw-light, 'teal-700'),
 
   // ── Overlay / Backdrop ──────────────────────────────────
-  'overlay-backdrop':     rgba(0, 0, 0, 0.4),
+  'overlay-backdrop':     rgba(15, 15, 26, 0.5),
 
   // ── Interactive ─────────────────────────────────────────
-  'interactive-hover':    map.get($_raw-light, 'gray-50'),
-  'interactive-active':   map.get($_raw-light, 'gray-100'),
-  'interactive-disabled': map.get($_raw-light, 'gray-200'),
+  'interactive-hover':    map.get($_raw-light, 'cream'),
+  'interactive-active':   map.get($_raw-light, 'sand'),
+  'interactive-disabled': map.get($_raw-light, 'sand'),
 );
 
 $tokens-dark: (
@@ -171,53 +172,53 @@ $tokens-dark: (
   'surface-overlay':      map.get($_raw-dark, 'surface-700'),
 
   // ── Content (text) ──────────────────────────────────────
-  'content-heading':      map.get($_raw-dark, 'white'),
+  'content-heading':      map.get($_raw-dark, 'warm-white'),
   'content-body':         map.get($_raw-dark, 'gray-200'),
   'content-muted':        map.get($_raw-dark, 'gray-400'),
   'content-inverse':      map.get($_raw-dark, 'surface-950'),
 
   // ── Borders ─────────────────────────────────────────────
-  'border-default':       map.get($_raw-dark, 'surface-700'),
-  'border-subtle':        map.get($_raw-dark, 'surface-800'),
+  'border-default':       map.get($_raw-dark, 'surface-600'),
+  'border-subtle':        map.get($_raw-dark, 'surface-700'),
   'border-strong':        map.get($_raw-dark, 'gray-400'),
 
-  // ── Brand — Primary (indigo in dark) ────────────────────
-  'brand-primary':        map.get($_raw-dark, 'indigo-500'),
-  'brand-primary-dark':   map.get($_raw-dark, 'blue-500'),
-  'brand-primary-subtle': map.get($_raw-dark, 'blue-400'),
+  // ── Brand — Primary (teal — dark) ──────────────────────
+  'brand-primary':        map.get($_raw-dark, 'teal-500'),
+  'brand-primary-dark':   map.get($_raw-dark, 'teal-400'),
+  'brand-primary-subtle': map.get($_raw-dark, 'teal-300'),
 
-  // ── Brand — Accent (purple) ─────────────────────────────
-  'brand-accent':         map.get($_raw-dark, 'purple-400'),
-  'brand-accent-mid':     map.get($_raw-dark, 'purple-400'),
-  'brand-accent-light':   map.get($_raw-dark, 'purple-300'),
+  // ── Brand — Accent (gold — dark) ──────────────────────
+  'brand-accent':         map.get($_raw-dark, 'gold-500'),
+  'brand-accent-mid':     map.get($_raw-dark, 'gold-400'),
+  'brand-accent-light':   map.get($_raw-dark, 'gold-300'),
 
   // ── Status — Success ────────────────────────────────────
   'status-success':       map.get($_raw-dark, 'green-500'),
   'status-success-hover': map.get($_raw-dark, 'green-400'),
   'status-success-strong':map.get($_raw-dark, 'green-500'),
-  'status-success-subtle':rgba(0, 201, 80, 0.15),
+  'status-success-subtle':rgba(46, 160, 67, 0.15),
 
   // ── Status — Warning ────────────────────────────────────
-  'status-warning':       map.get($_raw-dark, 'orange-500'),
-  'status-warning-strong':map.get($_raw-dark, 'yellow-500'),
-  'status-warning-subtle':rgba(254, 154, 0, 0.15),
+  'status-warning':       map.get($_raw-dark, 'amber-500'),
+  'status-warning-strong':map.get($_raw-dark, 'amber-400'),
+  'status-warning-subtle':rgba(227, 160, 8, 0.15),
 
-  // ── Status — Info ───────────────────────────────────────
-  'status-info':          map.get($_raw-dark, 'blue-500'),
-  'status-info-subtle':   rgba(43, 127, 255, 0.15),
+  // ── Status — Info ──────────────────────────────────────
+  'status-info':          map.get($_raw-dark, 'teal-500'),
+  'status-info-subtle':   rgba(52, 168, 122, 0.15),
 
   // ── Status — Danger ─────────────────────────────────────
-  'status-danger':        map.get($_raw-dark, 'pink-500'),
+  'status-danger':        map.get($_raw-dark, 'red-500'),
 
   // ── Focus ───────────────────────────────────────────────
-  'focus-ring':           map.get($_raw-dark, 'indigo-500'),
+  'focus-ring':           map.get($_raw-dark, 'teal-400'),
 
   // ── Overlay / Backdrop ──────────────────────────────────
-  'overlay-backdrop':     rgba(0, 0, 0, 0.6),
+  'overlay-backdrop':     rgba(0, 0, 0, 0.65),
 
   // ── Interactive ─────────────────────────────────────────
   'interactive-hover':    map.get($_raw-dark, 'surface-700'),
-  'interactive-active':   map.get($_raw-dark, 'surface-800'),
+  'interactive-active':   map.get($_raw-dark, 'surface-600'),
   'interactive-disabled': map.get($_raw-dark, 'surface-700'),
 );
 
@@ -225,7 +226,8 @@ $tokens-dark: (
 // Typography Scale
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-$font-family-base:     'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-family-body:     'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-family-display:  'Playfair Display', Georgia, 'Times New Roman', serif;
 $font-size-xs:         0.75rem;
 $font-size-sm:         0.875rem;
 $font-size-base:       1rem;
@@ -274,20 +276,21 @@ $section-padding-y:   $space-20;
 // Border Radius
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-$radius-sm:   0.25rem;
-$radius-md:   0.5rem;
-$radius-lg:   0.75rem;
-$radius-xl:   1rem;
+$radius-sm:   0.375rem;
+$radius-md:   0.625rem;
+$radius-lg:   0.875rem;
+$radius-xl:   1.25rem;
+$radius-2xl:  1.5rem;
 $radius-full: 9999px;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Elevation / Shadows
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-$shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.05);
-$shadow-md:  0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-$shadow-lg:  0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-$shadow-xl:  0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+$shadow-sm:  0 1px 3px rgba(26, 26, 46, 0.06), 0 1px 2px rgba(26, 26, 46, 0.04);
+$shadow-md:  0 4px 6px -1px rgba(26, 26, 46, 0.08), 0 2px 4px -2px rgba(26, 26, 46, 0.06);
+$shadow-lg:  0 10px 25px -3px rgba(26, 26, 46, 0.1), 0 4px 6px -4px rgba(26, 26, 46, 0.06);
+$shadow-xl:  0 20px 40px -5px rgba(26, 26, 46, 0.12), 0 8px 10px -6px rgba(26, 26, 46, 0.06);
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Transitions
@@ -322,8 +325,8 @@ $breakpoint-2xl: 1536px;
 // Glass Morphism
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-$glass-bg-light:     rgba(255, 255, 255, 0.8);
-$glass-border-light: rgba(0, 0, 0, 0.06);
-$glass-bg-dark:      rgba(26, 31, 46, 0.7);   // surface-800 with opacity
-$glass-border-dark:  rgba(255, 255, 255, 0.08);
-$glass-blur:         16px;
+$glass-bg-light:     rgba(253, 251, 247, 0.85);
+$glass-border-light: rgba(212, 201, 184, 0.25);
+$glass-bg-dark:      rgba(22, 27, 34, 0.75);
+$glass-border-dark:  rgba(48, 54, 61, 0.4);
+$glass-blur:         20px;

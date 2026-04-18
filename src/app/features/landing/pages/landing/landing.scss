@@ -231,6 +231,12 @@
 .stats-strip {
   background: var(--brand-primary);
   padding: 2rem 0;
+
+  :host-context(body.dark) & {
+    background: linear-gradient(135deg, #0f2b22 0%, #14352b 45%, #0c2019 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
 }
 
 .stats-grid {
@@ -264,6 +270,10 @@
   > i {
     font-size: 1.5rem;
     color: rgba(255, 255, 255, 0.6);
+
+    :host-context(body.dark) & {
+      color: rgba(218, 165, 32, 0.88);
+    }
   }
 }
 
@@ -288,6 +298,10 @@
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
+
+  :host-context(body.dark) & {
+    color: rgba(255, 255, 255, 0.82);
+  }
 }
 
 // ── Section Common ───────────────────────────────────────────

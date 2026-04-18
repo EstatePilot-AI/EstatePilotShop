@@ -169,6 +169,115 @@
   }
 }
 
+:host ::ng-deep .update-main {
+  .p-inputtext,
+  .p-textarea {
+    background: var(--surface-ground) !important;
+    border: 1px solid var(--border-default) !important;
+    color: var(--content-heading) !important;
+
+    &::placeholder {
+      color: var(--content-muted) !important;
+      opacity: 1;
+    }
+
+    &:hover {
+      border-color: var(--border-strong) !important;
+    }
+
+    &:focus {
+      border-color: var(--brand-primary) !important;
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 20%, transparent) !important;
+      outline: none;
+    }
+  }
+
+  .p-select {
+    --p-select-background: var(--surface-ground);
+    --p-select-border-color: var(--border-default);
+    --p-select-color: var(--content-heading);
+    --p-select-placeholder-color: var(--content-muted);
+    --p-select-hover-border-color: var(--border-strong);
+    --p-select-focus-border-color: var(--brand-primary);
+    --p-select-focus-ring-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 20%, transparent);
+  }
+}
+
+:host ::ng-deep .p-select-overlay {
+  background: var(--surface-card) !important;
+  border: 1px solid var(--border-default) !important;
+  color: var(--content-body) !important;
+}
+
+:host ::ng-deep .p-select-list {
+  background: transparent !important;
+}
+
+:host ::ng-deep .p-select-option {
+  color: var(--content-body) !important;
+
+  &.p-focus,
+  &:hover {
+    background: var(--interactive-hover) !important;
+    color: var(--content-heading) !important;
+  }
+
+  &.p-select-option-selected {
+    background: color-mix(in srgb, var(--brand-primary) 22%, var(--surface-card)) !important;
+    color: var(--content-heading) !important;
+  }
+}
+
+:host ::ng-deep {
+  .p-select-overlay {
+    background: var(--surface-card) !important;
+    border: 1px solid var(--border-default) !important;
+    color: var(--content-heading) !important;
+  }
+
+  .p-select-list-container {
+    background: transparent !important;
+  }
+
+  .p-select-option {
+    color: var(--content-body) !important;
+    background: transparent !important;
+
+    &.p-focus,
+    &:hover {
+      background: var(--interactive-hover) !important;
+      color: var(--content-heading) !important;
+    }
+
+    &.p-select-option-selected,
+    &[aria-selected='true'] {
+      background: color-mix(in srgb, var(--brand-primary) 22%, transparent) !important;
+      color: var(--content-heading) !important;
+      font-weight: 600;
+    }
+  }
+
+  .p-fileupload {
+    .p-fileupload-buttonbar {
+      background: var(--surface-overlay) !important;
+      border: 1px solid var(--border-default) !important;
+      border-bottom: none !important;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .p-fileupload-content {
+      background: var(--surface-ground) !important;
+      border: 1px solid var(--border-default) !important;
+      border-radius: 0 0 12px 12px;
+      color: var(--content-body) !important;
+    }
+
+    .p-fileupload-empty {
+      color: var(--content-muted) !important;
+    }
+  }
+}
+
 // ── Input with Suffix ────────────────────────────────────────
 
 .input-with-suffix {
@@ -215,6 +324,66 @@
 
 :host ::ng-deep .p-fileupload {
   width: 100%;
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  overflow: hidden;
+
+  .p-fileupload-header,
+  .p-fileupload-content {
+    background: var(--surface-ground);
+    color: var(--content-body);
+    border: 0;
+  }
+
+  .p-fileupload-header {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .p-fileupload-content {
+    border-top: 0;
+  }
+
+  .p-fileupload-file {
+    color: var(--content-body);
+    border-bottom-color: var(--border-subtle);
+  }
+
+  .p-fileupload-file-info,
+  .p-fileupload-file-name,
+  .p-fileupload-file-size {
+    color: var(--content-body);
+  }
+
+  .p-fileupload-header {
+    background: var(--surface-section) !important;
+    border: 1px solid var(--border-default) !important;
+    color: var(--content-body) !important;
+  }
+
+  .p-fileupload-content {
+    background: var(--surface-ground) !important;
+    border: 1px solid var(--border-default) !important;
+    border-top: none !important;
+    color: var(--content-body) !important;
+  }
+
+  .p-fileupload-file {
+    color: var(--content-heading) !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+  }
+
+  .p-button {
+    &.p-button-secondary,
+    &.p-button-outlined {
+      border-color: var(--border-strong) !important;
+      color: var(--content-heading) !important;
+      background: var(--surface-overlay) !important;
+
+      &:hover {
+        background: var(--interactive-hover) !important;
+      }
+    }
+  }
 }
 
 // ── Sticky Sidebar ───────────────────────────────────────────
@@ -356,7 +525,27 @@
   }
 
   @media (max-width: 480px) {
-    flex-direction: column;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 300;
+    flex-direction: row;
+    gap: 0.625rem;
+    background: color-mix(in srgb, var(--surface-card) 86%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border-default);
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+
+    > * {
+      flex: 1;
+    }
+
+    .p-button {
+      width: 100%;
+      justify-content: center;
+    }
   }
 }
 
@@ -374,11 +563,66 @@
   }
 }
 
+:host ::ng-deep .save-confirm-dialog {
+  .p-dialog-header {
+    background: var(--surface-card);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .p-dialog-content {
+    background: var(--surface-card);
+    color: var(--content-body);
+  }
+}
+
+.save-confirm-dialog__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--content-heading);
+  font-weight: 700;
+
+  i {
+    color: var(--brand-primary);
+  }
+}
+
+.save-confirm-dialog__text {
+  margin: 0;
+  color: var(--content-body);
+  line-height: 1.6;
+}
+
+.save-confirm-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.625rem;
+  margin-top: 1.25rem;
+
+  @media (max-width: 480px) {
+    flex-direction: column-reverse;
+
+    .p-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .property-update-page {
+    padding-bottom: 6rem;
+  }
+}
+
 // ── Mobile: sidebar becomes top banner ───────────────────────
 
 @media (max-width: 768px) {
   .sidebar-preview {
     border-radius: 16px;
+  }
+  .property-update-page {
+    padding-bottom: 6.75rem;
   }
 
   .sidebar-image-wrapper {
@@ -399,5 +643,26 @@
 
   .sidebar-id {
     margin-left: auto;
+  }
+  .sidebar-actions {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 350;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+    margin: 0;
+    background: color-mix(in srgb, var(--surface-card) 92%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border-default);
+  }
+
+  :host ::ng-deep .sidebar-actions .p-button {
+    width: 100%;
+    justify-content: center;
   }
 }

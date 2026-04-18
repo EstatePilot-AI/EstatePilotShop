@@ -282,3 +282,31 @@ h1, h2, h3, h4, h5, h6 {
     scroll-behavior: auto !important;
   }
 }
+
+// ============================================================
+// Toast (mobile responsiveness)
+// ============================================================
+
+@media (max-width: 640px) {
+  .p-toast.p-toast-top-right {
+    inset-inline-start: 0.5rem !important;
+    inset-inline-end: 0.5rem !important;
+    top: max(0.5rem, env(safe-area-inset-top)) !important;
+    width: auto !important;
+  }
+
+  .p-toast .p-toast-message {
+    margin: 0 0 0.5rem;
+  }
+
+  .p-toast .p-toast-message-content {
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .p-toast .p-toast-summary,
+  .p-toast .p-toast-detail {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}

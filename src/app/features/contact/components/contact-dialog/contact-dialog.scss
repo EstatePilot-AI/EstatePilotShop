@@ -70,6 +70,33 @@
   }
 }
 
+:host ::ng-deep .contact-dialog .p-inputtext {
+  background: var(--surface-ground) !important;
+  border: 1px solid var(--border-default) !important;
+  color: var(--content-heading) !important;
+
+  &::placeholder {
+    color: var(--content-muted) !important;
+    opacity: 1;
+  }
+
+  &:hover {
+    border-color: var(--border-strong) !important;
+  }
+
+  &:focus {
+    border-color: var(--brand-primary) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 20%, transparent) !important;
+    outline: none;
+  }
+}
+
+:host ::ng-deep .contact-dialog .p-inputtext.p-invalid,
+:host ::ng-deep .contact-dialog .p-inputtext.ng-invalid.ng-dirty,
+:host ::ng-deep .contact-dialog .p-inputtext.ng-invalid.ng-touched {
+  border-color: var(--status-danger) !important;
+}
+
 .form-error {
   font-size: 0.8rem;
   color: var(--status-danger);

@@ -46,16 +46,7 @@
           [label]="'HERO.EXPLORE_BTN' | translate"
           icon="pi pi-search"
           [rounded]="true"
-          size="large"
           routerLink="/properties"
-        />
-        <p-button
-          [label]="'HERO.CONTACT_BTN' | translate"
-          icon="pi pi-envelope"
-          [rounded]="true"
-          [outlined]="true"
-          size="large"
-          routerLink="/contact"
         />
       </div>
     </div>
@@ -70,7 +61,7 @@
         <div class="stat-item" appReveal [revealDelay]="$index * 100">
           <i [class]="stat.icon" aria-hidden="true"></i>
           <div class="stat-text">
-            <span class="stat-value">{{ stat.value }}</span>
+            <span class="stat-value">{{ stat.valueKey | translate }}</span>
             <span class="stat-label">{{ stat.labelKey | translate }}</span>
           </div>
         </div>
@@ -96,7 +87,6 @@
             </div>
             <div class="category-chip-text">
               <span class="category-chip-name">{{ cat.nameKey | translate }}</span>
-              <span class="category-chip-count">{{ cat.count }} {{ 'CATEGORIES.LISTINGS' | translate }}</span>
             </div>
           </a>
         }

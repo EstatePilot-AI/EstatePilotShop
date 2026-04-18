@@ -30,14 +30,10 @@
       <p-message severity="info" [text]="'PROPERTY_UPDATE.PREFILLING' | translate" />
     }
 
-    @if (successMessage()) {
-      <p-message severity="success" [text]="successMessage()!" styleClass="mb-6" />
-    }
-
     <form
       [formGroup]="updateForm"
       class="update-layout"
-      (ngSubmit)="submit(uploader)"
+      (ngSubmit)="openSaveConfirm(uploader)"
       novalidate
     >
       <!-- ── Main Form Column ─────────────────────────────── -->
@@ -60,6 +56,9 @@
                 formControlName="propertyType"
                 [placeholder]="'PROPERTY_UPDATE.PROPERTY_TYPE_PLACEHOLDER' | translate"
               />
+              @if (isControlInvalid('propertyType', 'required')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.FIELD_REQUIRED' | translate }}</small>
+              }
             </div>
 
             <div class="form-field">
@@ -72,6 +71,9 @@
                 formControlName="finishingType"
                 [placeholder]="'PROPERTY_UPDATE.FINISHING_TYPE_PLACEHOLDER' | translate"
               />
+              @if (isControlInvalid('finishingType', 'required')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.FIELD_REQUIRED' | translate }}</small>
+              }
             </div>
 
             <div class="form-field">
@@ -84,6 +86,9 @@
                 formControlName="negotiable"
                 [placeholder]="'PROPERTY_UPDATE.NEGOTIABLE_PLACEHOLDER' | translate"
               />
+              @if (isControlInvalid('negotiable', 'required')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.FIELD_REQUIRED' | translate }}</small>
+              }
             </div>
           </div>
 
@@ -94,6 +99,9 @@
                 <input pInputText id="up-price" type="number" formControlName="price" />
                 <span class="input-suffix">EGP</span>
               </div>
+              @if (isControlInvalid('price', 'required')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.FIELD_REQUIRED' | translate }}</small>
+              }
               @if (isControlInvalid('price', 'min')) {
                 <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
               }
@@ -105,6 +113,9 @@
                 <input pInputText id="up-area" type="number" formControlName="area" />
                 <span class="input-suffix">m²</span>
               </div>
+              @if (isControlInvalid('area', 'required')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.FIELD_REQUIRED' | translate }}</small>
+              }
               @if (isControlInvalid('area', 'min')) {
                 <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
               }
@@ -115,6 +126,9 @@
             <div class="form-field">
               <label for="up-rooms">{{ 'PROPERTY_UPDATE.ROOMS' | translate }}</label>
               <input pInputText id="up-rooms" type="number" formControlName="rooms" />
+              @if (isControlInvalid('rooms', 'required')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.FIELD_REQUIRED' | translate }}</small>
+              }
               @if (isControlInvalid('rooms', 'min')) {
                 <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
               }
@@ -123,6 +137,9 @@
             <div class="form-field">
               <label for="up-bathrooms">{{ 'PROPERTY_UPDATE.BATHROOMS' | translate }}</label>
               <input pInputText id="up-bathrooms" type="number" formControlName="bathrooms" />
+              @if (isControlInvalid('bathrooms', 'required')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.FIELD_REQUIRED' | translate }}</small>
+              }
               @if (isControlInvalid('bathrooms', 'min')) {
                 <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
               }
@@ -146,6 +163,9 @@
             <div class="form-field">
               <label for="up-governorate">{{ 'PROPERTY_UPDATE.GOVERNORATE' | translate }}</label>
               <input pInputText id="up-governorate" type="text" formControlName="governorate" />
+              @if (isControlInvalid('governorate', 'required')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.FIELD_REQUIRED' | translate }}</small>
+              }
             </div>
           </div>
 
@@ -153,16 +173,25 @@
             <div class="form-field">
               <label for="up-city">{{ 'PROPERTY_UPDATE.CITY' | translate }}</label>
               <input pInputText id="up-city" type="text" formControlName="city" />
+              @if (isControlInvalid('city', 'required')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.FIELD_REQUIRED' | translate }}</small>
+              }
             </div>
 
             <div class="form-field">
               <label for="up-district">{{ 'PROPERTY_UPDATE.DISTRICT' | translate }}</label>
               <input pInputText id="up-district" type="text" formControlName="district" />
+              @if (isControlInvalid('district', 'required')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.FIELD_REQUIRED' | translate }}</small>
+              }
             </div>
 
             <div class="form-field">
               <label for="up-street">{{ 'PROPERTY_UPDATE.STREET' | translate }}</label>
               <input pInputText id="up-street" type="text" formControlName="street" />
+              @if (isControlInvalid('street', 'required')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.FIELD_REQUIRED' | translate }}</small>
+              }
             </div>
           </div>
         </section>
@@ -178,6 +207,9 @@
             <div class="form-field">
               <label for="up-building-number">{{ 'PROPERTY_UPDATE.BUILDING_NUMBER' | translate }}</label>
               <input pInputText id="up-building-number" type="number" formControlName="buildingNumber" />
+              @if (isControlInvalid('buildingNumber', 'required')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.FIELD_REQUIRED' | translate }}</small>
+              }
               @if (isControlInvalid('buildingNumber', 'min')) {
                 <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
               }
@@ -186,11 +218,20 @@
             <div class="form-field">
               <label for="up-floor-number">{{ 'PROPERTY_UPDATE.FLOOR_NUMBER' | translate }}</label>
               <input pInputText id="up-floor-number" type="number" formControlName="floorNumber" />
+              @if (isControlInvalid('floorNumber', 'required')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.FIELD_REQUIRED' | translate }}</small>
+              }
+              @if (isControlInvalid('floorNumber', 'min')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
+              }
             </div>
 
             <div class="form-field">
               <label for="up-apartment-number">{{ 'PROPERTY_UPDATE.APARTMENT_NUMBER' | translate }}</label>
               <input pInputText id="up-apartment-number" type="number" formControlName="apartmentNumber" />
+              @if (isControlInvalid('apartmentNumber', 'required')) {
+                <small class="form-error">{{ 'PROPERTY_UPDATE.FIELD_REQUIRED' | translate }}</small>
+              }
               @if (isControlInvalid('apartmentNumber', 'min')) {
                 <small class="form-error">{{ 'PROPERTY_UPDATE.NON_NEGATIVE' | translate }}</small>
               }
@@ -219,7 +260,12 @@
               [chooseLabel]="'PROPERTY_UPDATE.CHOOSE_IMAGES' | translate"
               [cancelLabel]="'PROPERTY_UPDATE.CLEAR_IMAGES' | translate"
               [invalidFileTypeMessageSummary]="'PROPERTY_UPDATE.INVALID_FILE_TYPE' | translate"
+              (onSelect)="onImagesSelect()"
+              (onClear)="onImagesClear()"
             />
+            @if (isImageRequiredInvalid(uploader)) {
+              <small class="form-error">{{ 'PROPERTY_UPDATE.IMAGES_REQUIRED' | translate }}</small>
+            }
             <small class="form-hint">{{ 'PROPERTY_UPDATE.IMAGES_HINT' | translate }}</small>
           </div>
         </section>
@@ -294,4 +340,43 @@
       </aside>
     </form>
   </div>
+
+  <p-dialog
+    [visible]="saveConfirmDialogVisible()"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="true"
+    [style]="{ width: 'min(92vw, 28rem)' }"
+    styleClass="save-confirm-dialog"
+    (onHide)="cancelSaveConfirm()"
+  >
+    <ng-template #header>
+      <div class="save-confirm-dialog__header">
+        <i class="pi pi-question-circle" aria-hidden="true"></i>
+        <span>{{ 'PROPERTY_UPDATE.SAVE_CONFIRM_TITLE' | translate }}</span>
+      </div>
+    </ng-template>
+
+    <p class="save-confirm-dialog__text">
+      {{ 'PROPERTY_UPDATE.SAVE_CONFIRM_BODY' | translate }}
+    </p>
+
+    <div class="save-confirm-dialog__actions">
+      <p-button
+        [label]="'PROPERTY_UPDATE.SAVE_CONFIRM_CANCEL' | translate"
+        [outlined]="true"
+        severity="secondary"
+        (onClick)="cancelSaveConfirm()"
+      />
+      <p-button
+        [label]="'PROPERTY_UPDATE.SAVE_CONFIRM_ACCEPT' | translate"
+        icon="pi pi-home"
+        iconPos="right"
+        [loading]="submitting()"
+        [disabled]="submitting()"
+        (onClick)="confirmSaveAndGoHome(uploader)"
+      />
+    </div>
+  </p-dialog>
 </section>

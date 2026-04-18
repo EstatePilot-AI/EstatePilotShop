@@ -3,4 +3,6 @@
   <router-outlet />
 </main>
 <p-toast position="top-right" />
-<app-chat-widget />
+@if (!hideChatWidget()) {
+  <app-chat-widget />
+}

@@ -13,11 +13,11 @@
   overflow: hidden;
 
   @media (max-width: 768px) {
-    min-height: max(500px, 70vh);
+    min-height: max(420px, 62vh);
   }
 
   @media (max-width: 480px) {
-    min-height: max(420px, 65vh);
+    min-height: max(360px, 54vh);
   }
 }
 
@@ -29,7 +29,7 @@
 
 .hero-bg-image {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   object-fit: cover;
   display: block;
 }
@@ -60,16 +60,27 @@
   padding: 8rem 0 5rem;
 
   @media (max-width: 768px) {
-    padding: 5rem 0 3rem;
+    padding: 4rem 0.75rem 1rem;
   }
 
   @media (max-width: 480px) {
-    padding: 4rem 0 2.5rem;
+    padding: 3rem 1rem 0.75rem;
   }
 }
 
 .hero-content {
   max-width: 620px;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    padding-inline: 0.5rem;
+  }
+
+  @media (max-width: 480px) {
+    padding-inline: 0.25rem;
+  }
 }
 
 .hero-badge {
@@ -125,22 +136,65 @@
   line-height: 1.7;
   margin-bottom: 2.5rem;
   max-width: 500px;
+
+  @media (max-width: 768px) {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 0.9rem;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-inline: 0.5rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+    margin-bottom: 0.45rem;
+    padding-inline: 0.625rem;
+  }
 }
 
 .hero-actions {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.75rem;
   flex-wrap: wrap;
+  margin-top: 0.35rem;
 
-  @media (max-width: 480px) {
-    flex-direction: column;
-    align-items: stretch;
+  ::ng-deep .p-button {
+    min-width: 12rem;
+    justify-content: center;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+  }
+
+  @media (max-width: 768px) {
     width: 100%;
 
     ::ng-deep .p-button {
-      width: 100%;
+      min-width: 11.5rem;
+      font-size: 0.95rem;
+      padding-block: 0.56rem;
+      padding-inline: 1rem;
       justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 0.625rem;
+
+    ::ng-deep .p-button {
+      margin-top: auto;
+      min-width: 11.25rem;
+      width: min(100%, 12rem);
+      justify-content: center;
+      font-size: 0.92rem;
+      padding-block: 0.5rem;
+      padding-inline: 0.95rem;
     }
   }
 }
@@ -153,16 +207,21 @@
 
   ::ng-deep .hero-carousel {
     height: 100%;
+    background: transparent;
 
+    .p-carousel-container,
+    .p-carousel-items-content,
     .p-carousel-items-container,
     .p-carousel-item,
     .p-carousel-item-list {
       height: 100%;
+      background: transparent;
     }
 
     .p-carousel-content {
       height: 100%;
       padding: 0;
+      background: transparent;
     }
   }
 }
@@ -287,6 +346,8 @@
 
 .categories-chips {
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 1rem;
   min-width: max-content;
   padding: 0.5rem 0;

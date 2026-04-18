@@ -24,11 +24,10 @@ import { RevealDirective } from '../../../../shared/directives/reveal.directive'
 interface Category {
   icon: string;
   nameKey: string;
-  count: number;
 }
 
 interface Stat {
-  value: string;
+  valueKey: string;
   labelKey: string;
   icon: string;
 }
@@ -84,7 +83,7 @@ export class Landing implements OnInit {
       .subscribe({
         next: (data) => {
           this.featuredProperties.set(data);
-          this.featuredPreview.set(data.slice(0, 3));
+          this.featuredPreview.set(data.slice(0, 4));
           this.featuredLoading.set(false);
         },
         error: (err: Error) => {
@@ -143,19 +142,35 @@ export class Landing implements OnInit {
   }
 
   protected readonly categories: Category[] = [
-    { icon: 'pi pi-building', nameKey: 'CATEGORIES.APARTMENTS', count: 840 },
-    { icon: 'pi pi-home', nameKey: 'CATEGORIES.VILLAS', count: 320 },
-    { icon: 'pi pi-warehouse', nameKey: 'CATEGORIES.COMMERCIAL', count: 150 },
-    { icon: 'pi pi-map', nameKey: 'CATEGORIES.LAND', count: 95 },
-    { icon: 'pi pi-briefcase', nameKey: 'CATEGORIES.OFFICES', count: 210 },
-    { icon: 'pi pi-key', nameKey: 'CATEGORIES.RENTALS', count: 560 },
+    { icon: 'pi pi-building', nameKey: 'CATEGORIES.APARTMENTS' },
+    { icon: 'pi pi-home', nameKey: 'CATEGORIES.VILLAS' },
+    { icon: 'pi pi-warehouse', nameKey: 'CATEGORIES.COMMERCIAL' },
+    { icon: 'pi pi-map', nameKey: 'CATEGORIES.LAND' },
+    { icon: 'pi pi-briefcase', nameKey: 'CATEGORIES.OFFICES' },
+    { icon: 'pi pi-key', nameKey: 'CATEGORIES.RENTALS' },
   ];
 
   protected readonly stats: Stat[] = [
-    { value: '2,500+', labelKey: 'STATS.PROPERTIES_LISTED', icon: 'pi pi-building' },
-    { value: '1,200+', labelKey: 'STATS.HAPPY_BUYERS', icon: 'pi pi-users' },
-    { value: '$2.5B', labelKey: 'STATS.TOTAL_SALES', icon: 'pi pi-dollar' },
-    { value: '15+', labelKey: 'STATS.YEARS_IN_MARKET', icon: 'pi pi-calendar' },
+    {
+      valueKey: 'STATS.TRUSTED_PLATFORM_TITLE',
+      labelKey: 'STATS.TRUSTED_PLATFORM_SUBTITLE',
+      icon: 'pi pi-building',
+    },
+    {
+      valueKey: 'STATS.VERIFIED_LISTINGS_TITLE',
+      labelKey: 'STATS.VERIFIED_LISTINGS_SUBTITLE',
+      icon: 'pi pi-users',
+    },
+    {
+      valueKey: 'STATS.SECURE_PROCESS_TITLE',
+      labelKey: 'STATS.SECURE_PROCESS_SUBTITLE',
+      icon: 'pi pi-shield',
+    },
+    {
+      valueKey: 'STATS.RELIABLE_SUPPORT_TITLE',
+      labelKey: 'STATS.RELIABLE_SUPPORT_SUBTITLE',
+      icon: 'pi pi-calendar',
+    },
   ];
 
   private localFallbackImage(propertyType: string): string {

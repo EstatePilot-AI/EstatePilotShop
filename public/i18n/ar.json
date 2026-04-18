@@ -24,10 +24,14 @@
     "CONTACT_BTN": "تواصل معنا"
   },
   "STATS": {
-    "PROPERTIES_LISTED": "عقار مُدرج",
-    "HAPPY_BUYERS": "مشترٍ سعيد",
-    "TOTAL_SALES": "إجمالي المبيعات",
-    "YEARS_IN_MARKET": "سنوات في السوق"
+    "TRUSTED_PLATFORM_TITLE": "منصة موثوقة",
+    "TRUSTED_PLATFORM_SUBTITLE": "مصممة لتساعدك في الشراء والبيع بثقة",
+    "VERIFIED_LISTINGS_TITLE": "إعلانات موثقة",
+    "VERIFIED_LISTINGS_SUBTITLE": "كل إعلان يتم مراجعته قبل النشر",
+    "SECURE_PROCESS_TITLE": "إجراءات آمنة",
+    "SECURE_PROCESS_SUBTITLE": "خطوات واضحة ومعاملات أكثر أمانًا من البداية للنهاية",
+    "RELIABLE_SUPPORT_TITLE": "دعم موثوق",
+    "RELIABLE_SUPPORT_SUBTITLE": "فريقنا موجود دائمًا لمساعدتك"
   },
   "CATEGORIES": {
     "TITLE": "تصفح حسب الفئة",

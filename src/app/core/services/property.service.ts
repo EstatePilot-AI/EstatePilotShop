@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { HttpParams } from '@angular/common/http';
 import {
+  IPaginatedResponse,
   IProperty,
   IPropertyDetail,
   IUpdatePropertyPayload,
@@ -16,8 +17,20 @@ export class PropertyService {
   private readonly api = inject(ApiService);
   private readonly imageBaseUrl = environment.apiUrl.replace(/\/api\/?$/, '');
 
-  getAllProperties(): Observable<IProperty[]> {
-    return this.api.get<IProperty[]>('property/GetAllProperties');
+  getAllProperties(
+    pageNumber = 1,
+    pageSize = 10,
+    term?: string,
+  ): Observable<IPaginatedResponse<IProperty>> {
+    let params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
+    if (term?.trim()) {
+      params = params.set('term', term.trim());
+    }
+
+    return this.api.get<IPaginatedResponse<IProperty>>('property/GetAllProperties', { params });
   }
 
   buildPropertyImageUrl(imageFileName: string): string {

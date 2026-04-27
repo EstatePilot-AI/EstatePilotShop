@@ -78,12 +78,12 @@ export class Landing implements OnInit {
   // ── Lifecycle ────────────────────────────────────────────
   ngOnInit(): void {
     this.propertyService
-      .getAllProperties()
+      .getAllProperties(1, 4) // Fetch first page with 4 items for landing
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data) => {
-          this.featuredProperties.set(data);
-          this.featuredPreview.set(data.slice(0, 4));
+        next: (response) => {
+          this.featuredProperties.set(response.data);
+          this.featuredPreview.set(response.data);
           this.featuredLoading.set(false);
         },
         error: (err: Error) => {

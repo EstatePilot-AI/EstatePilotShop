@@ -9,7 +9,7 @@
             @if (loading()) {
               {{ 'PROPERTIES.LOADING' | translate }}
             } @else {
-              {{ 'PROPERTIES.LISTINGS_FOUND' | translate: { count: filtered().length } }}
+              {{ 'PROPERTIES.LISTINGS_FOUND' | translate: { count: totalCount() } }}
             }
           </p>
         </div>
@@ -40,7 +40,7 @@
           [placeholder]="'PROPERTIES.SEARCH_PLACEHOLDER' | translate"
           class="filter-search-input"
           [ngModel]="searchQuery()"
-          (ngModelChange)="searchQuery.set($event)"
+          (ngModelChange)="onSearchChange($event)"
           [attr.aria-label]="'PROPERTIES.SEARCH_LABEL' | translate"
         />
         @if (searchQuery()) {
@@ -146,7 +146,7 @@
     }
 
     <!-- ── Property Grid ──────────────────────────────────── -->
-    @if (!loading() && !error() && filtered().length > 0) {
+    @if (!loading() && !error() && totalCount() > 0) {
       <div class="properties-grid">
         @for (property of filtered(); track property.propertyId) {
           <article
@@ -199,7 +199,13 @@
                   <h3 class="property-card-title">
                     {{ property.district }}, {{ property.city }}
                   </h3>
-                  <span class="property-card-subtitle">{{ property.city }}</span>
+                  <span class="property-card-subtitle">
+                    {{ property.city }}
+                    <span class="property-body-date">
+                      <i class="pi pi-clock"></i>
+                      {{ property.createdAt }}
+                    </span>
+                  </span>
                 </div>
 
                 <span class="property-card-price">
@@ -232,6 +238,20 @@
             </div>
           </article>
         }
+      </div>
+
+      <!-- ── Pagination ────────────────────────────────────── -->
+      <div class="pagination-wrapper">
+        <p-paginator
+          [first]="first()"
+          [rows]="pageSize()"
+          [totalRecords]="totalCount()"
+          [rowsPerPageOptions]="[9, 18, 27]"
+          (onPageChange)="onPageChange($event)"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="{first} - {last} of {totalRecords}"
+          styleClass="property-paginator"
+        />
       </div>
     }
   </div>

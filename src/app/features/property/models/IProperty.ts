@@ -1,12 +1,23 @@
 export interface IProperty {
-  propertyId : number;
+  propertyId: number;
   price: number;
   area: number;
   propertyType: string;
   status: string;
   city: string;
   district: string;
+  createdAt: string;
   imageURLs?: string[];
+}
+
+export interface IPaginatedResponse<T> {
+  data: T[];
+  totalCount: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
 }
 
 export interface IPropertyDetail extends IProperty {
@@ -20,7 +31,6 @@ export interface IPropertyDetail extends IProperty {
   buildingNumber: number;
   floorNumber: number;
   apartmentNumber: number;
-  imageURLs?: string[];
 }
 
 export interface IUpdatePropertyPayload {

@@ -3,9 +3,11 @@ import {
   Component,
   computed,
   DestroyRef,
+  effect,
   inject,
   OnInit,
   signal,
+  untracked,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -22,6 +24,7 @@ import { SelectModule } from 'primeng/select';
 import { MessageModule } from 'primeng/message';
 import { TooltipModule } from 'primeng/tooltip';
 import { DividerModule } from 'primeng/divider';
+import { PaginatorModule, PaginatorState, Paginator } from 'primeng/paginator';
 
 import { PropertyService } from '../../../../core/services/property.service';
 import { IProperty } from '../../models/IProperty';
@@ -40,6 +43,8 @@ import { IProperty } from '../../models/IProperty';
     MessageModule,
     TooltipModule,
     DividerModule,
+    PaginatorModule,
+    Paginator,
     TranslatePipe,
   ],
   templateUrl: './property-list.html',
@@ -58,6 +63,26 @@ export class PropertyList implements OnInit {
   readonly searchQuery = signal('');
   readonly selectedType = signal<string | null>(null);
   readonly sortBy = signal('newest');
+
+  // ── Pagination State ────────────────────────────────────
+  readonly totalCount = signal(0);
+  readonly pageNumber = signal(1);
+  readonly pageSize = signal(9);
+
+  constructor() {
+    // Combined effect to handle reloads when page, size or search changes
+    effect(() => {
+      this.pageNumber();
+      this.pageSize();
+      this.searchQuery();
+      untracked(() => this.loadProperties());
+    });
+  }
+
+  onSearchChange(query: string): void {
+    this.searchQuery.set(query);
+    this.pageNumber.set(1);
+  }
 
   // ── Dropdown options (translated reactively) ───────────
   readonly propertyTypes = computed(() => [
@@ -81,15 +106,13 @@ export class PropertyList implements OnInit {
     const type = this.selectedType();
     const sort = this.sortBy();
 
-    let list = this.properties().filter(p => {
-      const matchesSearch =
-        !q ||
-        p.city.toLowerCase().includes(q) ||
-        p.district.toLowerCase().includes(q) ||
-        p.propertyType.toLowerCase().includes(q);
-      const matchesType = !type || p.propertyType.toLowerCase() === type;
-      return matchesSearch && matchesType;
-    });
+    let list = this.properties();
+
+    // Still apply client-side filtering for type if it wasn't handled by 'term'
+    // and for sorting which isn't supported by the API yet.
+    if (type) {
+      list = list.filter(p => p.propertyType.toLowerCase() === type);
+    }
 
     switch (sort) {
       case 'price_asc': list = [...list].sort((a, b) => a.price - b.price); break;
@@ -99,11 +122,13 @@ export class PropertyList implements OnInit {
     return list;
   });
 
+  readonly first = computed(() => (this.pageNumber() - 1) * this.pageSize());
+
   readonly skeletonItems = Array.from({ length: 6 });
 
   // ── Lifecycle ───────────────────────────────────────────
   ngOnInit(): void {
-    this.loadProperties();
+    // Initial load is handled by effects
   }
 
   // ── Public helpers ──────────────────────────────────────
@@ -161,6 +186,16 @@ export class PropertyList implements OnInit {
     this.searchQuery.set('');
     this.selectedType.set(null);
     this.sortBy.set('newest');
+    this.pageNumber.set(1);
+  }
+
+  onPageChange(event: PaginatorState): void {
+    if (event.page !== undefined) {
+      this.pageNumber.set(event.page + 1);
+    }
+    if (event.rows !== undefined) {
+      this.pageSize.set(event.rows);
+    }
   }
 
   reload(): void {
@@ -171,12 +206,23 @@ export class PropertyList implements OnInit {
 
   // ── Private ─────────────────────────────────────────────
   private loadProperties(): void {
+    this.loading.set(true);
     this.propertyService
-      .getAllProperties()
+      .getAllProperties(this.pageNumber(), this.pageSize(), this.searchQuery())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data) => {
-          this.properties.set(data);
+        next: (response: any) => {
+          // Handle both new paginated response and old array format
+          if (response && response.data && Array.isArray(response.data)) {
+            this.properties.set(response.data);
+            this.totalCount.set(response.totalCount ?? response.data.length);
+          } else if (Array.isArray(response)) {
+            this.properties.set(response);
+            this.totalCount.set(response.length);
+          } else {
+            this.properties.set([]);
+            this.totalCount.set(0);
+          }
           this.loading.set(false);
         },
         error: (err: Error) => {

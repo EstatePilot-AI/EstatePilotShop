@@ -667,6 +667,22 @@
     font-size: 0.8rem;
     color: var(--brand-primary);
   }
+
+  &.property-body-date {
+    background: var(--brand-primary-subtle);
+    border-color: rgba(26, 77, 62, 0.15);
+    color: var(--brand-primary);
+
+    :host-context(body.dark) & {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    i {
+      color: var(--brand-primary);
+    }
+  }
 }
 
 .featured-error {

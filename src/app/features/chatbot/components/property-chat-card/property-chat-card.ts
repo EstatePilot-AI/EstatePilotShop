@@ -2,10 +2,19 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { PropertyCard } from '../../models/chatbot.model';
+import { formatPropertyPrice, resolvePropertyId } from '../../utils/chatbot-normalizer';
+import { ChatIcon, ChatIconName } from '../chat-icon/chat-icon';
+
+interface PropertyMetaItem {
+  icon: ChatIconName;
+  value: string;
+  labelKey: string;
+  suffix?: string;
+}
 
 @Component({
   selector: 'app-property-chat-card',
-  imports: [RouterLink, TranslatePipe],
+  imports: [RouterLink, TranslatePipe, ChatIcon],
   templateUrl: './property-chat-card.html',
   styleUrl: './property-chat-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,14 +23,7 @@ export class PropertyChatCard {
   readonly property = input.required<PropertyCard>();
 
   readonly resolvedPropertyId = computed<number | null>(() => {
-    const raw = this.property().propertyId ?? this.property()['property_id'] ?? this.property()['id'];
-    const numericId = Number(raw);
-
-    if (!Number.isFinite(numericId) || numericId <= 0) {
-      return null;
-    }
-
-    return Math.trunc(numericId);
+    return resolvePropertyId(this.property());
   });
 
   readonly propertyLink = computed(() => {
@@ -30,13 +32,7 @@ export class PropertyChatCard {
   });
 
   readonly formattedPrice = computed(() => {
-    const price = this.property().price;
-    if (price == null) return '';
-    return new Intl.NumberFormat('en-EG', {
-      style: 'currency',
-      currency: 'EGP',
-      maximumFractionDigits: 0,
-    }).format(price);
+    return formatPropertyPrice(this.property().price);
   });
 
   readonly displayType = computed(() => {
@@ -56,7 +52,46 @@ export class PropertyChatCard {
   });
 
   readonly hasMeta = computed(() => {
+    return this.metaItems().length > 0;
+  });
+
+  readonly metaItems = computed<PropertyMetaItem[]>(() => {
     const p = this.property();
-    return !!(p.area || p.rooms || p.bathrooms || p.floorNumber);
+    const items: PropertyMetaItem[] = [];
+
+    if (p.area != null) {
+      items.push({
+        icon: 'area',
+        value: String(p.area),
+        labelKey: 'CHATBOT.AREA',
+        suffix: 'm²',
+      });
+    }
+
+    if (p.rooms != null) {
+      items.push({
+        icon: 'bed',
+        value: String(p.rooms),
+        labelKey: 'CHATBOT.ROOMS',
+      });
+    }
+
+    if (p.bathrooms != null) {
+      items.push({
+        icon: 'bath',
+        value: String(p.bathrooms),
+        labelKey: 'CHATBOT.BATHROOMS',
+      });
+    }
+
+    if (p.floorNumber != null) {
+      items.push({
+        icon: 'building',
+        value: String(p.floorNumber),
+        labelKey: 'CHATBOT.FLOOR',
+      });
+    }
+
+    return items;
   });
 }

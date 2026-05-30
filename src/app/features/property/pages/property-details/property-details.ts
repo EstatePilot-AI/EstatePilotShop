@@ -10,6 +10,8 @@ import {
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { EMPTY, Observable } from 'rxjs';
+import { catchError, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -47,6 +49,7 @@ export class PropertyDetails implements OnInit {
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly selectedImageIndex = signal(0);
+  private readonly activePropertyId = signal<number | null>(null);
 
   // ── Contact Dialog ──────────────────────────────────────
   readonly dialogVisible = signal(false);
@@ -135,13 +138,21 @@ export class PropertyDetails implements OnInit {
   });
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (!id || isNaN(id)) {
-      this.error.set(this.translate.instant('PROPERTY_DETAILS.INVALID_ID'));
-      this.loading.set(false);
-      return;
-    }
-    this.loadProperty(id);
+    this.route.paramMap
+      .pipe(
+        map((params) => this.parseRouteId(params.get('id'))),
+        distinctUntilChanged(),
+        switchMap((id) => {
+          if (id === null) {
+            this.setInvalidIdState();
+            return EMPTY;
+          }
+
+          return this.loadProperty(id);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((data) => this.setLoadedProperty(data));
   }
 
   statusSeverity(
@@ -164,29 +175,54 @@ export class PropertyDetails implements OnInit {
   }
 
   reload(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.loading.set(true);
-    this.error.set(null);
-    this.loadProperty(id);
+    const id = this.activePropertyId();
+
+    if (id === null) {
+      this.setInvalidIdState();
+      return;
+    }
+
+    this.loadProperty(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((data) => this.setLoadedProperty(data));
   }
 
-  private loadProperty(id: number): void {
-    this.propertyService
-      .getPropertyById(id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (data) => {
-          this.property.set(data);
-          this.selectedImageIndex.set(0);
-          this.loading.set(false);
-        },
-        error: (err: Error) => {
-          this.error.set(
-            err?.message ?? this.translate.instant('PROPERTY_DETAILS.LOAD_ERROR'),
-          );
-          this.loading.set(false);
-        },
-      });
+  private parseRouteId(rawId: string | null): number | null {
+    const id = Number(rawId);
+    if (!Number.isFinite(id) || id <= 0) return null;
+    return Math.trunc(id);
+  }
+
+  private loadProperty(id: number): Observable<IPropertyDetail> {
+    this.activePropertyId.set(id);
+    this.property.set(null);
+    this.loading.set(true);
+    this.error.set(null);
+    this.selectedImageIndex.set(0);
+
+    return this.propertyService.getPropertyById(id).pipe(
+      catchError((err: Error) => {
+        this.property.set(null);
+        this.error.set(
+          err?.message ?? this.translate.instant('PROPERTY_DETAILS.LOAD_ERROR'),
+        );
+        this.loading.set(false);
+        return EMPTY;
+      }),
+    );
+  }
+
+  private setLoadedProperty(data: IPropertyDetail): void {
+    this.property.set(data);
+    this.selectedImageIndex.set(0);
+    this.loading.set(false);
+  }
+
+  private setInvalidIdState(): void {
+    this.activePropertyId.set(null);
+    this.property.set(null);
+    this.error.set(this.translate.instant('PROPERTY_DETAILS.INVALID_ID'));
+    this.loading.set(false);
   }
 
   private localFallbackImage(propertyType: string): string {

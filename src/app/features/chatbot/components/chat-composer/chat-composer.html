@@ -1,9 +1,9 @@
 <div class="composer">
   <textarea
+    #messageInput
     class="composer__input"
-    [(ngModel)]="value"
+    [formControl]="messageControl"
     [placeholder]="'CHATBOT.PLACEHOLDER' | translate"
-    [disabled]="disabled()"
     rows="1"
     (keydown)="onKeydown($event)"
     [attr.aria-label]="'CHATBOT.PLACEHOLDER' | translate"
@@ -11,7 +11,7 @@
   <button
     class="composer__btn"
     type="button"
-    [disabled]="disabled() || !value.trim()"
+    [disabled]="disabled() || !messageControl.value.trim()"
     (click)="submit()"
     [attr.aria-label]="'CHATBOT.SEND' | translate"
   >

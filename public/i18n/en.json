@@ -265,6 +265,7 @@
     "FALLBACK_NOTICE": "Showing general results. Try being more specific.",
     "RETRY": "Retry",
     "ERROR_GENERIC": "Something went wrong. Please try again.",
+    "ERROR_TIMEOUT": "The advisor is taking longer than usual. Please try again in a moment.",
     "CLOSE": "Close chat",
     "OPEN_CHAT": "Open chat",
     "CLEAR_CHAT": "Clear chat",

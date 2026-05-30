@@ -174,12 +174,12 @@
 
 /* ── Chat panel ─────────────────────────────────────────── */
 .chat-panel {
-  height: auto !important;
   position: absolute;
   bottom: calc(56px + 0.75rem);
   inset-inline-end: 0;
   width: 400px;
   height: min(580px, calc(100dvh - 5rem));
+  max-height: calc(100dvh - 5rem);
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -201,6 +201,7 @@ app-chat-message-list {
   display: flex;
   flex: 1;
   min-height: 0;
+  overflow: hidden;
 }
 
 app-chat-composer {
@@ -321,6 +322,8 @@ app-chat-composer {
 /* ── Welcome screen ─────────────────────────────────────── */
 .chat-welcome {
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -361,63 +364,21 @@ app-chat-composer {
   margin: 0;
 }
 
-.chat-welcome__chips {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-  max-width: 300px;
-  margin-top: 0.5rem;
-}
-
-.chat-welcome__chip {
-  padding: 0.625rem 1rem;
-  border-radius: 12px;
-  border: 1px solid var(--border-default, rgba(224, 216, 204, 0.6));
-  background: var(--glass-bg, rgba(253, 251, 247, 0.6));
-  backdrop-filter: blur(8px);
-  color: var(--content-body, #3d3d56);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
-  text-align: start;
-  font-family: inherit;
-
-  &:hover {
-    border-color: var(--brand-primary, #1a4d3e);
-    box-shadow: 0 2px 8px rgba(26, 77, 62, 0.1);
-    transform: translateY(-1px);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--brand-primary, #1a4d3e);
-    outline-offset: 2px;
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-}
-
 /* ── Responsive: tablet ─────────────────────────────────── */
 @media (max-width: 480px) {
   :host {
-    bottom: 1rem;
+    bottom: max(1rem, env(safe-area-inset-bottom));
     inset-inline-end: 1rem;
   }
 
   .chat-panel {
-    position: absolute;
+    position: fixed;
     inset: auto;
-    bottom: calc(56px + 0.625rem);
-    inset-inline-end: 0;
-    width: min(92vw, 340px);
-    height: min(68dvh, 460px);
-    max-height: calc(100dvh - 6.5rem);
+    bottom: calc(56px + 1.625rem + env(safe-area-inset-bottom));
+    inset-inline-end: 1rem;
+    width: min(calc(100vw - 2rem), 360px);
+    height: min(70dvh, 460px);
+    max-height: calc(100dvh - 7.5rem - env(safe-area-inset-bottom));
     border-radius: 18px;
     z-index: 1001;
     animation: panel-reveal 0.3s cubic-bezier(0.22, 1, 0.36, 1);
@@ -433,10 +394,6 @@ app-chat-composer {
 
   .chat-panel__status {
     font-size: 0.625rem;
-  }
-
-  .chat-welcome__chips {
-    max-width: 100%;
   }
 
   .chat-welcome {
@@ -481,10 +438,11 @@ app-chat-composer {
   }
 
   .chat-panel {
-    width: min(94vw, 320px);
-    height: min(64dvh, 420px);
-    max-height: calc(100dvh - 5.5rem);
-    bottom: calc(48px + 0.625rem);
+    width: min(calc(100vw - 1.5rem), 320px);
+    height: min(68dvh, 420px);
+    max-height: calc(100dvh - 6.75rem - env(safe-area-inset-bottom));
+    bottom: calc(48px + 1.5rem + env(safe-area-inset-bottom));
+    inset-inline-end: 0.75rem;
   }
 }
 

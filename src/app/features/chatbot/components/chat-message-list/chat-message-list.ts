@@ -2,20 +2,22 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  afterNextRender,
   effect,
   input,
+  output,
   viewChild,
 } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ChatIcon } from '../chat-icon/chat-icon';
 import { PropertyChatCard } from '../property-chat-card/property-chat-card';
 import { RecommendationPanel } from '../recommendation-panel/recommendation-panel';
-import { ChatMessage } from '../../models/chatbot.model';
+import { ChatMessage, PropertyCard } from '../../models/chatbot.model';
+import { trackPropertyCard } from '../../utils/chatbot-normalizer';
 
 @Component({
   selector: 'app-chat-message-list',
-  imports: [PropertyChatCard, RecommendationPanel, TranslatePipe, DatePipe],
+  imports: [ChatIcon, PropertyChatCard, RecommendationPanel, TranslatePipe, DatePipe],
   templateUrl: './chat-message-list.html',
   styleUrl: './chat-message-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +25,7 @@ import { ChatMessage } from '../../models/chatbot.model';
 export class ChatMessageList {
   readonly messages = input.required<ChatMessage[]>();
   readonly loading = input(false);
+  readonly retry = output<void>();
   private pendingRafId: number | null = null;
   private pendingTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
@@ -45,7 +48,8 @@ export class ChatMessageList {
       return;
     }
 
-    afterNextRender(() => {
+    this.pendingTimeoutId = setTimeout(() => {
+      this.pendingTimeoutId = null;
       const raf = globalThis.requestAnimationFrame;
 
       if (raf) {
@@ -56,11 +60,8 @@ export class ChatMessageList {
         return;
       }
 
-      this.pendingTimeoutId = setTimeout(() => {
-        this.pendingTimeoutId = null;
-        this.scrollToBottom();
-      }, 0);
-    });
+      this.scrollToBottom();
+    }, 0);
   }
 
   scrollToBottom(): void {
@@ -80,11 +81,33 @@ export class ChatMessageList {
     return msg.role === 'user';
   }
 
+  isError(msg: ChatMessage): boolean {
+    return msg.kind === 'error';
+  }
+
+  requestRetry(): void {
+    if (!this.loading()) {
+      this.retry.emit();
+    }
+  }
+
   isRecommend(msg: ChatMessage): boolean {
     return msg.module === 'Recommend' && !!msg.recommendation;
   }
 
   isSearch(msg: ChatMessage): boolean {
     return (msg.module === 'Search' || msg.module === 'Selection') && !!msg.properties?.length;
+  }
+
+  isCompare(msg: ChatMessage): boolean {
+    return msg.module === 'Compare' && !!msg.comparison?.length;
+  }
+
+  isNegotiate(msg: ChatMessage): boolean {
+    return msg.module === 'Negotiate' && !!msg.negotiation;
+  }
+
+  trackProperty(index: number, property: PropertyCard): number | string {
+    return trackPropertyCard(index, property);
   }
 }

@@ -53,7 +53,11 @@
     "LOADING": "Loading featured properties",
     "AREA": "Area",
     "TYPE": "Type",
-    "STATUS": "Status"
+    "STATUS": "Status",
+    "CARD_DESCRIPTION": "Discover this {{type}} in {{location}}",
+    "PROPERTY_DETAILS_SUMMARY": "Property details summary",
+    "SAVE_PROPERTY_ARIA": "Save {{type}} in {{location}}",
+    "VIEW_DETAILS_ARIA": "View details for property {{id}}"
   },
   "TESTIMONIALS": {
     "TITLE": "What Our Clients Say",
@@ -122,7 +126,10 @@
     "VIEW_DETAILS_ARIA": "View details for property {{id}}",
     "AREA": "Area",
     "TYPE": "Type",
-    "STATUS": "Status"
+    "STATUS": "Status",
+    "PROPERTY_DETAILS_SUMMARY": "Property details summary",
+    "SAVE_PROPERTY_ARIA": "Save {{type}} in {{location}}",
+    "CARD_DESCRIPTION": "Discover this {{type}} in {{location}}"
   },
   "PROPERTY_DETAILS": {
     "BACK_TO_LISTINGS": "Back to Listings",
@@ -149,6 +156,46 @@
     "TRY_AGAIN": "Try Again",
     "INVALID_ID": "Invalid property ID.",
     "LOAD_ERROR": "Failed to load property details. Please try again."
+  },
+  "PROPERTY_LABELS": {
+    "TYPES": {
+      "APARTMENT": "Apartment",
+      "VILLA": "Villa",
+      "DUPLEX": "Duplex",
+      "TOWNHOUSE": "Townhouse",
+      "STUDIO": "Studio",
+      "CHALET": "Chalet",
+      "PENTHOUSE": "Penthouse",
+      "HOUSE": "House",
+      "OFFICE": "Office",
+      "LAND": "Land"
+    },
+    "STATUS": {
+      "AVAILABLE": "Available",
+      "SOLD": "Sold",
+      "RENTED": "Rented",
+      "PENDING": "Pending"
+    },
+    "FINISHING": {
+      "FINISHED": "Finished",
+      "WITHOUT_FINISHING": "Without Finishing",
+      "SEMI_FINISHED": "Semi-Finished",
+      "FULLY_FINISHED": "Fully Finished",
+      "SUPER_LUX": "Super Lux"
+    },
+    "LOCATIONS": {
+      "EGYPT": "Egypt",
+      "CAIRO": "Cairo",
+      "NEW_ZAYED": "New Zayed",
+      "JIRIAN": "Jirian",
+      "SHEIKH_ZAYED": "Sheikh Zayed",
+      "EL_SHOROUK": "El Shorouk",
+      "OCTOBER": "October",
+      "ADMINISTRATIVE_CAPITAL": "New Administrative Capital",
+      "EL_ZEITOUN": "El Zeitoun",
+      "EL_MAADI": "El Maadi",
+      "GIZA": "Giza"
+    }
   },
   "PROPERTY_UPDATE": {
     "TITLE": "Update Property",

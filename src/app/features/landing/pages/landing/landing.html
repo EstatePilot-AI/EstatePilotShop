@@ -116,23 +116,26 @@
 
     <!-- Loading skeletons -->
     @if (featuredLoading()) {
-      <div
-        class="properties-grid"
-        aria-busy="true"
-        [attr.aria-label]="'LISTINGS.LOADING' | translate"
-      >
+      <div class="featured-properties-grid" aria-busy="true" [attr.aria-label]="'LISTINGS.LOADING' | translate">
         @for (item of skeletonItems; track $index) {
-          <div class="property-card property-card--skeleton">
-            <p-skeleton height="260px" styleClass="skeleton-image" borderRadius="0" />
-            <div class="property-card-body">
-              <p-skeleton width="40%" height="1.25rem" styleClass="mb-2" />
-              <p-skeleton width="70%" height="1rem" styleClass="mb-1" />
-              <p-skeleton width="55%" height="0.85rem" styleClass="mb-3" />
-              <p-skeleton width="100%" height="1px" styleClass="mb-3" />
-              <div class="flex gap-3">
-                <p-skeleton width="4rem" height="0.85rem" />
-                <p-skeleton width="4rem" height="0.85rem" />
-                <p-skeleton width="4rem" height="0.85rem" />
+          <div class="featured-property-card featured-property-card--skeleton">
+            <p-skeleton
+              height="100%"
+              styleClass="featured-property-card__skeleton-image"
+              borderRadius="10px"
+            />
+            <div class="featured-property-card__content">
+              <p-skeleton width="34%" height="0.9rem" styleClass="mb-2" />
+              <p-skeleton width="62%" height="1.35rem" styleClass="mb-2" />
+              <p-skeleton width="80%" height="1rem" styleClass="mb-3" />
+              <div class="featured-property-card__details">
+                <p-skeleton width="5rem" height="0.85rem" />
+                <p-skeleton width="5rem" height="0.85rem" />
+                <p-skeleton width="5rem" height="0.85rem" />
+              </div>
+              <div class="featured-property-card__price-row">
+                <p-skeleton width="8rem" height="1.35rem" />
+                <p-skeleton width="6rem" height="2rem" />
               </div>
             </div>
           </div>
@@ -146,75 +149,75 @@
 
     <!-- Property cards — magazine style -->
     @if (!featuredLoading() && !featuredError()) {
-      <div class="properties-grid">
+      <div class="featured-properties-grid">
         @for (property of featuredPreview(); track property.propertyId) {
           <article
-            class="property-card"
+            class="featured-property-card"
             appReveal
             [revealDelay]="$index * 120"
-            [attr.aria-label]="displayPropertyType(property.propertyType) + ' in ' + property.city"
           >
-            <div class="property-image-wrapper">
+            <div class="featured-property-card__media">
               <img
-                class="property-image"
+                class="featured-property-card__image"
                 [src]="propertyImageUrl(property)"
-                [alt]="displayPropertyType(property.propertyType) + ' in ' + property.city"
-                width="900"
-                height="506"
+                [alt]="displayPropertyType(property.propertyType) + ' in ' + propertyLocation(property)"
+                width="560"
+                height="350"
                 loading="lazy"
                 decoding="async"
                 (error)="onImageError($event, property)"
               />
 
               <span
-                class="property-status-badge"
-                [class.status-available]="property.status === 'Available'"
-                [class.status-sold]="property.status === 'Sold'"
-                [class.status-rented]="property.status === 'Rented'"
+                class="featured-property-card__status featured-property-card__status--floating"
+                [class.status-available]="propertyStatusKey(property.status) === 'AVAILABLE'"
+                [class.status-sold]="propertyStatusKey(property.status) === 'SOLD'"
+                [class.status-rented]="propertyStatusKey(property.status) === 'RENTED'"
+                [class.status-pending]="propertyStatusKey(property.status) === 'PENDING'"
               >
-                {{ property.status }}
+                {{ displayPropertyStatus(property.status) }}
               </span>
 
-              <button
-                class="property-heart-btn"
-                type="button"
-                [attr.aria-label]="'Save ' + displayPropertyType(property.propertyType)"
-              >
-                <i class="pi pi-heart" aria-hidden="true"></i>
-              </button>
+            </div>
+            <a
+              class="featured-property-card__link"
+              [routerLink]="['/properties', property.propertyId]"
+              [attr.aria-label]="'LISTINGS.VIEW_DETAILS_ARIA' | translate: { id: property.propertyId }"
+            >
+              <div class="featured-property-card__content">
+                <div class="featured-property-card__eyebrow">
+                  <span class="featured-property-card__location">
+                    <i class="pi pi-map-marker" aria-hidden="true"></i>
+                    {{ displayPropertyLocation(property.city) }}
+                  </span>
+                  <span class="featured-property-card__date">
+                    <i class="pi pi-clock" aria-hidden="true"></i>
+                    {{ property.createdAt }}
+                  </span>
+                </div>
 
-              <div class="property-image-overlay">
-                <span class="property-price-badge">{{ formatPrice(property.price) }}</span>
-                <span class="property-type-pill">
-                  {{ displayPropertyType(property.propertyType) }}
+                <h3 class="featured-property-card__title">{{ propertyTitle(property) }}</h3>
+                <p class="featured-property-card__description">{{ propertyDescription(property) }}</p>
+                <div
+                  class="featured-property-card__details"
+                  [attr.aria-label]="'LISTINGS.PROPERTY_DETAILS_SUMMARY' | translate"
+                >
+                <span class="featured-property-card__detail">
+                    {{ displayPropertyType(property.propertyType) }}
+                </span>
+                  <span class="featured-property-card__detail featured-property-card__detail--area" dir="ltr">
+                    {{ formatArea(property.area) }}
                 </span>
               </div>
-            </div>
-            <div class="property-card-body">
-              <h3 class="property-card-title">
-                {{ property.district }}, {{ property.city }}
-              </h3>
-              <div class="property-meta">
-                <span class="property-meta-pill">
-                  <i class="pi pi-th-large" aria-hidden="true"></i>
-                  {{ property.area }} m²
-                </span>
-                <span class="property-meta-pill property-body-date">
-                  <i class="pi pi-clock" aria-hidden="true"></i>
-                  {{ property.createdAt }}
+              <div class="featured-property-card__price-row">
+                <span class="featured-property-card__price">{{ formatPrice(property.price) }}</span>
+                <span class="featured-property-card__cta">
+                  {{ 'LISTINGS.VIEW_DETAILS' | translate }}
+                  <i class="pi pi-arrow-up-right" aria-hidden="true"></i>
                 </span>
               </div>
-              <p-button
-                [label]="'LISTINGS.VIEW_DETAILS' | translate"
-                icon="pi pi-arrow-right"
-                iconPos="right"
-                styleClass="w-full mt-3"
-                [outlined]="true"
-                size="small"
-                [routerLink]="['/properties', property.propertyId]"
-                [attr.aria-label]="'View details for property ' + property.propertyId"
-              />
-            </div>
+              </div>
+            </a>
           </article>
         }
       </div>

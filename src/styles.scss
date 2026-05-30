@@ -198,6 +198,26 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 // ============================================================
+// Shared Status Badges
+// ============================================================
+
+.status-available {
+  background: var(--status-success);
+}
+
+.status-sold {
+  background: var(--status-danger);
+}
+
+.status-rented {
+  background: var(--status-warning);
+}
+
+.status-pending {
+  background: color-mix(in srgb, var(--brand-primary) 75%, #000000);
+}
+
+// ============================================================
 // Scrollbar
 // ============================================================
 

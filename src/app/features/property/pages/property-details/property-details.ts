@@ -22,6 +22,13 @@ import { MessageModule } from 'primeng/message';
 import { PropertyService } from '../../../../core/services/property.service';
 import { IPropertyDetail } from '../../models/IProperty';
 import { ContactDialog } from '../../../contact/components/contact-dialog/contact-dialog';
+import {
+  displayTranslatedFinishingType,
+  displayTranslatedPropertyLocation,
+  displayTranslatedPropertyStatus,
+  displayTranslatedPropertyType,
+  propertyStatusKey as getPropertyStatusKey,
+} from '../../utils/property-labels';
 
 @Component({
   selector: 'app-property-details',
@@ -72,12 +79,23 @@ export class PropertyDetails implements OnInit {
   }
 
   displayPropertyType(propertyType: string): string {
-    if (!propertyType) return 'Property';
-    return propertyType
-      .split(/\s+/)
-      .filter(Boolean)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
+    return displayTranslatedPropertyType(this.translate, propertyType);
+  }
+
+  displayPropertyStatus(status: string): string {
+    return displayTranslatedPropertyStatus(this.translate, status);
+  }
+
+  displayFinishingType(finishingType: string): string {
+    return displayTranslatedFinishingType(this.translate, finishingType);
+  }
+
+  displayPropertyLocation(location: string): string {
+    return displayTranslatedPropertyLocation(this.translate, location);
+  }
+
+  propertyStatusKey(status: string): string {
+    return getPropertyStatusKey(status);
   }
 
   formatFloorLabel(floorNumber: number): string {
@@ -119,6 +137,7 @@ export class PropertyDetails implements OnInit {
       p.country,
     ]
       .filter(Boolean)
+      .map((location) => this.displayPropertyLocation(location))
       .join(', ');
   });
 
@@ -162,16 +181,12 @@ export class PropertyDetails implements OnInit {
       string,
       'success' | 'warn' | 'danger' | 'info' | 'secondary' | 'contrast'
     > = {
-      متاحة: 'success',
-      available: 'success',
-      sold: 'danger',
-      مباعة: 'danger',
-      rented: 'warn',
-      مؤجرة: 'warn',
-      pending: 'info',
-      معلقة: 'info',
+      AVAILABLE: 'success',
+      SOLD: 'danger',
+      RENTED: 'warn',
+      PENDING: 'info',
     };
-    return map[status?.toLowerCase()] ?? 'secondary';
+    return map[this.propertyStatusKey(status)] ?? 'secondary';
   }
 
   reload(): void {

@@ -67,14 +67,19 @@ export interface SmartSearchResponse {
 }
 
 export type ChatMessageRole = 'user' | 'assistant';
+export type ChatMessageKind = 'message' | 'error';
 
 export interface ChatMessage {
   id: string;
   role: ChatMessageRole;
   text: string;
+  translationKey?: string;
+  kind?: ChatMessageKind;
   timestamp: number;
   properties?: PropertyCard[];
   recommendation?: PropertyCard;
+  comparison?: PropertyCard[];
+  negotiation?: PropertyCard;
   module?: AdvisorModule;
   fallbackUsed?: boolean;
 }

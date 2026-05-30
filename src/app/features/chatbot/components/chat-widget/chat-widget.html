@@ -1,8 +1,10 @@
 <!-- Floating Action Button -->
 <button
+  #openButton
   class="chat-fab"
   type="button"
   [attr.aria-label]="'CHATBOT.OPEN_CHAT' | translate"
+  [attr.aria-expanded]="isOpen()"
   (click)="toggle()"
 >
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -27,7 +29,7 @@
 <!-- Chat Panel -->
 @if (isOpen()) {
   <div class="chat-panel" role="dialog" [attr.aria-label]="'CHATBOT.TITLE' | translate" [dir]="direction()">
-    <header class="chat-panel__header">
+    <div class="chat-panel__header">
       <div class="chat-panel__brand">
         <div class="chat-panel__avatar">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -68,7 +70,7 @@
           </svg>
         </button>
       </div>
-    </header>
+    </div>
 
     @if (!hasMessages()) {
       <div class="chat-welcome">
@@ -80,22 +82,12 @@
           </svg>
         </div>
         <p class="chat-welcome__greeting">{{ 'CHATBOT.WELCOME_GREETING' | translate }}</p>
-        <div class="chat-welcome__chips">
-          @for (suggestion of translatedSuggestions(); track $index) {
-            <button
-              class="chat-welcome__chip"
-              type="button"
-              (click)="sendMessage(suggestion)"
-            >
-              {{ suggestion }}
-            </button>
-          }
-        </div>
       </div>
     } @else {
       <app-chat-message-list
         [messages]="messages()"
         [loading]="loading()"
+        (retry)="retryLastMessage()"
       />
     }
 

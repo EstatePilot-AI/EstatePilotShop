@@ -1,365 +1,300 @@
-# Frontend Integration Guideline (Angular)
+# Frontend Integration Guideline
 
-This document explains how frontend developers should integrate with the EstatePilot chatbot backend.
+This document helps a frontend developer integrate the **EstatePilot AI chatbot** into a web app. The backend is a FastAPI service that understands real-estate queries, keeps light conversation state per user, and returns both conversational replies and structured property data.
 
-- Backend repo: `chatbot`
-- Primary endpoint: `POST /ai-advisor`
-- Secondary endpoint: `POST /smartsearch`
-- Language target: Egyptian Arabic UX (RTL-friendly)
+## What the backend does
 
----
+The service can:
 
-## 1) Integration goals
+- Search properties from the indexed catalog
+- Recommend the best match
+- Compare multiple properties
+- Give negotiation advice
+- Handle clarification questions when the query is vague
+- Let a user select one of the last shown properties
 
-Frontend should:
-1. Send user chat messages to backend with a stable `user_id`.
-2. Render assistant response and property results.
-3. Handle intent-based response modes (`Search`, `Recommend`, `Compare`, `Negotiate`, etc.).
-4. Gracefully handle fallback and low-confidence replies.
-5. Keep UX responsive with loading, timeout, retry, and empty states.
+The response is optimized for a conversational UI in **Egyptian Arabic**, but the structured fields are ideal for rendering cards, compare views, and result lists in a frontend.
 
----
+## Base URL
 
-## 2) Endpoints and contracts
+Use the deployed backend URL for your environment.
 
-## 2.1 `POST /ai-advisor` (main conversational flow)
+Examples:
 
-### Request
+- Local development: `http://localhost:8000`
+- Deployed Render service: the app is started as `gunicorn main:app` and listens on `$PORT`
+
+> The backend has CORS enabled for all origins, so a frontend app can call it directly from the browser.
+
+## Required request model
+
+### `POST /ai-advisor`
+
+This is the main chatbot endpoint.
+
+#### Request body
 
 ```json
 {
-  "user_id": 123456,
-  "query": "عايز شقة 3 غرف في التجمع الخامس بحد أقصى 4 مليون"
+  "user_id": 12345,
+  "query": "عايز شقة في التجمع بميزانية 3 مليون"
 }
 ```
 
-### Response
+#### Fields
+
+- `user_id` must be an **integer**
+- `query` is the user message in any supported language, but Arabic works best for the chatbot's tone
+
+#### Important integration note
+
+The backend stores conversation history **in memory**, keyed by `user_id`.
+
+That means the frontend should:
+
+- Keep the same `user_id` for the same user/session
+- Reuse it for every chat turn
+- Not generate a fresh ID for every request
+
+If your app does not have authenticated users, generate a numeric session ID once and persist it in `localStorage` or your own session layer.
+
+## Response shape
+
+`/ai-advisor` returns a structured payload similar to this:
 
 ```json
 {
   "module": "Search",
   "filters_extracted": {
     "propertyType": "Apartment",
+    "finishingType": null,
     "min_price": null,
-    "max_price": 4000000,
-    "rooms": 3,
-    "city": "القاهرة",
-    "district": "التجمع الخامس"
+    "max_price": 3000000,
+    "min_area": null,
+    "max_area": null,
+    "rooms": null,
+    "bathrooms": null,
+    "governorate": null,
+    "city": "التجمع",
+    "district": null
   },
-  "top_properties": [
-    {
-      "propertyId": 123,
-      "propertyType": "Apartment",
-      "price": 3850000,
-      "area": 155,
-      "rooms": 3,
-      "bathrooms": 2,
-      "district": "التجمع الخامس",
-      "city": "القاهرة",
-      "propertyStatus": "Available"
-    }
-  ],
+  "top_properties": [],
   "recommendation": null,
   "comparison": null,
   "negotiation": null,
   "fallback_used": false,
-  "explanation": "Intent=search, confidence=0.81",
-  "reply_in_egyptian_arabic": "تمام، لقيت لك اختيارات مناسبة في التجمع الخامس..."
+  "explanation": "",
+  "reply_in_egyptian_arabic": "..."
 }
 ```
 
-### Notes
+### Response fields
 
-- `module` drives frontend UI mode.
-- `reply_in_egyptian_arabic` is the primary assistant message to display.
-- `top_properties` can be empty (show empty state with assistant text).
-- `recommendation`, `comparison`, and `negotiation` are optional and intent-dependent.
+- `module`: detected intent, such as `Search`, `Recommend`, `Compare`, `Negotiate`, `Chat`, or `Selection`
+- `filters_extracted`: merged filters currently active for that user
+- `top_properties`: list of matched property objects
+- `recommendation`: best property object when the user asks for a recommendation
+- `comparison`: array of up to 2 properties when comparing
+- `negotiation`: property object used for negotiation advice
+- `fallback_used`: `true` when the backend had to relax filtering and show near matches
+- `explanation`: short machine-readable explanation of the chosen path
+- `reply_in_egyptian_arabic`: the user-facing chat reply
 
----
+### Clarification cases
 
-## 2.2 `POST /smartsearch` (fast property-id retrieval)
+When the query is too vague or confidence is low, the backend may return:
 
-### Request
+- `module: "Guided Conversation"`
+- `top_properties: []`
+- a clarifying `reply_in_egyptian_arabic`
+
+Your UI should render this as a normal assistant message and wait for the next user turn.
+
+### Selection cases
+
+If the user refers to one of the last shown properties, the backend may return:
+
+- `module: "Selection"`
+- a direct property link in the reply
+- a single matched property in `top_properties` when available
+
+## Lightweight search endpoint
+
+### `POST /smartsearch`
+
+Use this when you only need ordered property IDs, without the full conversational reply.
+
+#### Request body
 
 ```json
 {
-  "query": "فيلا في الشيخ زايد أقل من 10 مليون",
+  "query": "شقة في المعادي",
   "top_k": 5
 }
 ```
 
-### Response
+#### Response
 
 ```json
 {
-  "property_ids": [101, 222, 319, 405, 510]
+  "property_ids": [101, 87, 56]
 }
 ```
 
-### When to use it
+This is useful for:
 
-Use `/smartsearch` when:
-- You only need matched IDs quickly.
-- You want to prefetch property details from another service.
-- You do not need chatbot narrative text.
+- autocomplete-like search experiences
+- quick result ranking
+- loading property cards from another service after the backend ranks them
 
----
+## Suggested frontend flow
 
-## 3) Required frontend data models (TypeScript)
+### 1. Send user message
+
+When the user submits a message:
+
+1. Append the message to the local chat UI immediately
+2. Call `POST /ai-advisor`
+3. Render `reply_in_egyptian_arabic`
+4. If `top_properties` is present, render property cards or a results panel
+
+### 2. Keep chat session stable
+
+Persist `user_id` per user/session so the backend can remember:
+
+- conversation history
+- previously shown properties
+- accumulated filters
+
+### 3. Render by intent
+
+Use the backend fields to choose the right UI:
+
+- **Search** → show a chat reply plus result cards
+- **Recommend** → highlight the single best property
+- **Compare** → show a side-by-side comparison layout
+- **Negotiate** → show negotiation tips and the referenced property
+- **Selection** → deep-link the selected property detail page
+- **Guided Conversation** → show a follow-up question prompt
+
+## Property data to expect
+
+The properties returned by the backend come from the upstream catalog API and are passed through the ranking pipeline. Common fields include:
+
+- `propertyId`
+- `propertyType`
+- `finishingType`
+- `propertyStatus`
+- `district`
+- `city`
+- `governorate`
+- `price`
+- `area`
+- `rooms`
+- `bathrooms`
+- `floorNumber`
+- `street`
+
+Treat the object as the source of truth for the detail card and keep your UI tolerant of missing or null fields.
+
+## UX recommendations
+
+- Show the assistant reply and the property cards together when results exist
+- Use a compact card for search results and a richer layout for recommendations
+- If `fallback_used` is `true`, show a small note like “showing near matches”
+- If the backend returns no matches, keep the chat tone friendly and prompt the user to broaden the search
+- Preserve the most recent result list so the user can tap “this one” / “التانية” in the next message
+
+## Angular integration example
+
+### Service
 
 ```ts
-export type AdvisorModule =
-  | 'Search'
-  | 'Recommend'
-  | 'Compare'
-  | 'Negotiate'
-  | 'Guided Conversation'
-  | 'Selection'
-  | string;
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
-export interface AdvisorRequest {
+export interface AiAdvisorRequest {
   user_id: number;
   query: string;
 }
 
-export interface PropertyCard {
-  propertyId: number;
-  propertyType?: string;
-  finishingType?: string;
-  propertyStatus?: string;
-  price?: number;
-  area?: number;
-  rooms?: number;
-  bathrooms?: number;
-  district?: string;
-  city?: string;
-  governorate?: string;
-  country?: string;
-  floorNumber?: number;
-  street?: string;
-  [key: string]: unknown;
-}
-
-export interface ExtractedFilters {
-  propertyType?: string | null;
-  finishingType?: string | null;
-  min_price?: number | null;
-  max_price?: number | null;
-  min_area?: number | null;
-  max_area?: number | null;
-  rooms?: number | null;
-  bathrooms?: number | null;
-  governorate?: string | null;
-  city?: string | null;
-  district?: string | null;
-  [key: string]: unknown;
-}
-
-export interface AdvisorResponse {
-  module: AdvisorModule;
-  filters_extracted: ExtractedFilters;
-  top_properties: PropertyCard[];
-  recommendation?: PropertyCard | null;
-  comparison?: PropertyCard[] | null;
-  negotiation?: PropertyCard | null;
+export interface AiAdvisorResponse {
+  module: string;
+  filters_extracted: Record<string, unknown>;
+  top_properties: any[];
+  recommendation: any | null;
+  comparison: any[] | null;
+  negotiation: any | null;
   fallback_used: boolean;
   explanation: string;
   reply_in_egyptian_arabic: string;
+  confidence_score?: number;
 }
 
-export interface SmartSearchRequest {
-  query: string;
-  top_k?: number;
-}
-
-export interface SmartSearchResponse {
-  property_ids: number[];
-}
-```
-
----
-
-## 4) User ID strategy (guest mode)
-
-Backend expects numeric `user_id` and uses it to keep session context.
-
-### Recommendation
-
-- Generate a deterministic numeric guest ID once per browser profile.
-- Store in `localStorage`.
-- Reuse the same ID for every `/ai-advisor` request.
-- Regenerate only if user explicitly resets chat identity.
-
-### Example generation idea
-
-- If no ID exists, create: `Date.now()` + random suffix, then convert to safe integer range.
-- Persist under key: `estatepilot_guest_user_id`.
-
-> Why: session filters/history are tied to `user_id`, so changing it mid-conversation loses context.
-
----
-
-## 5) Angular architecture recommendation
-
-Use 4 layers:
-
-1. **API layer**
-   - `ChatbotApiService` for HTTP calls.
-   - Strict typed request/response interfaces.
-   - Central timeout + retry policy.
-
-2. **State layer**
-   - `ChatStore` (signals, RxJS store, or NgRx).
-   - Keep:
-     - messages
-     - latest `filters_extracted`
-     - latest `top_properties`
-     - loading/error status
-
-3. **Presentation layer**
-   - `ChatComposerComponent`
-   - `ChatMessagesComponent`
-   - `PropertyResultsComponent`
-   - `ComparePanelComponent`
-   - `RecommendationPanelComponent`
-
-4. **Utilities layer**
-   - Arabic number/currency formatting
-   - area units (`م²`)
-   - status badges
-
----
-
-## 6) Module-to-UI behavior mapping
-
-When `module` =
-
-- **`Search`**
-  - Show assistant text + property cards list.
-
-- **`Recommend`**
-  - Highlight `recommendation` card first.
-  - Keep remaining `top_properties` as alternatives.
-
-- **`Compare`**
-  - Show side-by-side comparison table from `comparison` (usually top 2).
-
-- **`Negotiate`**
-  - Show negotiation advice panel using `negotiation` + assistant response.
-
-- **`Guided Conversation`**
-  - Show assistant clarifying question.
-  - Optionally render quick-reply chips (budget, location, rooms, type).
-
-- **`Selection`**
-  - Treat as user selecting previously shown property.
-  - Route to property details page if link is available in your frontend system.
-
----
-
-## 7) Fallback and error handling
-
-## 7.1 Application-level fallback
-
-If `fallback_used === true`:
-- Show a subtle info banner: "نتيجة تقريبية بسبب قلة التطابق".
-- Still render the response normally.
-
-## 7.2 Empty results
-
-If `top_properties.length === 0`:
-- Show empty-state UI + backend assistant text.
-- Offer user chips for next action: `زود الميزانية` / `غيّر المنطقة` / `قلل المساحة`.
-
-## 7.3 Network/API failure
-
-- Show non-blocking error toast for transient issues.
-- Keep unsent message in composer for retry.
-- Add “Retry” action that resubmits same payload.
-
-## 7.4 Timeout policy
-
-- Suggested request timeout: 15–25 seconds for `/ai-advisor`.
-- Suggested request timeout: 8–12 seconds for `/smartsearch`.
-
----
-
-## 8) UX requirements (Arabic-first)
-
-- Enable RTL layout for chat screen.
-- Use Arabic-friendly numerals/formatting where relevant.
-- Display price as `EGP` + localized separators.
-- Keep assistant tone natural and concise.
-- Keep loading indicators visible while waiting for LLM response.
-
----
-
-## 9) Suggested Angular service skeleton
-
-```ts
 @Injectable({ providedIn: 'root' })
 export class ChatbotApiService {
-  private readonly baseUrl = environment.apiBaseUrl;
+  private readonly baseUrl = 'https://YOUR-BACKEND-URL';
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
-  askAdvisor(payload: AdvisorRequest): Observable<AdvisorResponse> {
-    return this.http
-      .post<AdvisorResponse>(`${this.baseUrl}/ai-advisor`, payload)
-      .pipe(timeout(20000));
+  sendMessage(payload: AiAdvisorRequest): Observable<AiAdvisorResponse> {
+    return this.http.post<AiAdvisorResponse>(`${this.baseUrl}/ai-advisor`, payload);
   }
 
-  smartSearch(payload: SmartSearchRequest): Observable<SmartSearchResponse> {
-    return this.http
-      .post<SmartSearchResponse>(`${this.baseUrl}/smartsearch`, payload)
-      .pipe(timeout(10000));
+  smartSearch(query: string, top_k = 5): Observable<{ property_ids: number[] }> {
+    return this.http.post<{ property_ids: number[] }>(`${this.baseUrl}/smartsearch`, {
+      query,
+      top_k,
+    });
   }
 }
 ```
 
----
+### Component usage
 
-## 10) QA acceptance checklist
+```ts
+this.chatbotApi.sendMessage({
+  user_id: this.userId,
+  query: this.message,
+}).subscribe((response) => {
+  this.messages.push({ role: 'assistant', text: response.reply_in_egyptian_arabic });
+  this.properties = response.top_properties ?? [];
+});
+```
 
-A frontend implementation is accepted when:
+## Error handling
 
-1. Chat sends `user_id` + `query` correctly.
-2. Multi-turn conversation keeps context with same `user_id`.
-3. All `module` modes render correctly.
-4. `fallback_used` state is visible but non-disruptive.
-5. Empty results are graceful and actionable.
-6. Retry path works for network errors.
-7. RTL + Arabic text rendering is correct on desktop/mobile.
-8. `/smartsearch` integration returns and consumes IDs properly.
+Handle these cases gracefully in the frontend:
 
----
+- Network failure: show a retry message
+- Empty `top_properties`: show the chatbot text without cards
+- Non-200 response: show a generic support message
+- Missing `reply_in_egyptian_arabic`: fallback to a safe default message
 
-## 11) Troubleshooting matrix
+## Security and configuration notes
 
-| Symptom | Likely cause | Frontend action |
-|---|---|---|
-| Context lost between messages | `user_id` changed | Persist guest ID and reuse it |
-| Assistant asks many clarification questions | Query too vague / low confidence | Offer quick filter chips and guided prompts |
-| No cards but assistant message exists | Filtered result set is empty | Show empty state and refinement options |
-| Slow responses | LLM processing latency | Show loading state + tune timeout + optional cancel UX |
-| Compare panel empty | `comparison` null for current intent | Fallback to top properties list |
-| Recommendation missing | `recommendation` null | Render generic result cards only |
+- Do **not** expose `GOOGLE_API_KEY` in the frontend
+- Keep secrets server-side only
+- The backend currently allows all CORS origins, but you can still lock down your frontend deployment separately
+- Sessions are in-memory, so restarting or scaling the backend may reset chat memory
 
----
+## Quick integration checklist
 
-## 12) Security and production notes
+- [ ] Set the backend base URL
+- [ ] Persist a stable numeric `user_id`
+- [ ] Call `POST /ai-advisor` on each chat turn
+- [ ] Render `reply_in_egyptian_arabic`
+- [ ] Render `top_properties` when present
+- [ ] Support compare/recommend/negotiation states
+- [ ] Handle empty results and clarification replies
+- [ ] Never ship backend secrets to the browser
 
-- Do not expose private backend secrets in frontend.
-- Keep API base URL in Angular environments (`environment.ts`).
-- Add client-side rate guard (button debounce) to avoid duplicate sends.
-- Log only non-sensitive telemetry.
+## Files to know
 
----
-
-## 13) Delivery summary for frontend team
-
-If your team implements this document as-is, they will have:
-- stable chat session behavior,
-- reliable intent-based rendering,
-- graceful fallback/error UX,
-- production-ready Arabic chatbot integration with the current backend contracts.
+- `main.py` — FastAPI app and endpoints
+- `session_manager.py` — in-memory per-user session storage
+- `query_analyzer.py` — intent and filter extraction
+- `search_chain.py` — conversational search reply generation
+- `compare_chain.py` — comparison reply generation
+- `negotiation_chain.py` — negotiation advice generation

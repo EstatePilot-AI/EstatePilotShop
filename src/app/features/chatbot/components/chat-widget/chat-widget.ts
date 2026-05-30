@@ -2,14 +2,15 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
   inject,
+  viewChild,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ChatMessageList } from '../chat-message-list/chat-message-list';
 import { ChatComposer } from '../chat-composer/chat-composer';
 import { ChatStore } from '../../services/chat-store.service';
 import { TranslationService } from '../../../../core/services/translation.service';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-chat-widget',
@@ -24,7 +25,8 @@ import { TranslateService } from '@ngx-translate/core';
 export class ChatWidget {
   readonly store = inject(ChatStore);
   private readonly translation = inject(TranslationService);
-  private readonly translateService = inject(TranslateService);
+  private readonly openButton =
+    viewChild<ElementRef<HTMLButtonElement>>('openButton');
 
   readonly isOpen = this.store.isOpen;
   readonly messages = this.store.messages;
@@ -33,22 +35,15 @@ export class ChatWidget {
 
   readonly direction = computed(() => this.translation.isRtl() ? 'rtl' : 'ltr');
 
-  readonly suggestions = computed(() => [
-    'CHATBOT.SUGGESTION_SEARCH',
-    'CHATBOT.SUGGESTION_RECOMMEND',
-    'CHATBOT.SUGGESTION_COMPARE',
-  ]);
-
-  readonly translatedSuggestions = computed(() =>
-    this.suggestions().map(key => this.translateService.instant(key))
-  );
-
   toggle(): void {
     this.store.toggleOpen();
   }
 
   close(): void {
     this.store.close();
+    queueMicrotask(() => {
+      this.openButton()?.nativeElement.focus();
+    });
   }
 
   sendMessage(text: string): void {
@@ -57,6 +52,10 @@ export class ChatWidget {
 
   clearChat(): void {
     this.store.clearChat();
+  }
+
+  retryLastMessage(): void {
+    this.store.retryLastMessage();
   }
 
   onEscape(): void {

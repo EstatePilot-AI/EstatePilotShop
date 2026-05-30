@@ -27,7 +27,13 @@ import { DividerModule } from 'primeng/divider';
 import { PaginatorModule, PaginatorState, Paginator } from 'primeng/paginator';
 
 import { PropertyService } from '../../../../core/services/property.service';
-import { IProperty } from '../../models/IProperty';
+import { IPaginatedResponse, IProperty } from '../../models/IProperty';
+import {
+  displayTranslatedPropertyLocation,
+  displayTranslatedPropertyStatus,
+  displayTranslatedPropertyType,
+  propertyStatusKey as getPropertyStatusKey,
+} from '../../utils/property-labels';
 
 @Component({
   selector: 'app-property-list',
@@ -158,13 +164,44 @@ export class PropertyList implements OnInit {
     }).format(price);
   }
 
+  formatArea(area: number): string {
+    return `${new Intl.NumberFormat('en-EG', { maximumFractionDigits: 0 }).format(area)} m²`;
+  }
+
   displayPropertyType(propertyType: string): string {
-    if (!propertyType) return 'Property';
-    return propertyType
-      .split(/\s+/)
+    return displayTranslatedPropertyType(this.translate, propertyType);
+  }
+
+  displayPropertyStatus(status: string): string {
+    return displayTranslatedPropertyStatus(this.translate, status);
+  }
+
+  displayPropertyLocation(location: string): string {
+    return displayTranslatedPropertyLocation(this.translate, location);
+  }
+
+  propertyStatusKey(status: string): string {
+    return getPropertyStatusKey(status);
+  }
+
+  propertyTitle(property: IProperty): string {
+    return [property.district, property.city]
       .filter(Boolean)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
+      .map((location) => this.displayPropertyLocation(location))
+      .join(' - ');
+  }
+
+  propertyLocation(property: IProperty): string {
+    return [property.district, property.city]
+      .filter(Boolean)
+      .map((location) => this.displayPropertyLocation(location))
+      .join(', ');
+  }
+
+  propertyDescription(property: IProperty): string {
+    const type = this.displayPropertyType(property.propertyType);
+    const location = this.propertyLocation(property);
+    return this.translate.instant('PROPERTIES.CARD_DESCRIPTION', { type, location });
   }
 
   statusSeverity(
@@ -174,12 +211,12 @@ export class PropertyList implements OnInit {
       string,
       'success' | 'warn' | 'danger' | 'info' | 'secondary' | 'contrast'
     > = {
-      available: 'success',
-      sold: 'danger',
-      rented: 'warn',
-      pending: 'info',
+      AVAILABLE: 'success',
+      SOLD: 'danger',
+      RENTED: 'warn',
+      PENDING: 'info',
     };
-    return map[status?.toLowerCase()] ?? 'secondary';
+    return map[this.propertyStatusKey(status)] ?? 'secondary';
   }
 
   clearFilters(): void {
@@ -211,9 +248,9 @@ export class PropertyList implements OnInit {
       .getAllProperties(this.pageNumber(), this.pageSize(), this.searchQuery())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (response: any) => {
+        next: (response: IPaginatedResponse<IProperty> | IProperty[]) => {
           // Handle both new paginated response and old array format
-          if (response && response.data && Array.isArray(response.data)) {
+          if (this.isPaginatedResponse(response)) {
             this.properties.set(response.data);
             this.totalCount.set(response.totalCount ?? response.data.length);
           } else if (Array.isArray(response)) {
@@ -230,6 +267,12 @@ export class PropertyList implements OnInit {
           this.loading.set(false);
         },
       });
+  }
+
+  private isPaginatedResponse(
+    response: IPaginatedResponse<IProperty> | IProperty[],
+  ): response is IPaginatedResponse<IProperty> {
+    return !Array.isArray(response) && Array.isArray(response.data);
   }
 
   private localFallbackImage(propertyType: string): string {

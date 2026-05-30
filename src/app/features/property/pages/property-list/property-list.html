@@ -1,5 +1,4 @@
 <section class="property-list-page">
-  <!-- ── Page Header ──────────────────────────────────────── -->
   <header class="page-header">
     <div class="container">
       <div class="page-header-inner">
@@ -30,7 +29,6 @@
   </header>
 
   <div class="container">
-    <!-- ── Filter Bar ──────────────────────────────────────── -->
     <div class="filter-bar">
       <div class="filter-search">
         <i class="pi pi-search filter-search-icon"></i>
@@ -87,7 +85,6 @@
       }
     </div>
 
-    <!-- ── Error State ─────────────────────────────────────── -->
     @if (error()) {
       <div class="state-wrapper" role="alert">
         <p-message severity="error" [text]="error()!" styleClass="w-full" />
@@ -100,25 +97,31 @@
       </div>
     }
 
-    <!-- ── Loading Skeletons ───────────────────────────────── -->
     @if (loading() && !error()) {
       <div
-        class="properties-grid"
+        class="properties-list"
         aria-busy="true"
         [attr.aria-label]="'PROPERTIES.LOADING_PROPERTIES' | translate"
       >
         @for (item of skeletonItems; track $index) {
-          <div class="property-card property-card--skeleton">
-            <p-skeleton height="220px" styleClass="skeleton-image" borderRadius="0" />
-            <div class="property-card-body">
-              <p-skeleton width="40%" height="1.25rem" styleClass="mb-2" />
-              <p-skeleton width="70%" height="1rem" styleClass="mb-1" />
-              <p-skeleton width="55%" height="0.85rem" styleClass="mb-3" />
-              <p-skeleton width="100%" height="1px" styleClass="mb-3" />
-              <div class="flex gap-3">
-                <p-skeleton width="4rem" height="0.85rem" />
-                <p-skeleton width="4rem" height="0.85rem" />
-                <p-skeleton width="4rem" height="0.85rem" />
+          <div class="property-list-card property-list-card--skeleton">
+            <p-skeleton
+              height="100%"
+              styleClass="property-list-card__skeleton-image"
+              borderRadius="10px"
+            />
+            <div class="property-list-card__content">
+              <p-skeleton width="32%" height="0.9rem" styleClass="mb-2" />
+              <p-skeleton width="46%" height="1.5rem" styleClass="mb-2" />
+              <p-skeleton width="72%" height="1rem" styleClass="mb-3" />
+              <div class="property-list-card__details">
+                <p-skeleton width="5rem" height="0.85rem" />
+                <p-skeleton width="5rem" height="0.85rem" />
+                <p-skeleton width="5rem" height="0.85rem" />
+              </div>
+              <div class="property-list-card__price-row">
+                <p-skeleton width="8rem" height="1.5rem" />
+                <p-skeleton width="6rem" height="2rem" />
               </div>
             </div>
           </div>
@@ -126,7 +129,6 @@
       </div>
     }
 
-    <!-- ── Empty State ────────────────────────────────────── -->
     @if (!loading() && !error() && filtered().length === 0) {
       <div class="state-wrapper empty-state" role="status">
         <span class="empty-icon" aria-hidden="true">
@@ -145,102 +147,78 @@
       </div>
     }
 
-    <!-- ── Property Grid ──────────────────────────────────── -->
     @if (!loading() && !error() && totalCount() > 0) {
-      <div class="properties-grid">
+      <div class="properties-list">
         @for (property of filtered(); track property.propertyId) {
-          <article
-            class="property-card"
-            [routerLink]="['/properties', property.propertyId]"
-            [attr.aria-label]="displayPropertyType(property.propertyType) + ' in ' + property.city"
-          >
-            <div class="property-image-wrapper">
+          <article class="property-list-card">
+            <div class="property-list-card__media">
               <img
-                class="property-image"
+                class="property-list-card__image"
                 [src]="propertyImageUrl(property)"
-                [alt]="displayPropertyType(property.propertyType) + ' in ' + property.city"
-                width="900"
-                height="506"
+                [alt]="displayPropertyType(property.propertyType) + ' in ' + propertyLocation(property)"
+                width="560"
+                height="350"
                 loading="lazy"
                 decoding="async"
                 (error)="onImageError($event, property)"
               />
 
               <span
-                class="property-status-badge"
-                [class.status-available]="property.status === 'Available'"
-                [class.status-sold]="property.status === 'Sold'"
-                [class.status-rented]="property.status === 'Rented'"
-                [class.status-pending]="property.status === 'Pending'"
-              >
-                {{ property.status }}
-              </span>
-
-              <button
-                class="property-heart-btn"
-                type="button"
-                [attr.aria-label]="'Save ' + displayPropertyType(property.propertyType)"
-                (click)="$event.stopPropagation()"
-              >
-                <i class="pi pi-heart" aria-hidden="true"></i>
-              </button>
-
-              <div class="property-image-overlay">
-                <span class="property-price-badge">{{ formatPrice(property.price) }}</span>
-                <span class="property-type-pill">
-                  {{ displayPropertyType(property.propertyType) }}
+                class="property-list-card__status property-list-card__status--floating"
+                [class.status-available]="propertyStatusKey(property.status) === 'AVAILABLE'"
+                [class.status-sold]="propertyStatusKey(property.status) === 'SOLD'"
+                [class.status-rented]="propertyStatusKey(property.status) === 'RENTED'"
+                [class.status-pending]="propertyStatusKey(property.status) === 'PENDING'"
+                >
+                  {{ displayPropertyStatus(property.status) }}
                 </span>
-              </div>
             </div>
 
-            <div class="property-card-body">
-              <div class="property-card-header">
-                <div class="property-card-text">
-                  <h3 class="property-card-title">
-                    {{ property.district }}, {{ property.city }}
-                  </h3>
-                  <span class="property-card-subtitle">
-                    {{ property.city }}
-                    <span class="property-body-date">
-                      <i class="pi pi-clock"></i>
-                      {{ property.createdAt }}
-                    </span>
+            <a
+              class="property-list-card__link"
+              [routerLink]="['/properties', property.propertyId]"
+              [attr.aria-label]="'PROPERTIES.VIEW_DETAILS_ARIA' | translate: { id: property.propertyId }"
+            >
+              <div class="property-list-card__content">
+                <div class="property-list-card__eyebrow">
+                  <span class="property-list-card__location">
+                    <i class="pi pi-map-marker" aria-hidden="true"></i>
+                    {{ displayPropertyLocation(property.city) }}
+                  </span>
+                  <span class="property-list-card__date">
+                    <i class="pi pi-clock" aria-hidden="true"></i>
+                    {{ property.createdAt }}
                   </span>
                 </div>
 
-                <span class="property-card-price">
-                  {{ formatPrice(property.price) }}
-                </span>
-              </div>
+                <h3 class="property-list-card__title">{{ propertyTitle(property) }}</h3>
+                <p class="property-list-card__description">{{ propertyDescription(property) }}</p>
 
-              <div class="property-divider"></div>
-
-              <div class="property-card-footer">
-                <div class="property-tags">
-                  <span class="property-tag">
-                    <i class="pi pi-th-large" aria-hidden="true"></i>
-                    {{ property.area }} m²
-                  </span>
-                  <span class="property-tag">
-                    <i class="pi pi-map-marker" aria-hidden="true"></i>
-                    {{ property.city }}
-                  </span>
-                  <span class="property-tag">
-                    <i class="pi pi-tag" aria-hidden="true"></i>
+                <div
+                  class="property-list-card__details"
+                  [attr.aria-label]="'PROPERTIES.PROPERTY_DETAILS_SUMMARY' | translate"
+                >
+                  <span class="property-list-card__detail">
                     {{ displayPropertyType(property.propertyType) }}
                   </span>
+                  <span class="property-list-card__detail property-list-card__detail--area" dir="ltr">
+                    {{ formatArea(property.area) }}
+                  </span>
                 </div>
 
-                <span class="property-card-arrow" aria-hidden="true">
-                  <i class="pi pi-arrow-up-right"></i>
-                </span>
+                <div class="property-list-card__price-row">
+                  <span class="property-list-card__price">{{ formatPrice(property.price) }}</span>
+                  <span class="property-list-card__cta">
+                    {{ 'PROPERTIES.VIEW_DETAILS' | translate }}
+                    <i class="pi pi-arrow-up-right" aria-hidden="true"></i>
+                  </span>
+                </div>
               </div>
-            </div>
+            </a>
           </article>
         }
       </div>
 
-      <!-- ── Pagination ────────────────────────────────────── -->
       <div class="pagination-wrapper">
         <p-paginator
           [first]="first()"

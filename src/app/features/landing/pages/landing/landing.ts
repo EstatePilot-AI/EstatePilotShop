@@ -18,7 +18,13 @@ import { CarouselModule } from 'primeng/carousel';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { PropertyService } from '../../../../core/services/property.service';
-import { IProperty } from '../../../property/models/IProperty';
+import { IPaginatedResponse, IProperty } from '../../../property/models/IProperty';
+import {
+  displayTranslatedPropertyLocation,
+  displayTranslatedPropertyStatus,
+  displayTranslatedPropertyType,
+  propertyStatusKey as getPropertyStatusKey,
+} from '../../../property/utils/property-labels';
 import { RevealDirective } from '../../../../shared/directives/reveal.directive';
 
 interface Category {
@@ -81,9 +87,10 @@ export class Landing implements OnInit {
       .getAllProperties(1, 4) // Fetch first page with 4 items for landing
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (response) => {
-          this.featuredProperties.set(response.data);
-          this.featuredPreview.set(response.data);
+        next: (response: IPaginatedResponse<IProperty> | IProperty[]) => {
+          const properties = Array.isArray(response) ? response : response.data;
+          this.featuredProperties.set(properties);
+          this.featuredPreview.set(properties);
           this.featuredLoading.set(false);
         },
         error: (err: Error) => {
@@ -95,12 +102,40 @@ export class Landing implements OnInit {
 
   // ── Helpers ──────────────────────────────────────────────
   displayPropertyType(propertyType: string): string {
-    if (!propertyType) return 'Property';
-    return propertyType
-      .split(/\s+/)
+    return displayTranslatedPropertyType(this.translate, propertyType);
+  }
+
+  displayPropertyStatus(status: string): string {
+    return displayTranslatedPropertyStatus(this.translate, status);
+  }
+
+  displayPropertyLocation(location: string): string {
+    return displayTranslatedPropertyLocation(this.translate, location);
+  }
+
+  propertyStatusKey(status: string): string {
+    return getPropertyStatusKey(status);
+  }
+
+  propertyTitle(property: IProperty): string {
+    return [property.district, property.city]
       .filter(Boolean)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
+      .map((location) => this.displayPropertyLocation(location))
+      .join(' - ');
+  }
+
+  propertyLocation(property: IProperty): string {
+    return [property.district, property.city]
+      .filter(Boolean)
+      .map((location) => this.displayPropertyLocation(location))
+      .join(', ');
+  }
+
+  propertyDescription(property: IProperty): string {
+    return this.translate.instant('LISTINGS.CARD_DESCRIPTION', {
+      type: this.displayPropertyType(property.propertyType),
+      location: this.propertyLocation(property),
+    });
   }
 
   propertyImageUrl(property: IProperty): string {
@@ -129,16 +164,20 @@ export class Landing implements OnInit {
     }).format(price);
   }
 
+  formatArea(area: number): string {
+    return `${new Intl.NumberFormat('en-EG', { maximumFractionDigits: 0 }).format(area)} m²`;
+  }
+
   statusSeverity(
     status: string,
   ): 'success' | 'warn' | 'danger' | 'info' | 'secondary' | 'contrast' {
     const map: Record<string, 'success' | 'warn' | 'danger' | 'info' | 'secondary' | 'contrast'> = {
-      available: 'success',
-      sold: 'danger',
-      rented: 'warn',
-      pending: 'info',
+      AVAILABLE: 'success',
+      SOLD: 'danger',
+      RENTED: 'warn',
+      PENDING: 'info',
     };
-    return map[status?.toLowerCase()] ?? 'secondary';
+    return map[this.propertyStatusKey(status)] ?? 'secondary';
   }
 
   protected readonly categories: Category[] = [

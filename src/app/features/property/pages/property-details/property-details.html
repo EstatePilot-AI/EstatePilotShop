@@ -65,7 +65,7 @@
           <img
             class="hero-image"
             [src]="galleryImages()[selectedImageIndex()]"
-            [alt]="displayPropertyType(p.propertyType) + ' in ' + p.city"
+            [alt]="displayPropertyType(p.propertyType) + ' in ' + displayPropertyLocation(p.city)"
             width="1400"
             height="788"
             loading="eager"
@@ -99,7 +99,7 @@
           }
           <div class="hero-badges">
             <p-tag
-              [value]="p.propertyStatus"
+              [value]="displayPropertyStatus(p.propertyStatus)"
               [severity]="statusSeverity(p.propertyStatus)"
               [rounded]="true"
             />
@@ -144,7 +144,7 @@
               <div class="stat-card">
                 <i class="pi pi-check-circle stat-icon" aria-hidden="true"></i>
                 <div class="stat-info">
-                  <span class="stat-value">{{ p.finishingType }}</span>
+                  <span class="stat-value">{{ displayFinishingType(p.finishingType) }}</span>
                   <span class="stat-label">{{ 'PROPERTY_DETAILS.FINISHING' | translate }}</span>
                 </div>
               </div>
@@ -160,19 +160,19 @@
             <div class="info-grid">
               <div class="info-item">
                 <span class="info-label">{{ 'PROPERTY_DETAILS.COUNTRY' | translate }}</span>
-                <span class="info-value">{{ p.country }}</span>
+                <span class="info-value">{{ displayPropertyLocation(p.country) }}</span>
               </div>
               <div class="info-item">
                 <span class="info-label">{{ 'PROPERTY_DETAILS.GOVERNORATE' | translate }}</span>
-                <span class="info-value">{{ p.governorate }}</span>
+                <span class="info-value">{{ displayPropertyLocation(p.governorate) }}</span>
               </div>
               <div class="info-item">
                 <span class="info-label">{{ 'PROPERTY_DETAILS.CITY' | translate }}</span>
-                <span class="info-value">{{ p.city }}</span>
+                <span class="info-value">{{ displayPropertyLocation(p.city) }}</span>
               </div>
               <div class="info-item">
                 <span class="info-label">{{ 'PROPERTY_DETAILS.DISTRICT' | translate }}</span>
-                <span class="info-value">{{ p.district }}</span>
+                <span class="info-value">{{ displayPropertyLocation(p.district) }}</span>
               </div>
               <div class="info-item">
                 <span class="info-label">{{ 'PROPERTY_DETAILS.STREET' | translate }}</span>

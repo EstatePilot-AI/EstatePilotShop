@@ -21,7 +21,7 @@ export class PropertyService {
     pageNumber = 1,
     pageSize = 10,
     term?: string,
-  ): Observable<IPaginatedResponse<IProperty>> {
+  ): Observable<IPaginatedResponse<IProperty> | IProperty[]> {
     let params = new HttpParams()
       .set('pageNumber', pageNumber.toString())
       .set('pageSize', pageSize.toString());

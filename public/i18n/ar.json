@@ -53,7 +53,11 @@
     "LOADING": "جاري تحميل العقارات المميزة",
     "AREA": "المساحة",
     "TYPE": "النوع",
-    "STATUS": "الحالة"
+    "STATUS": "الحالة",
+    "CARD_DESCRIPTION": "اكتشف {{type}} في {{location}}",
+    "PROPERTY_DETAILS_SUMMARY": "ملخص تفاصيل العقار",
+    "SAVE_PROPERTY_ARIA": "حفظ {{type}} في {{location}}",
+    "VIEW_DETAILS_ARIA": "عرض تفاصيل العقار {{id}}"
   },
   "TESTIMONIALS": {
     "TITLE": "ماذا يقول عملاؤنا",
@@ -122,7 +126,10 @@
     "VIEW_DETAILS_ARIA": "عرض تفاصيل العقار {{id}}",
     "AREA": "المساحة",
     "TYPE": "النوع",
-    "STATUS": "الحالة"
+    "STATUS": "الحالة",
+    "PROPERTY_DETAILS_SUMMARY": "ملخص تفاصيل العقار",
+    "SAVE_PROPERTY_ARIA": "حفظ {{type}} في {{location}}",
+    "CARD_DESCRIPTION": "اكتشف {{type}} في {{location}}"
   },
   "PROPERTY_DETAILS": {
     "BACK_TO_LISTINGS": "العودة للإعلانات",
@@ -149,6 +156,46 @@
     "TRY_AGAIN": "إعادة المحاولة",
     "INVALID_ID": "معرّف العقار غير صالح.",
     "LOAD_ERROR": "فشل تحميل تفاصيل العقار. يرجى المحاولة مرة أخرى."
+  },
+  "PROPERTY_LABELS": {
+    "TYPES": {
+      "APARTMENT": "شقة",
+      "VILLA": "فيلا",
+      "DUPLEX": "دوبلكس",
+      "TOWNHOUSE": "تاون هاوس",
+      "STUDIO": "ستوديو",
+      "CHALET": "شاليه",
+      "PENTHOUSE": "بنتهاوس",
+      "HOUSE": "منزل",
+      "OFFICE": "مكتب",
+      "LAND": "أرض"
+    },
+    "STATUS": {
+      "AVAILABLE": "متاح",
+      "SOLD": "مباع",
+      "RENTED": "مؤجر",
+      "PENDING": "قيد الانتظار"
+    },
+    "FINISHING": {
+      "FINISHED": "مشطب",
+      "WITHOUT_FINISHING": "بدون تشطيب",
+      "SEMI_FINISHED": "نصف تشطيب",
+      "FULLY_FINISHED": "تشطيب كامل",
+      "SUPER_LUX": "سوبر لوكس"
+    },
+    "LOCATIONS": {
+      "EGYPT": "مصر",
+      "CAIRO": "القاهرة",
+      "NEW_ZAYED": "نيو زايد",
+      "JIRIAN": "جريان",
+      "SHEIKH_ZAYED": "الشيخ زايد",
+      "EL_SHOROUK": "مدينة الشروق",
+      "OCTOBER": "أكتوبر",
+      "ADMINISTRATIVE_CAPITAL": "العاصمة الإدارية",
+      "EL_ZEITOUN": "حي الزيتون",
+      "EL_MAADI": "المعادي",
+      "GIZA": "الجيزة"
+    }
   },
   "PROPERTY_UPDATE": {
     "TITLE": "تحديث العقار",

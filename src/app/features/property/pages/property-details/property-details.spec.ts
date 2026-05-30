@@ -31,6 +31,19 @@ function property(id: number): IPropertyDetail {
   };
 }
 
+function englishBackendProperty(id: number): IPropertyDetail {
+  return {
+    ...property(id),
+    propertyType: 'Apartment',
+    propertyStatus: 'Available',
+    finishingType: 'Semi-Finished',
+    country: 'Egypt',
+    governorate: 'Cairo',
+    city: 'Cairo',
+    district: 'El Maadi',
+  };
+}
+
 describe('PropertyDetails', () => {
   let fixture: ComponentFixture<PropertyDetails>;
   let component: PropertyDetails;
@@ -61,8 +74,59 @@ describe('PropertyDetails', () => {
       ],
     }).compileComponents();
 
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation(
+      'ar',
+      {
+        PROPERTY_DETAILS: {
+          BACK_ARIA: 'العودة لقائمة العقارات',
+          BACK_TO_LISTINGS: 'العودة للإعلانات',
+          LOADING: 'جاري تحميل تفاصيل العقار',
+          AREA: 'المساحة',
+          ROOMS: 'الغرف',
+          BATHROOMS: 'الحمامات',
+          FINISHING: 'التشطيب',
+          LOCATION_DETAILS: 'تفاصيل الموقع',
+          COUNTRY: 'الدولة',
+          GOVERNORATE: 'المحافظة',
+          CITY: 'المدينة',
+          DISTRICT: 'الحي',
+          STREET: 'الشارع',
+          BUILDING_DETAILS: 'تفاصيل المبنى',
+          BUILDING_NO: 'رقم المبنى',
+          FLOOR: 'الطابق',
+          APARTMENT_NO: 'رقم الشقة',
+          CONTACT_US: 'تواصل معنا',
+          CONTACT_ARIA: 'تواصل معنا بخصوص هذا العقار',
+          TRY_AGAIN: 'إعادة المحاولة',
+          INVALID_ID: 'معرّف العقار غير صالح.',
+          LOAD_ERROR: 'فشل تحميل تفاصيل العقار.',
+        },
+        PROPERTY_LABELS: {
+          TYPES: {
+            APARTMENT: 'شقة',
+          },
+          STATUS: {
+            AVAILABLE: 'متاح',
+          },
+          FINISHING: {
+            SEMI_FINISHED: 'نصف تشطيب',
+          },
+          LOCATIONS: {
+            EGYPT: 'مصر',
+            CAIRO: 'القاهرة',
+            EL_MAADI: 'المعادي',
+          },
+        },
+      },
+      true,
+    );
+    translate.use('ar');
+
     fixture = TestBed.createComponent(PropertyDetails);
     component = fixture.componentInstance;
+    fixture.detectChanges();
+    await fixture.whenStable();
     fixture.detectChanges();
   }
 
@@ -112,5 +176,24 @@ describe('PropertyDetails', () => {
 
     expect(propertyService.getPropertyById).toHaveBeenCalledWith(2);
     expect(component.property()?.propertyId).toBe(2);
+  });
+
+  it('translates backend property labels on the details page', async () => {
+    await createComponent('1');
+    propertyService.getPropertyById.mockReturnValue(of(englishBackendProperty(1)));
+
+    component.reload();
+    fixture.detectChanges();
+
+    const host: HTMLElement = fixture.nativeElement;
+
+    expect(host.textContent).toContain('شقة');
+    expect(host.textContent).toContain('متاح');
+    expect(host.textContent).toContain('نصف تشطيب');
+    expect(host.textContent).toContain('المعادي, القاهرة, القاهرة, مصر');
+    expect(host.textContent).not.toContain('Apartment');
+    expect(host.textContent).not.toContain('Available');
+    expect(host.textContent).not.toContain('Semi-Finished');
+    expect(host.textContent).not.toContain('El Maadi');
   });
 });

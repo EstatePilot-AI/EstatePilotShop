@@ -1,0 +1,111 @@
+<div class="about-page">
+  <section class="about-hero bg-gradient-hero" aria-labelledby="about-title">
+    <div class="container about-hero__grid">
+      <div class="about-hero__copy" appReveal>
+        <span class="about-eyebrow">
+          <i class="pi pi-sparkles" aria-hidden="true"></i>
+          {{ 'ABOUT_PAGE.HERO.EYEBROW' | translate }}
+        </span>
+
+        <h1 id="about-title" class="about-hero__title">
+          {{ 'ABOUT_PAGE.HERO.TITLE' | translate }}
+        </h1>
+
+        <p class="about-hero__subtitle">
+          {{ 'ABOUT_PAGE.HERO.SUBTITLE' | translate }}
+        </p>
+
+        <a routerLink="/contact" class="about-hero__cta">
+          <span>{{ 'ABOUT_PAGE.HERO.CTA' | translate }}</span>
+          <i class="pi pi-arrow-up-right" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section about-overview" aria-labelledby="about-overview-title">
+    <div class="container about-overview__grid">
+      <div appReveal>
+        <span class="about-section-kicker">{{ 'ABOUT_PAGE.OVERVIEW.KICKER' | translate }}</span>
+        <h2 id="about-overview-title" class="about-section-title">
+          {{ 'ABOUT_PAGE.OVERVIEW.TITLE' | translate }}
+        </h2>
+      </div>
+
+      <p class="about-overview__body" appReveal [revealDelay]="100">
+        {{ 'ABOUT_PAGE.OVERVIEW.BODY' | translate }}
+      </p>
+    </div>
+  </section>
+
+  <section class="section about-business" aria-labelledby="about-business-title">
+    <div class="container">
+      <div class="about-section-header" appReveal>
+        <span class="about-section-kicker">{{ 'ABOUT_PAGE.BUSINESS.KICKER' | translate }}</span>
+        <h2 id="about-business-title" class="about-section-title">
+          {{ 'ABOUT_PAGE.BUSINESS.TITLE' | translate }}
+        </h2>
+        <p class="about-section-subtitle">{{ 'ABOUT_PAGE.BUSINESS.SUBTITLE' | translate }}</p>
+      </div>
+
+      <div class="about-feature-grid">
+        @for (item of businessModelItems(); track item.titleKey) {
+          <article class="about-feature-card" appReveal [revealDelay]="$index * 90">
+            <span class="about-feature-card__icon">
+              <i [class]="item.icon" aria-hidden="true"></i>
+            </span>
+            <h3>{{ item.titleKey | translate }}</h3>
+            <p>{{ item.bodyKey | translate }}</p>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section about-system" aria-labelledby="about-system-title">
+    <div class="container">
+      <div class="about-section-header" appReveal>
+        <span class="about-section-kicker">{{ 'ABOUT_PAGE.SYSTEM.KICKER' | translate }}</span>
+        <h2 id="about-system-title" class="about-section-title">
+          {{ 'ABOUT_PAGE.SYSTEM.TITLE' | translate }}
+        </h2>
+        <p class="about-section-subtitle">{{ 'ABOUT_PAGE.SYSTEM.SUBTITLE' | translate }}</p>
+      </div>
+
+      <div class="about-system-list">
+        @for (item of systemItems(); track item.titleKey) {
+          <article class="about-system-item" appReveal [revealDelay]="$index * 80">
+            <span class="about-system-item__icon">
+              <i [class]="item.icon" aria-hidden="true"></i>
+            </span>
+            <div>
+              <h3>{{ item.titleKey | translate }}</h3>
+              <p>{{ item.bodyKey | translate }}</p>
+            </div>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section about-team" aria-labelledby="about-team-title">
+    <div class="container">
+      <div class="about-section-header" appReveal>
+        <span class="about-section-kicker">{{ 'ABOUT_PAGE.TEAM.KICKER' | translate }}</span>
+        <h2 id="about-team-title" class="about-section-title">
+          {{ 'ABOUT_PAGE.TEAM.TITLE' | translate }}
+        </h2>
+        <p class="about-section-subtitle">{{ 'ABOUT_PAGE.TEAM.SUBTITLE' | translate }}</p>
+      </div>
+
+      <div class="about-team-grid">
+        @for (member of teamMembers(); track member) {
+          <article class="about-team-card" appReveal [revealDelay]="$index * 50">
+            <span class="about-team-card__avatar" aria-hidden="true">{{ memberInitials(member) }}</span>
+            <h3>{{ member }}</h3>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+</div>

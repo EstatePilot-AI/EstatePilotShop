@@ -293,6 +293,77 @@
     "ERROR_TITLE": "Error",
     "ERROR_MESSAGE": "Failed to submit. Please try again."
   },
+  "ABOUT_PAGE": {
+    "HERO": {
+      "EYEBROW": "About EstatePilot",
+      "TITLE": "AI-powered real estate outreach",
+      "SUBTITLE": "EstatePilot helps real estate sales teams automate high-volume outbound calling campaigns, qualify leads, and manage customer conversations through a focused SaaS dashboard.",
+      "CTA": "Start a conversation"
+    },
+    "OVERVIEW": {
+      "KICKER": "Product overview",
+      "TITLE": "Built for real estate sales teams",
+      "BODY": "EstatePilot is an AI conversational agent designed for sales managers, brokerages, developers, and real estate agents. It streamlines outbound sales communication by helping teams launch calling campaigns, qualify prospects, and keep sales delivery organized from one interactive web dashboard."
+    },
+    "BUSINESS": {
+      "KICKER": "Business model",
+      "TITLE": "Business model",
+      "SUBTITLE": "The platform is designed as a B2B SaaS and partnership model for agencies, marketing firms, developers, brokerages, and independent real estate agents.",
+      "PARTNERSHIPS_TITLE": "B2B partnerships",
+      "PARTNERSHIPS_BODY": "EstatePilot supports collaborations with real estate agencies, marketing firms, and developers so sales teams can generate and manage outbound campaigns in an accessible way.",
+      "SUBSCRIPTIONS_TITLE": "Volume-based packages",
+      "SUBSCRIPTIONS_BODY": "Subscription packages scale with AI-generated call volume, such as 1,000, 5,000, or 10,000 automated calls per month, with higher tiers adding CRM integrations and deeper analytics.",
+      "REVENUE_TITLE": "Sustainable operations",
+      "REVENUE_BODY": "Revenue supports cloud hosting, LLM usage, text-to-speech processing, ongoing product development, and long-term growth while serving individual brokers and large agencies."
+    },
+    "SYSTEM": {
+      "KICKER": "System description",
+      "TITLE": "System description",
+      "SUBTITLE": "EstatePilot combines campaign automation, AI conversations, and dashboard-based workflow management for outbound real estate sales.",
+      "DASHBOARD_TITLE": "Interactive dashboard",
+      "DASHBOARD_BODY": "Sales managers and agents use a web dashboard to configure campaigns, review activity, and keep outreach visible to the team.",
+      "CAMPAIGNS_TITLE": "Outbound automation",
+      "CAMPAIGNS_BODY": "The AI agent helps teams run high-volume outbound calling campaigns without turning daily sales delivery into repetitive manual work.",
+      "QUALIFICATION_TITLE": "Lead qualification",
+      "QUALIFICATION_BODY": "Conversational flows collect customer intent, filter prospects, and help prioritize qualified opportunities for follow-up.",
+      "INTEGRATIONS_TITLE": "CRM and analytics path",
+      "INTEGRATIONS_BODY": "Advanced packages can connect campaign output with CRM workflows and analytics so teams can measure performance and improve decisions."
+    },
+    "TEAM": {
+      "KICKER": "Our team",
+      "TITLE": "Project Team",
+      "SUBTITLE": "The EstatePilot project was created by a multidisciplinary team focused on practical AI for real estate sales operations."
+    }
+  },
+  "CONTACT_PAGE": {
+    "HERO": {
+      "EYEBROW": "Contact EstatePilot",
+      "TITLE": "Talk to us about AI real estate outreach",
+      "SUBTITLE": "Reach the EstatePilot team for business inquiries, partnerships, or product support. For this version, contact starts through direct email so no message is submitted to a backend form."
+    },
+    "INTRO": {
+      "KICKER": "Get in touch",
+      "TITLE": "How can we help?",
+      "BODY": "Choose the inquiry path that best fits your need. We use one project email for now and route the conversation by subject."
+    },
+    "CHANNELS": {
+      "BUSINESS": {
+        "TITLE": "Business inquiries",
+        "BODY": "Discuss AI calling packages for brokerages, agencies, and independent real estate teams.",
+        "CTA": "Email business team"
+      },
+      "PARTNERSHIP": {
+        "TITLE": "Partnerships",
+        "BODY": "Explore collaborations with real estate agencies, developers, and marketing firms.",
+        "CTA": "Email partnerships"
+      },
+      "SUPPORT": {
+        "TITLE": "Support",
+        "BODY": "Ask for product help, project details, or guidance about the EstatePilot platform.",
+        "CTA": "Email support"
+      }
+    }
+  },
   "COMMON": {
     "LOADING": "Loading…",
     "ERROR": "An error occurred.",

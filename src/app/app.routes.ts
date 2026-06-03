@@ -10,5 +10,13 @@ export const routes: Routes = [
     path: 'properties',
     loadChildren: () =>
       import('./features/property/property.routes').then((m) => m.propertyRoutes),
-  }
+  },
+  {
+    path: 'about',
+    loadChildren: () => import('./features/about/about.routes').then((m) => m.aboutRoutes),
+  },
+  {
+    path: 'contact',
+    loadChildren: () => import('./features/contact/contact.routes').then((m) => m.contactRoutes),
+  },
 ];

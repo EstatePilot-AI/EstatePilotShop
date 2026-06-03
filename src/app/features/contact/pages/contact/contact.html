@@ -1,0 +1,50 @@
+<div class="contact-page">
+  <section class="contact-hero bg-gradient-hero" aria-labelledby="contact-title">
+    <div class="container contact-hero__grid">
+      <div class="contact-hero__copy" appReveal>
+        <span class="contact-eyebrow">
+          <i class="pi pi-envelope" aria-hidden="true"></i>
+          {{ 'CONTACT_PAGE.HERO.EYEBROW' | translate }}
+        </span>
+
+        <h1 id="contact-title" class="contact-hero__title">
+          {{ 'CONTACT_PAGE.HERO.TITLE' | translate }}
+        </h1>
+
+        <p class="contact-hero__subtitle">
+          {{ 'CONTACT_PAGE.HERO.SUBTITLE' | translate }}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section contact-intro" aria-labelledby="contact-intro-title">
+    <div class="container">
+      <div class="contact-section-header" appReveal>
+        <span class="contact-section-kicker">{{ 'CONTACT_PAGE.INTRO.KICKER' | translate }}</span>
+        <h2 id="contact-intro-title" class="contact-section-title">
+          {{ 'CONTACT_PAGE.INTRO.TITLE' | translate }}
+        </h2>
+        <p class="contact-section-subtitle">
+          {{ 'CONTACT_PAGE.INTRO.BODY' | translate }}
+        </p>
+      </div>
+
+      <div class="contact-channel-grid">
+        @for (channel of channels(); track channel.titleKey) {
+          <article class="contact-channel-card" appReveal [revealDelay]="$index * 90">
+            <span class="contact-channel-card__icon">
+              <i [class]="channel.icon" aria-hidden="true"></i>
+            </span>
+            <h3>{{ channel.titleKey | translate }}</h3>
+            <p>{{ channel.bodyKey | translate }}</p>
+            <a [href]="mailtoLink(channel.subject)" class="contact-channel-card__link">
+              <span>{{ channel.ctaKey | translate }}</span>
+              <i class="pi pi-arrow-up-right" aria-hidden="true"></i>
+            </a>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+</div>

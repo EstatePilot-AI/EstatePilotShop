@@ -66,7 +66,7 @@ export class ChatMessageList {
 
   scrollToBottom(): void {
     const el = this.scrollAnchor()?.nativeElement;
-    if (el) {
+    if (el && typeof el.scrollIntoView === 'function') {
       const prefersReducedMotion =
         globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 

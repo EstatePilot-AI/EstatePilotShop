@@ -79,6 +79,10 @@ describe('ChatMessageList', () => {
     expect(text).not.toContain('CHATBOT.ERROR_TIMEOUT');
   });
 
+  it('does not throw when scrollIntoView is unavailable', () => {
+    expect(() => component.scrollToBottom()).not.toThrow();
+  });
+
   it('emits retry when the error retry button is clicked', () => {
     const emitted: void[] = [];
     component.retry.subscribe(() => emitted.push(undefined));
